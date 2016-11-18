@@ -1,6 +1,7 @@
 # Project specifics
 media/
-*.sqlite
+*.sqlite3
+.idea/
 
 # Github boilerplate
 
