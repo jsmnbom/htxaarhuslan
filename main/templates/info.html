@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Information{% endblock %}
+
+{% block content %}
+    <div class="box" id="tidsted">
+        <h2>Tid & sted</h2>
+        <h3>Tid</h3>
+        <h4>Start: <strong>{{ next_lan.start|date:"l, j. F Y G:i" }}</strong></h4>
+        <h4>Slut: <strong>{{ next_lan.end|date:"l, j. F Y G:i" }}</strong></h4>
+        <p>Det er tilladt at møde og forlade stedet som man har lyst; man kan komme ind når som helst, dog hvis portene
+            er lukkede, skal man ringe på dette telefon nummer: <a href="tel:29721401">29 72 14 01</a>.</p>
+        <h3>Sted</h3>
+        <p><a href="https://goo.gl/maps/U3QLMv2Phfv" target="_blank">Univers, AARHUS TECH Aarhus Gymnasium<br>Dollerupvej 2, 8000,
+            Aarhus C</a></p>
+        <!--<div id="map"></div>-->
+    </div>
+    <div class="box" id="mad">
+        <h2>Mad</h2>
+        <p>Det er ikke muligt at købe mad, men der ligger en Netto tæt på skolen.</p>
+    </div>
+    <div class="box" id="regler">
+        <h2>Reglement</h2>
+        <h4><strong>10. februar!</strong></h4>
+        {% lorem 2 p %}
+    </div>
+    <div class="box" id="pakke">
+        <h2>Pakkeliste</h2>
+        <p>Vi anbefaler at du medbringer følgende:</p>
+        {% lorem 1 p %}
+    </div>
+{% endblock %}

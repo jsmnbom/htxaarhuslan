@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="box" id="register">
+        <h2>{% block title %}Opret bruger{% endblock %}</h2>
+        <form action="{% url 'register' %}?next={{ request.GET.next }}" method="post">
+            {% csrf_token %}
+            {{ user_form }}
+            {{ profile_form }}
+            <input type="submit" value="Opret bruger" name="register">
+        </form>
+    </div>
+{% endblock %}

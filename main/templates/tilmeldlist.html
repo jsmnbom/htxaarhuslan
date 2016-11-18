@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="box" id="tilmeldlist">
+        <h2>{% block title %}Liste over tilmeldte{% endblock %}</h2>
+        {% if profiles %}
+            <table class="hover stripe">
+                <thead>
+                    <tr>
+                        <td>Navn:</td>
+                        <td>Klasse:</td>
+                        <td>Plads:</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {# @formatter:off--> #}
+                    {% for profile in profiles %}
+                        <tr><td><a href="{% url "profile" username=profile.profile.user.username %}">{{ profile.profile.user.first_name }}</a></td><td>{{ profile.profile.get_grade_display }}</td><td>{% if profile.seat %}{{ profile.seat }}{% else %}Ikke reserveret{% endif %}</td></tr>
+                    {% endfor %}
+                    {# @formatter:on--> #}
+                </tbody>
+            </table>
+        {% else %}
+            <h3>Ingen tilmeldte?!?!!</h3>
+        {% endif %}
+    </div>
+{% endblock %}

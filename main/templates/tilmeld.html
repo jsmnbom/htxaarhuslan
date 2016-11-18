@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="box" id="tilmeld">
+        <h2>{% block title %}Tilmelding{% endblock %}</h2>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %}
+                        class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if open %}
+            <div class="seats">
+                <a href="{% url "tilmeldlist" %}" title="Klik her for at se en liste over alle tilmeldte."><h3
+                        id="count">Antal tilmeldte: {{ count.0 }}/{{ count.1 }}</h3></a>
+                {% if current == 0 %}
+                    <h4 id="current">Du skal logge ind for at kunne tilmelde dig til LAN</h4>
+                {% elif current == -1 %}
+                    <h4 id="current" data-not="true">Du er ikke tilmeldt LAN.</h4>
+                {% else %}
+                    {% if current %}
+                        <h4 id="current" data-seat="{{ current }}">Valgt plads: <span>{{ current }}</span></h4>
+                    {% else %}
+                        <h4 id="current" data-seat="">Du er tilmeldt LAN, men ingen plads er reseveret</h4>
+                    {% endif %}
+                {% endif %}
+                <br>
+                {# @formatter:off--> #}
+                <table>
+                    <tbody>
+                        {% for row in seats %}
+                            <tr>
+                                {% for seat in row %}{% if seat.0 %}<td {% if current == seat.0 %}class="current" {% endif %}tabindex="0" role="button" data-url="{% if seat.1.user.username %}{% url "profile" username=seat.1.user.username %}{% endif %}" data-name="{{ seat.1.user.first_name }}" data-grade="{{ seat.1.user.profile.get_grade_display }}">{{ seat.0 }}</td>{% else %}<td>&nbsp;</td>{% endif %}
+                                {% empty %} <td>&nbsp;</td>{% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {# @formatter:on--> #}
+                <br>
+                {% if current != 0 %}
+                    <a class="button" id="reset" href="#">Jeg ønsker ikke at resevere plads</a>
+                    {% if current != -1 %}<a class="button" href="{% url "frameld" %}">Frameld</a>{% endif %}
+                    <form action="{% url "tilmeld" %}" method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit" value="{% if current == -1 %}Tilmeld{% else %}Skift plads{% endif %}"
+                               name="tilmeld">
+                    </form>
+                {% endif %}
+            </div>
+        {% else %}
+            <h3 id="notopen">Tilmelding åbner om:</h3>
+            <div id="countdown" data-opens="{{ opens_time }}"></div>
+        {% endif %}
+    </div>
+{% endblock %}

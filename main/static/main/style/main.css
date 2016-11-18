@@ -1,0 +1,523 @@
+/* Stylesheet for use with the main application of HTXAarhusLAN */
+
+html {
+    width: 100%;
+}
+
+body {
+    width: 100%;
+    margin: 0;
+
+    background: #e4d8c2 url("../img/bg2.jpg");
+    background-size:cover;
+    background-position: top center;
+    background-attachment:fixed;
+
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #fff;
+}
+
+/* Make everything non bold, and then a few things bold */
+
+* {
+    font-weight: 300;
+}
+
+h2, strong {
+    font-weight: 500;
+}
+
+/*
+ Standard width of the page (also centering)
+ Gets overwritten by media queries at the bottom.
+*/
+
+.container, .spacer {
+    width: 1100px;
+    margin: 0 auto;
+    background: #e4d8c2dd;
+}
+
+/* Header, title and navigation bar */
+
+.header {
+    margin-top: 30px;
+}
+
+.header .title {
+    background: #d33e20;
+    width: 100%;
+    font-size: 58px;
+}
+
+.header .title h1 {
+    text-align: center;
+    padding: 1.5% 0;
+    margin: 0;
+    color: #fff;
+    display: inline-block;
+    width: 100%;
+}
+
+.header .title a {
+    text-decoration: none;
+}
+
+.header .nav {
+    height: 70%;
+}
+
+.header .nav a {
+    background-color: #363032;
+    width: 25%;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 40px;
+    color: #fff;
+    padding: 0.5% 0;
+    float: left;
+    outline: 0;
+}
+
+.header .nav a:visited {
+    color: #fff;
+}
+
+.header .nav a:unvisited{
+    color: #fff;
+}
+
+.header .nav a:hover, .header .nav a:focus {
+    background-color: #85899b;
+    box-shadow: 0px 4px 10px 0px rgba(0,0,0,0.75);
+    z-index: 10;
+    position: relative;
+}
+
+.header .nav a.current {
+   background-color: #d33e20;
+   box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.75);
+}
+
+/* Boxes (incl. sidebar) */
+
+.page {
+    padding: 15px 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.box {
+    width: 70%;
+    background-color: #363032;
+    margin-top: 30px;
+    padding-bottom: 10px;
+    order: 10;
+}
+
+.box:nth-of-type(1) {
+    order: -1;
+}
+
+.sidebar {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    width: 27%;
+    order: 1;
+}
+
+.sidebar .box {
+    width: 100%;
+}
+
+.box.spacer {
+    height: 5vh;
+    padding: 0;
+    opacity: 0;
+}
+
+.box h2 {
+    width: 100%;
+    background: #d33e20;
+    margin-top: 0;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.box > :not(h2) {
+    padding: 0 15px;
+    font-size: 1.3em;
+    line-height: 1.2em;
+}
+
+.box#discord div {
+    padding: 0;
+    margin: 0 15px;
+}
+
+.box#discord iframe {
+    width: 100%;
+    height: 500px;
+}
+
+/* The stuff that goes in boxes */
+
+span.acronym span {
+    color: #d33e20;
+    font-weight: 500;
+}
+
+a {
+    text-decoration: none;
+    color: #4fb0d7;
+}
+
+a:visited {
+    color: #4fb0d7;
+}
+
+a:hover {
+    color: #d33e20;
+}
+
+h3#notopen {
+    text-align: center;
+}
+
+div#countdown {
+    text-align: center;
+}
+
+.box h3 {
+    font-size: 1.8em;
+    margin-bottom: 0;
+    line-height: 1.3em;
+}
+
+h4 {
+    font-size: 1.3em;
+    line-height: 1.3em;
+}
+
+/* Seat selection stuff */
+.seats {
+    margin: 0 auto;
+}
+
+.seats h4, .seats h3 {
+    text-align: center;
+}
+
+.seats table {
+    width:100%;
+    border-collapse: collapse;
+}
+
+.seats table td {
+    text-align: center;
+    font-size: 18px;
+    border-width:1px;
+    transition: background 0.3s ease, height 0.3s ease;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.seats table td.availible, .seats table td.occupied {
+    border-style:solid;
+    border-color: #ccc;
+}
+
+.seats table td.availible {
+    background: #090;
+    cursor: pointer;
+}
+
+.seats table td.occupied {
+    background-color:#900;
+    cursor: not-allowed;
+}
+
+.seats table td.selected {
+    background-color:#cc0;
+    animation: pulse 2s linear infinite alternate;
+}
+
+.seats table td.current {
+    background-color:#b44;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    background-color: #cc0;
+  }
+  50% {
+    background-color: #090;
+  }
+}
+
+.seats form input {
+    margin: 0;
+}
+
+.qtip-seat {
+    background: #67809f;
+    color: #fff;
+    padding: 5px;
+}
+
+.qtip-seat a {
+    font-size: 20px;
+}
+.qtip-seat a.visited, .qtip-seat a.unvisited, .qtip-seat a {
+    color: #fff;
+}
+
+/* Sidebar/login */
+.box.login {
+    overflow: hidden;
+    paddin-top: 7px;
+}
+
+.login a {
+    font-size: 16px;
+}
+
+.login ul.messages li {
+    font-size: 18px;
+}
+
+.box.login .buttons {
+    padding: 0 15px;
+}
+
+.box.login a.button:first-child {
+    margin-top: 17px;
+}
+
+.box.login a.button {
+    margin: 15px 0;
+}
+
+/* Form stuff */
+input, select, a.button, textarea {
+    text-align: center;
+    width: 100%;
+    height: 40px;
+    margin: 10px 0;
+    font-size: 25px;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 5px;
+    border:none;
+    padding: 0;
+    -webkit-appearance: none;
+}
+
+input:not([type="submit"]), select, textarea {
+    color: #e74c3c;
+}
+
+input[type="submit"], a.button {
+    background-color: #d33e20;
+    color: #fff;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover, a.button:hover, input[type="submit"]:focus, a.button:focus {
+    background-color: #e5492d;
+}
+
+label {
+    display: inline-block;
+    width: 100%;
+}
+
+input[type="file"] {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+input[type="checkbox"] {
+    -webkit-appearance: checkbox;
+}
+
+input#photo-clear-id {
+    width: auto;
+}
+
+form .file {
+    width: 50%;
+    float: left;
+    margin-bottom: 10px;
+}
+
+form .file.big {
+    width: 100%;
+}
+
+form div.file label.choose {
+    display: block;
+    box-sizing: border-box;
+    vertical-align: bottom;
+    padding: 8px 3px 0 3px;
+    text-align: center;
+    width: 80%;
+    height: 40px;
+    margin: 10px auto;
+    font-size: 25px;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 5px;
+    border:none;
+    background-color: #d33e20;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    tab-index: 0;
+}
+
+form div.file label.choose:hover {
+    background-color: #e5492d;
+}
+
+form div.check {
+    width: auto;
+    margin: 10px auto;
+    text-align: center;
+}
+
+form div.check label {
+    width: auto;
+}
+
+form div.check input {
+    width: auto;
+    height: auto;
+}
+
+textarea {
+    height: 150px;
+    text-align: left;
+    resize: vertical;
+}
+
+form span.helptext {
+    display: none;
+}
+
+ul.messages {
+    list-style: none;
+}
+
+ul.messages li {
+    color: #fff;
+    text-align: center;
+}
+
+/* Profile stuff */
+.box#profile img {
+    width: 50%;
+    float: right;
+}
+
+.box#profile .info {
+    width: 50%;
+    float: left;
+}
+
+/* Footer */
+.footer {
+    width: 100%;
+    background-color: #363032;
+    margin: 0;
+    z-index: 99;
+}
+
+.footer .container {
+    overflow: hidden;
+    background-color: #363032;
+}
+
+.footer p {
+    margin: 0;
+    padding: 1% 2%;
+}
+
+/* Common stuff */
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+.hidden {
+    display: none;
+}
+
+a.button {
+    display: block;
+    box-sizing: border-box;
+    padding-top: 8px;
+    margin: 20px 0;
+}
+
+/* Handle smaller screens */
+
+@media (max-width: 1150px) {
+    .container {
+        width: 95%;
+        margin: 0 auto;
+    }
+
+    /* Prevent annoying flash from title being huge for a sec */
+    .header .title {
+        font-size: 16px;
+    }
+
+    .page {
+        padding: 1% 1%;
+    }
+
+    .box {
+        width: 100%
+    }
+
+    .sidebar {
+        position: relative;
+        top: 0;
+        right: 0;
+        width: 100%;
+    }
+
+    .footer p.right {
+        float: left;
+        width: 100%;
+    }
+}
+
+/* Handle very small screens */
+
+@media (max-width: 800px) {
+    .header .nav a {
+        width: 50%;
+    }
+    .seats table td {
+        font-size: 7px;
+    }
+}

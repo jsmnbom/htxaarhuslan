@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="box" id="profile">
+        <h2>{% block title %}{{ profile.user.username }}{% endblock %}</h2>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %}
+                        class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <div id="show" {% if start_edit %}class="hide"{% endif %}>
+            <div class="info">
+                <p>Navn: {{ profile.user.first_name }}</p>
+                <p>Klasse: {{ profile.get_grade_display }}</p>
+                <p>Bio:<br>{{ profile.bio|linebreaks }}</p>
+            </div>
+            {% if profile.photo %}
+                <img src="{{ profile.photo.url }}" alt="{{ profile.user.username }}s profilbillede"/>
+            {% endif %}
+        </div>
+        {% if user_form %}
+            <form action="{{ get_full_path }}" method="post" enctype='multipart/form-data'>
+                {% csrf_token %}
+                <div id="edit" {% if not start_edit %}class="hide"{% endif %}>
+                    {{ user_form.as_p }}
+                    {{ profile_form.as_p }}
+                </div>
+                <input type="submit" value="Rediger profil" name="profile">
+                <a class="button" href="{% url "password_change" %}">Skift kodeord</a>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

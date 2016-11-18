@@ -1,0 +1,137 @@
+{% load static %}
+{% load recaptcha2 %}
+
+<!DOCTYPE HTML>
+<html lang="da" prefix="og: http://ogp.me/ns#">
+    <head>
+        <!-- Metadata -->
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description"
+              content="Siden for LAN på Aarhus Gymnasium. Her kan se information og tilmelde dig til LAN og tuneringer.">
+
+        <!-- Open graph (facebook) metadata -->
+        <meta property="og:title" content="HTXAarhusLAN"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:url" content="http://htxaarhuslan.dk"/>
+        <meta property="og:image" content="{% static "main/img/logo.png" %}"/>
+        <meta property="og:description"
+              content="Siden for LAN på Aarhus Gymnasium. Her kan se information og tilmelde dig til LAN og tuneringer."/>
+        <meta property="og:locale" content="da_DK"/>
+
+        <!-- Title and icon -->
+        <title>{% block title %}{% endblock %} - HTXAarhusLAN</title>
+        <link rel="icon" type="image/png" href="{% static "main/img/favicon.png" %}"/>
+
+        <!-- Styles -->
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.2/cookieconsent.min.css"/>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,500">
+        <link rel="stylesheet" href="{% static "main/style/main.css" %}">
+        <link rel="stylesheet" href="{% static "main/style/tables.css" %}"/>
+
+        <!-- Script -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.2/cookieconsent.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.js"></script>
+        <script src="{% static "main/script/vendor/jquery.fittext.js" %}"></script>
+        <script src="{% static "main/script/vendor/jquery.unevent.js" %}"></script>
+        <script src="{% static "main/script/vendor/jquery.countdown.min.js" %}"></script>
+        <script src="{% static "main/script/main.js" %}"></script>
+        <script src="{% static "main/script/tilmeld.js" %}"></script>
+        {% recaptcha_init 'da' %}
+    </head>
+
+    <body>
+        <div class="container">
+            <header>
+                <div class="header">
+                    {% block header %}
+                        <div class="title">
+                            <a href="/">
+                                <h1>HTX Aarhus LAN</h1>
+                            </a>
+                        </div>
+                        <nav>
+                            <div class="nav">
+                                {% url "index" as url %}
+                                <a href="{{ url }}" class="{% if request.get_full_path == url %}current{% endif %}">Forside</a>
+                                {% url "info" as url %}
+                                <a href="{{ url }}" class="{% if request.get_full_path == url %}current{% endif %}">Information</a>
+                                {% url "tilmeld" as url %}
+                                <a href="{{ url }}" class="{% if request.get_full_path == url %}current{% endif %}">Tilmelding</a>
+                                {% url "turne" as url %}
+                                <a href="{{ url }}" class="{% if request.get_full_path == url %}current{% endif %}">Turnering</a>
+                            </div>
+                        </nav>
+                    {% endblock %}
+                </div>
+            </header>
+            <div class="page">
+                {% block content %}
+
+                {% endblock %}
+                <div class="box spacer"></div>
+                <div class="sidebar">
+                    {% block sidebar %}
+                        <div class="box login" id="login">
+                            {% if request.user.is_authenticated %}
+                                <h2>Velkommen {{ request.user.first_name }}</h2>
+                                <div class="buttons">
+                                    <a class="button" href="{% url "tilmeld" %}">Tilmeld til lan</a>
+                                    <a class="button" href="{% url "profile" username=user.username %}">Vis/rediger
+                                        profil</a>
+                                    {% if request.user.is_staff %}
+                                        <a class="button" href="{% url "admin:index" %}">Admin</a>{% endif %}
+                                    <a class="button" href="{% url "logout" %}?next={{ request.get_full_path }}">Log
+                                        af</a>
+                                </div>
+                            {% else %}
+                                <h2>Login</h2>
+                                {% if messages %}
+                                    <ul class="messages">
+                                        {% for message in messages %}
+                                            <li{% if message.tags %}
+                                                class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                <form action="{% url "login" %}?next={{ request.get_full_path }}" method="post">
+                                    {% csrf_token %}
+                                    <input name="username" type="text" placeholder="Brugernavn"/>
+                                    <input name="password" type="password" placeholder="Kodeord"/>
+                                    <input type="submit" value="Log ind" name="login"/>
+                                </form>
+                                <div>
+                                    <a class="left" href="{% url "register" %}?next={{ request.get_full_path }}">Opret
+                                        bruger</a>
+                                    <a class="right" href="{% url "password_reset" %}">Glemt kodeord?</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="box" id="discord">
+                            <h2>Discord server</h2>
+                            <div>
+                                <iframe src="https://discordapp.com/widget?id=243374306501984256&theme=dark"
+                                        allowtransparency="true" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div class="footer">
+                <div class="container">
+                    <p class="right">Dette website er <a href="license/">open-source</a>. Deltag i udviklingen
+                        på <a href="https://github.com">github</a>!</p>
+                    <p class="left">Denne side er stadig under opbygning. Kontakt bomjacob@gmail.com, hvis der opstår
+                        problemer.</p>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>
