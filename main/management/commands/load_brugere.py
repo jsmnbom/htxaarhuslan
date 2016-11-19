@@ -17,6 +17,8 @@ class Command(BaseCommand):
             users = json.load(f)
             for user in users:
                 self.stdout.write('Adding user: {}'.format(user['brugernavn']))
+                if user['klasse'] == 'Lærer':
+                    user['klasse'] = 'teacher'
                 u = User.objects.create(username=user['brugernavn'], first_name=user['fullname'], email=user['mail'],
                                         password='bcrypt$$2a' + user['new_kodeord'][3:])
                 p = Profile.objects.create(user=u, grade=user['klasse'])
