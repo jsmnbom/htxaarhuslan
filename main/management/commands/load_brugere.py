@@ -1,5 +1,6 @@
 import json
 
+from django.db.utils import IntegrityError
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 
@@ -19,6 +20,10 @@ class Command(BaseCommand):
                 self.stdout.write('Adding user: {}'.format(user['brugernavn']))
                 if user['klasse'] == 'Lærer':
                     user['klasse'] = 'teacher'
-                u = User.objects.create(username=user['brugernavn'], first_name=user['fullname'], email=user['mail'],
-                                        password='bcrypt$$2a' + user['new_kodeord'][3:])
-                p = Profile.objects.create(user=u, grade=user['klasse'])
+                try:
+                    u = User.objects.create(username=user['brugernavn'], first_name=user['fullname'][:30],
+                                            email=user['mail'],
+                                            password='bcrypt$$2a' + user['new_kodeord'][3:])
+                    p = Profile.objects.create(user=u, grade=user['klasse'])
+                except IntegrityError:
+                    pass
