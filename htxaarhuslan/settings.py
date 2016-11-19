@@ -34,7 +34,7 @@ SECRET_KEY = env_var('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env_var('DEBUG', False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env_var('ALLOWED_HOSTS', '').split(',')
 
 # Application definition
 

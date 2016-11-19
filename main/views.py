@@ -116,6 +116,7 @@ def profile(request, username):
 def tournament(request):
     return render(request, 'tournament.html')
 
+
 # Meta pages
 
 def login_view(request):
