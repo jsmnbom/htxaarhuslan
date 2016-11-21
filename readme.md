@@ -27,7 +27,7 @@
     You can get a recaptcha key from google. Or just give it a empty string, but then you can't create users via the form on site (do it via the admin site instead).
 9. Run database migrations (also always do this if you've pulled new changes from the repository)
 
-    `python mange.py migrate`
+    `python manage.py migrate`
 
 ### Run server
 (Do this everytime you want to run the local dev server)
