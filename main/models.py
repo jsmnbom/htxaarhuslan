@@ -2,8 +2,6 @@ from collections import Counter
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.utils.timezone import now
 
 # noinspection SpellCheckingInspection
@@ -55,20 +53,21 @@ class Lan(models.Model):
         verbose_name = 'LAN'
         verbose_name_plural = 'LAN'
 
-    start = models.DateTimeField()
-    end = models.DateTimeField()
-    open = models.DateTimeField()
-    name = models.CharField(max_length=255)
+    start = models.DateTimeField(verbose_name='start')
+    end = models.DateTimeField(verbose_name='slut')
+    open = models.DateTimeField(verbose_name='tildmelding åbner')
+    name = models.CharField(max_length=255, verbose_name='navn')
     profiles = models.ManyToManyField(Profile, through='LanProfile')
-    seats = models.TextField()
-    schedule = models.TextField()
-    blurb = models.TextField()
+    seats = models.TextField(verbose_name='pladser')
+    schedule = models.TextField(verbose_name='tidsplan')
+    blurb = models.TextField(verbose_name='blurb', help_text='Husk at wrappe tekst i &lt;p> tags!')
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.start.strftime('%d. %b. %Y'))
 
     def is_open(self):
         return self.open <= now()
+    is_open.short_description = 'Tilmelding åben?'
 
     def parse_seats(self):
         parsed = []
@@ -89,6 +88,11 @@ class Lan(models.Model):
                     parsed[-1].append((None, None))
         return parsed, sum(tables.values())
 
+    def seats_count(self):
+        return self.parse_seats()[1]
+
+    seats_count.short_description = 'Antal pladser'
+
 
 class LanProfile(models.Model):
     class Meta:
@@ -96,9 +100,9 @@ class LanProfile(models.Model):
         verbose_name_plural = 'tilmeldinger'
         unique_together = (('lan', 'seat'), ('lan', 'profile'))
 
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    lan = models.ForeignKey(Lan, on_delete=models.CASCADE)
-    seat = models.CharField(max_length=8, blank=True, null=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, verbose_name='profil')
+    lan = models.ForeignKey(Lan, on_delete=models.CASCADE, verbose_name='lan')
+    seat = models.CharField(max_length=8, blank=True, null=True, verbose_name='plads')
 
     def __str__(self):
         return self.profile.user.username + '@' + self.lan.name

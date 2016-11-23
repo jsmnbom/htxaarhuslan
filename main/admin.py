@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
+from django.forms import model_to_dict
+from django.utils.timezone import now
 
 from main.forms import LanProfileAdminForm
 from .models import Profile, Lan, LanProfile
@@ -35,4 +37,14 @@ class MyUserAdmin(UserAdmin):
 
     list_filter = UserAdmin.list_filter + ('profile__grade',)
 
-admin.site.register(Lan)
+
+@admin.register(Lan)
+class LanAdmin(admin.ModelAdmin):
+    list_display = ('name', 'start', 'seats_count', 'is_open')
+
+    def get_changeform_initial_data(self, request):
+        try:
+            prev_lan = Lan.objects.filter(start__lt=now()).order_by("-start")[0]
+            return model_to_dict(prev_lan, ['blurb', 'seats', 'schedule'])
+        except (Lan.DoesNotExist, AttributeError, IndexError):
+            return {}
