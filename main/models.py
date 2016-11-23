@@ -60,19 +60,22 @@ class Lan(models.Model):
     profiles = models.ManyToManyField(Profile, through='LanProfile')
     seats = models.TextField(verbose_name='pladser')
     schedule = models.TextField(verbose_name='tidsplan')
-    blurb = models.TextField(verbose_name='blurb', help_text='Husk at wrappe tekst i &lt;p> tags!')
+    blurb = models.TextField(verbose_name='blurb',
+                             help_text='Teksten, specifikt til dette lan, der bliver vist på forsiden.'
+                                       'Husk at wrappe tekst i &lt;p> tags!')
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.start.strftime('%d. %b. %Y'))
 
     def is_open(self):
         return self.open <= now()
+
     is_open.short_description = 'Tilmelding åben?'
 
     def parse_seats(self):
         parsed = []
         tables = Counter()
-        users = self.profiles.all().select_related()
+        users = self.profiles.filter(lanprofile__lan=self).select_related()
         for row in self.seats.splitlines():
             parsed.append([])
             for s in row:
@@ -80,7 +83,7 @@ class Lan(models.Model):
                     tables[s] += 1
                     seat = '{}{:02d}'.format(s, tables[s])
                     try:
-                        user = users.get(lanprofile__seat=seat, lanprofile__lan=self)
+                        user = users.get(lanprofile__seat=seat)
                         parsed[-1].append((seat, user))
                     except Profile.DoesNotExist:
                         parsed[-1].append((seat, None))

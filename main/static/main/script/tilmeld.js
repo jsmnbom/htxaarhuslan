@@ -1,8 +1,14 @@
 $(document).ready(function() {
     $(window).resize(function() {
-        var h = $('.seats table td').first().width()
-        var s = h/3
-        $('.seats table td').css({height: h, fontSize: s})
+        var m = -1
+        $('.seats table td').each(function() {
+            var h = $(this).width()
+            if (h > m) {
+                m = h
+            }
+        })
+        var s = m/3
+        $('.seats table td').css({height: m, fontSize: s})
     }, 200).resize();
 
     $('.seats table td').each(function() {
