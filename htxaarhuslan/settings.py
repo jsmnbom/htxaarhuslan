@@ -149,7 +149,7 @@ LOGIN_REDIRECT_URL = '/'
 
 # Mail stuff
 
-DEFAULT_FROM_EMAIL = 'crew@htxaarhuslan.dk'
+DEFAULT_FROM_EMAIL = 'HTXAarhusLAN <crew@htxaarhuslan.dk>'
 SERVER_MAIL = 'server@htxaarhuslan.dk'
 
 if DEBUG:
