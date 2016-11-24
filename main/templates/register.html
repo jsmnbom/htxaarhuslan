@@ -7,6 +7,8 @@
             {% csrf_token %}
             {{ user_form }}
             {{ profile_form }}
+            <p>Når du trykker på "Opret bruger" accepterer du vilkårne i vores
+                <a href="{% url 'policy' %}">privatlivspolitik</a>.</p>
             <input type="submit" value="Opret bruger" name="register">
         </form>
     </div>

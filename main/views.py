@@ -141,6 +141,10 @@ def needlogin(request):
     return render(request, 'needlogin.html')
 
 
+def policy(request):
+    return render(request, 'policy.html')
+
+
 # Meta pages
 
 def login_view(request):

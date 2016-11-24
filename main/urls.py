@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^profil/(?P<username>[\w.@+-]+)$', views.profile, name='profile'),
     url(r'^bruger/gammel$', views.legacy, name='legacy'),
     url(r'^bruger/needlogin$', views.needlogin, name='needlogin'),
+    url(r'^privatliv$', views.policy, name='policy'),
     url(
         r'^autocomplete/profile/$',
         ProfileAutocomplete.as_view(),

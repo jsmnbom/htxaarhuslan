@@ -19,7 +19,8 @@ $(document).ready(function() {
       "content": {
         "message": "Denne hjemmeside bruger cookies til at sikre, at du får den bedste oplevelse på vores hjemmeside.",
         "dismiss": "Forstået!",
-        "link": "Lær mere"
+        "link": "Lær mere",
+        "href": "/privatliv"
       }
     });
 
