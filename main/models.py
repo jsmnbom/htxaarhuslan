@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.timezone import now
 
 # noinspection SpellCheckingInspection
+from main.storage import OverwriteStorage
 
 grades = {
     'xa': {
@@ -40,7 +41,8 @@ class Profile(models.Model):
     GRADES = GRADES + (('none', 'Ukendt'),)
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    photo = models.ImageField(upload_to=profile_picture_path, blank=True, verbose_name='billede')
+    photo = models.ImageField(upload_to=profile_picture_path, storage=OverwriteStorage(), blank=True,
+                              verbose_name='billede')
     bio = models.TextField(blank=True)
     grade = models.CharField(verbose_name='klasse', max_length=32, choices=GRADES, default='none')
 
