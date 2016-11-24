@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import Http404
-from django.utils import timezone
+from django.utils.timezone import utc
 from django.shortcuts import render, redirect
 from dal import autocomplete
 
@@ -155,7 +155,7 @@ def login_view(request):
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
-            is_legacy = (user.date_joined < timezone.now() and not user.last_login)
+            is_legacy = (user.date_joined < datetime(2016, 11, 22).replace(tzinfo=utc) and not user.last_login)
             login(request, user)
             if is_legacy:
                 return redirect(reverse('legacy'))
