@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /bruger/
+Disallow: /profil/

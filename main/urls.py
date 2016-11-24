@@ -2,9 +2,17 @@ from django.conf import settings
 from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from django.contrib.sitemaps.views import sitemap
+from django.views.generic import TemplateView
 
+from main.sitemaps import MainSitemap, TilmeldSitemap
 from main.views import ProfileAutocomplete
 from . import views
+
+sitemaps = {
+    'main': MainSitemap,
+    'tilmeld': TilmeldSitemap
+}
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
@@ -46,6 +54,9 @@ urlpatterns = [
     url(r'^bruger/kode/skift/done$',
         auth_views.password_change_done,
         name="password_change_done"),
+    # SEO AND ROBOTS STUFF
+    url(r'^robots.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain'), name="robots"),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]
 
 if settings.DEBUG:
