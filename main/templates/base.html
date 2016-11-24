@@ -14,8 +14,9 @@
         <!-- Open graph (facebook) metadata -->
         <meta property="og:title" content="HTXAarhusLAN"/>
         <meta property="og:type" content="website"/>
-        <meta property="og:url" content="http://htxaarhuslan.dk"/>
-        <meta property="og:image" content="{% static "main/img/logo.png" %}"/>
+        <meta property="og:url" content="{% url 'index' %}"/>
+        <meta property="og:image"
+              content="{{ request.scheme }}://{{ request.get_host }}{% static "main/img/logo.png" %}"/>
         <meta property="og:description"
               content="Siden for LAN på Aarhus Gymnasium. Her kan se information og tilmelde dig til LAN og tuneringer."/>
         <meta property="og:locale" content="da_DK"/>
@@ -126,7 +127,9 @@
         <footer>
             <div class="footer">
                 <div class="container">
-                    <p class="right">Dette website er <a href="https://github.com/bomjacob/htxaarhuslan/blob/master/LICENSE" target="_blank">open-source</a>. Deltag i udviklingen
+                    <p class="right">Dette website er <a
+                            href="https://github.com/bomjacob/htxaarhuslan/blob/master/LICENSE" target="_blank">open-source</a>.
+                        Deltag i udviklingen
                         på <a href="https://github.com/bomjacob/htxaarhuslan" target="_blank">github</a>!</p>
                     <p class="left">Denne side er stadig under opbygning. Kontakt bomjacob@gmail.com, hvis der opstår
                         problemer.</p>
