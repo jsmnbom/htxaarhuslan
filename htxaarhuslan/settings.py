@@ -150,3 +150,7 @@ if DEBUG:
     EMAIL_HOST_PASSWORD = ''
     EMAIL_USE_TLS = False
     DEFAULT_FROM_EMAIL = 'crew@htxaarhuslan.dk'
+
+
+LOGIN_URL = '/bruger/needlogin'
+LOGIN_REDIRECT_URL = '/'

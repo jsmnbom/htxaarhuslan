@@ -17,7 +17,10 @@ urlpatterns = [
     url(r'^bruger/logud$', views.logout_view, name='logout'),
     url(r'^bruger/registreret$', views.registered, name='registered'),
     url(r'^bruger/registrer$', views.register, name='register'),
-    url(r'^profil/(?P<username>[\w.@+-]+)?', views.profile, name='profile'),
+    url(r'^profil/(?P<username>[\w.@+-]+)$', views.profile, name='profile'),
+    url(r'^profil/$', views.profile, name='profile'),
+    url(r'^bruger/gammel$', views.legacy, name='legacy'),
+    url(r'^bruger/needlogin$', views.needlogin, name='needlogin'),
     url(
         r'^autocomplete/profile/$',
         ProfileAutocomplete.as_view(),

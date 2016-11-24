@@ -1,8 +1,11 @@
+from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import Http404
+from django.utils import timezone
 from django.shortcuts import render, redirect
 from dal import autocomplete
 
@@ -82,10 +85,17 @@ def registered(request):
     return render(request, 'registered.html')
 
 
-def profile(request, username):
+def profile(request, username=None):
     """Profile view/edit page"""
     user_form, profile_form = None, None
     start_edit = False
+
+    if username is None:
+        if request.user.is_authenticated():
+            username = request.user.username
+        else:
+            return redirect(reverse('needlogin'))
+
     try:
         prof = Profile.objects.get(user__username=username)
     except Profile.DoesNotExist:
@@ -117,18 +127,36 @@ def tournament(request):
     return render(request, 'tournament.html')
 
 
+def legacy(request):
+    return render(request, 'legacy.html')
+
+
+def needlogin(request):
+    referrer = request.GET.get('next', None)
+    if request.user.is_authenticated():
+        if referrer is not None:
+            return redirect(referrer)
+        else:
+            return redirect(reverse('index'))
+    return render(request, 'needlogin.html')
+
+
 # Meta pages
 
 def login_view(request):
-    """Post url for login form, always redirects the user back."""
-    username = request.POST.get('username')
-    password = request.POST.get('password')
+    """Post url for login form, always redirects the user back unless legacy."""
     referrer = request.GET.get('next', reverse("index"))
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        login(request, user)
-    else:
-        messages.add_message(request, messages.ERROR, "Fejl i brugernavn eller kodeord")
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            is_legacy = (user.date_joined < timezone.now() and not user.last_login)
+            login(request, user)
+            if is_legacy:
+                return redirect(reverse('legacy'))
+        else:
+            messages.add_message(request, messages.ERROR, "Fejl i brugernavn eller kodeord")
     return redirect(referrer)
 
 

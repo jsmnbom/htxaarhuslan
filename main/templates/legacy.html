@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="box" id="tilmeldlist">
+        <h2>{% block title %}Ny side{% endblock %}</h2>
+        <p>Velkommen til den nye HTXAarhusLAN side.</p>
+        <p>Vi har flyttet din gamle bruger over, dog er din profil gået tabt i flytningen. Det anbefales derfor at du
+            går
+            til <a href="{% url 'profile' username=request.user.username %}">Vis/rediger profil</a> for at opdatere den
+            snarrest muligt.</p>
+        <p>Vi har som noget nyt fået SSL kryptering. Dette betyder at dit kodeord ikke bliver lækket til alle på
+            netværket
+            når du logger på. Det anbefales derfor <strong>kraftigt</strong> at du <a
+                    href="{% url 'password_change' %}">skifter
+                dit kodeord.</a></p>
+        <p>Hvis du oplever problemer på den nye side, eller har spørgsmål til flytningen, er du velkommen til at skrive
+            til
+            os på <a href="mailto:crew@htxaarhuslan.dk">crew@htxaarhuslan.dk</a></p>
+    </div>
+{% endblock %}
