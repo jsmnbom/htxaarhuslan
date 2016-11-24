@@ -36,6 +36,9 @@ DEBUG = env_var('DEBUG', False)
 
 ALLOWED_HOSTS = env_var('ALLOWED_HOSTS', '').split(',')
 
+X_FRAME_OPTIONS = 'DENY'
+SECURE_BROWSER_XSS_FILTER = True
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -141,6 +144,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 RECAPTCHA_PRIVATE_KEY = env_var('RECAPTCHA_PRIVATE_KEY')
 RECAPTCHA_PUBLIC_KEY = env_var('RECAPTCHA_PUBLIC_KEY')
 
+LOGIN_URL = '/bruger/needlogin'
+LOGIN_REDIRECT_URL = '/'
+
+# Mail stuff
+
+DEFAULT_FROM_EMAIL = 'crew@htxaarhuslan.dk'
+SERVER_MAIL = 'server@htxaarhuslan.dk'
+
 if DEBUG:
     # Use python debug email server
     # Start it with: `python -m smtpd -n -c DebuggingServer localhost:1025`
@@ -149,8 +160,7 @@ if DEBUG:
     EMAIL_HOST_USER = ''
     EMAIL_HOST_PASSWORD = ''
     EMAIL_USE_TLS = False
-    DEFAULT_FROM_EMAIL = 'crew@htxaarhuslan.dk'
 
-
-LOGIN_URL = '/bruger/needlogin'
-LOGIN_REDIRECT_URL = '/'
+SENDGRID_API_KEY = env_var('SENDGRID_API_KEY', None)
+if SENDGRID_API_KEY:
+    EMAIL_BACKEND = "sgbackend.SendGridBackend"
