@@ -159,6 +159,10 @@ h2, strong {
     line-height: 1.2em;
 }
 
+.box > ul {
+    padding: 0 35px;
+}
+
 .box#discord div {
     padding: 0;
     margin: 0 15px;
