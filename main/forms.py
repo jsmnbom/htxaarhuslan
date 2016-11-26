@@ -152,3 +152,16 @@ class EditProfileForm(forms.ModelForm):
     photo.widget.attrs = {'accept': 'image/*'}
 
     grade = forms.ChoiceField(sorted(GRADES, reverse=True), label='Klasse', widget=LabelSelect(label='Klasse'))
+
+
+class AdminProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        instance = kwargs.get('instance', None)
+        if instance:
+            self.fields['grade'].choices += ((instance.grade, instance.grade),)
