@@ -77,7 +77,7 @@ class Lan(models.Model):
     def parse_seats(self):
         parsed = []
         tables = Counter()
-        users = self.profiles.filter(lanprofile__lan=self).select_related()
+        users = self.profiles.filter(lan=self).select_related()
         for row in self.seats.splitlines():
             parsed.append([])
             for s in row:
@@ -85,7 +85,7 @@ class Lan(models.Model):
                     tables[s] += 1
                     seat = '{}{:02d}'.format(s, tables[s])
                     try:
-                        user = users.get(lanprofile__seat=seat)
+                        user = users.get(lanprofile__seat=seat, lan=self)
                         parsed[-1].append((seat, user))
                     except Profile.DoesNotExist:
                         parsed[-1].append((seat, None))
