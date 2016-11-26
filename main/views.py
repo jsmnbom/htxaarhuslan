@@ -172,19 +172,21 @@ def logout_view(request):
 
 
 def frameld(request):
-    """Framelds a user
-
-    (This might need to be a POST so we can csrf secure it)
-    """
+    """Framelds a user"""
     lan = get_next_lan()
-    try:
-        current = LanProfile.objects.get(lan=lan, profile=request.user.profile)
-        current.delete(keep_parents=True)
-        messages.add_message(request, messages.INFO, "Du er nu frameldt LAN!")
-    except LanProfile.DoesNotExist:
-        pass
-    except AttributeError:
-        pass
+    success = False
+    if request.method == 'POST':
+        try:
+            current = LanProfile.objects.get(lan=lan, profile=request.user.profile)
+            success = current.delete(keep_parents=True)
+        except LanProfile.DoesNotExist:
+            pass
+        except AttributeError:
+            pass
+    if success:
+        messages.add_message(request, messages.SUCCESS, "Du er nu frameldt LAN!")
+    else:
+        messages.add_message(request, messages.ERROR, "Der opstod en fejl med din framelding. Prøv igen senere.")
     return redirect(reverse("tilmeld"))
 
 

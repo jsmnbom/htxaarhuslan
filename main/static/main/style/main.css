@@ -363,9 +363,14 @@ input#photo-clear-id {
     width: auto;
 }
 
+form {
+    margin: 20px 0;
+}
+
 form .file {
     width: 50%;
     float: left;
+    margin: 0;
     margin-bottom: 10px;
 }
 

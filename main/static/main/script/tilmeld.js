@@ -47,9 +47,9 @@ $(document).ready(function() {
 
     function showhideform() {
         if ($('input[name="seat"]').val() != seat) {
-            $('.seats form').slideDown()
+            $('.seats form#tilmeld').slideDown()
         } else {
-            $('.seats form').slideUp()
+            $('.seats form#tilmeld').slideUp()
         }
     }
 
@@ -57,7 +57,7 @@ $(document).ready(function() {
 
     if (seat != undefined) {
         $('input[name="seat"]').val(seat)
-        $('.seats form').hide()
+        $('.seats form#tilmeld').hide()
     }
 
     $('.seats table td').click(function() {

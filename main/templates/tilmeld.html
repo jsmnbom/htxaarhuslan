@@ -43,8 +43,13 @@
                 <br>
                 {% if current != 0 %}
                     <a class="button" id="reset" href="#">Jeg ønsker ikke at resevere plads</a>
-                    {% if current != -1 %}<a class="button" href="{% url "frameld" %}">Frameld</a>{% endif %}
-                    <form action="{% url "tilmeld" %}" method="post">
+                    {% if current != -1 %}
+                        <form action="{% url 'frameld' %}" method="POST" id="frameld">
+                            {% csrf_token %}
+                            <input type="submit" value="Frameld" name="frameld">
+                        </form>
+                    {% endif %}
+                    <form action="{% url "tilmeld" %}" method="post" id="tilmeld">
                         {% csrf_token %}
                         {{ form.as_p }}
                         <input type="submit" value="{% if current == -1 %}Tilmeld{% else %}Skift plads{% endif %}"
