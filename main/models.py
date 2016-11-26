@@ -10,9 +10,9 @@ from main.storage import OverwriteStorage
 grades = {
     'xa': {
         13: [],
-        14: ['a', 'b', 'c', 'd', 'r', 'j'],
-        15: ['a', 'b', 'c', 'd', 'r', 'j'],
-        16: ['a', 'b', 'c', 'd', 'r', 'j']
+        14: ['a', 'b', 'd', 'e', 'j', 'p', 'q', 'r'],
+        15: ['a', 'b', 'c', 'd', 'e', 'j', 'p', 'r'],
+        16: ['a', 'b', 'c', 'd', 'e', 'f', 'j', 'p', 'r']
     }
 }
 
