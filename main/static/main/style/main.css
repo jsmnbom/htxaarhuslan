@@ -8,7 +8,7 @@ body {
     width: 100%;
     margin: 0;
 
-    background-size:cover;
+    background-size: cover;
     background: #e4d8c2 url("../img/bg2.jpg") fixed top center;
 
     font-family: 'Roboto', sans-serif;
@@ -83,20 +83,20 @@ h2, strong {
     color: #fff;
 }
 
-.header .nav a:link{
+.header .nav a:link {
     color: #fff;
 }
 
 .header .nav a:hover, .header .nav a:focus {
     background-color: #85899b;
-    box-shadow: 0 4px 10px 0 rgba(0,0,0,0.75);
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.75);
     z-index: 10;
     position: relative;
 }
 
 .header .nav a.current {
-   background-color: #d33e20;
-   box-shadow: 0 2px 5px 0 rgba(0,0,0,0.75);
+    background-color: #d33e20;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.75);
 }
 
 /* Boxes (incl. sidebar) */
@@ -114,6 +114,7 @@ h2, strong {
     margin-top: 30px;
     padding-bottom: 10px;
     order: 10;
+    transition: width 0.3s ease;
 }
 
 .box:nth-of-type(1) {
@@ -149,6 +150,12 @@ h2, strong {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.box h2.huge {
+    font-size: 7em;
+    text-align: center;
+    transition: font-size 0.3s ease;
 }
 
 .box > :not(h2) {
@@ -225,14 +232,14 @@ div#countdown {
 }
 
 .seats table {
-    width:100%;
+    width: 100%;
     border-collapse: collapse;
 }
 
 .seats table td {
     text-align: center;
     font-size: 18px;
-    border-width:1px;
+    border-width: 1px;
     transition: background 0.3s ease, height 0.3s ease;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -250,26 +257,26 @@ div#countdown {
 }
 
 .seats table td.occupied {
-    background-color:#900;
+    background-color: #900;
     cursor: not-allowed;
 }
 
 .seats table td.selected {
-    background-color:#cc0;
+    background-color: #cc0;
     animation: pulse 2s linear infinite alternate;
 }
 
 .seats table td.current {
-    background-color:#b44;
+    background-color: #b44;
 }
 
 @keyframes pulse {
-  0%, 100% {
-    background-color: #cc0;
-  }
-  50% {
-    background-color: #090;
-  }
+    0%, 100% {
+        background-color: #cc0;
+    }
+    50% {
+        background-color: #090;
+    }
 }
 
 .seats form input {
@@ -285,6 +292,7 @@ div#countdown {
 .qtip-seat a {
     font-size: 20px;
 }
+
 .qtip-seat a.visited, .qtip-seat a.unvisited, .qtip-seat a {
     color: #fff;
 }
@@ -323,7 +331,7 @@ input, select, a.button, textarea {
     font-size: 25px;
     font-family: 'Roboto', sans-serif;
     border-radius: 5px;
-    border:none;
+    border: none;
     padding: 0;
     -webkit-appearance: none;
 }
@@ -390,7 +398,7 @@ form div.file label.choose {
     font-size: 25px;
     font-family: 'Roboto', sans-serif;
     border-radius: 5px;
-    border:none;
+    border: none;
     background-color: #d33e20;
     cursor: pointer;
     white-space: nowrap;
@@ -526,7 +534,12 @@ a.button {
     .header .nav a {
         width: 50%;
     }
+
     .seats table td {
         font-size: 7px;
+    }
+
+    .box h2.huge {
+        font-size: 5em;
     }
 }
