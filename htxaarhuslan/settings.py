@@ -172,6 +172,8 @@ SENDGRID_API_KEY = env_var('SENDGRID_API_KEY', None)
 if SENDGRID_API_KEY:
     EMAIL_BACKEND = "sgbackend.SendGridBackend"
 
+ADMINS = [('Jacob Bom', 'bomjacob@gmail.com')]
+
 # We only have a few element so we collapse the sidebar
 JET_SIDE_MENU_COMPACT = True
 
