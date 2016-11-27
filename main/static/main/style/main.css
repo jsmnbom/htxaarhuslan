@@ -83,7 +83,7 @@ h2, strong {
     color: #fff;
 }
 
-.header .nav a:unvisited{
+.header .nav a:link{
     color: #fff;
 }
 
@@ -117,7 +117,7 @@ h2, strong {
 }
 
 .box:nth-of-type(1) {
-    order: -1;
+    order: 0;
 }
 
 .sidebar {
@@ -155,7 +155,7 @@ h2, strong {
     padding: 0 15px;
     font-size: 1.3em;
     line-height: 1.2em;
-    margin: 7px 0 7px;
+    margin: 15px 0 15px;
 }
 
 .box > ul {
