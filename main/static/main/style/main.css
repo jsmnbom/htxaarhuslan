@@ -155,10 +155,15 @@ h2, strong {
     padding: 0 15px;
     font-size: 1.3em;
     line-height: 1.2em;
+    margin: 7px 0 7px;
 }
 
 .box > ul {
     padding: 0 35px;
+}
+
+.box li {
+    margin: 2px 0;
 }
 
 .box#discord div {
@@ -287,7 +292,6 @@ h4 {
 /* Sidebar/login */
 .box.login {
     overflow: hidden;
-    padding-top: 7px;
 }
 
 .login a {
