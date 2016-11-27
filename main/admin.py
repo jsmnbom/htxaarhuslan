@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.forms import model_to_dict
 from django.utils.timezone import now
 
-from main.forms import LanProfileAdminForm, AdminProfileForm
+from main.forms import AdminLanProfileForm, AdminProfileForm
 from .models import Profile, Lan, LanProfile
 
 admin.site.unregister(User)
@@ -15,7 +15,7 @@ class LanProfileAdmin(admin.ModelAdmin):
     list_filter = ('lan__name',)
     list_display = ('profile', 'lan', 'seat')
     search_fields = ('profile__user__first_name', 'profile__user__username', 'seat')
-    form = LanProfileAdminForm
+    form = AdminLanProfileForm
 
 
 class ProfileInline(admin.StackedInline):

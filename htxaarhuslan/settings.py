@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'dal',
     'dal_select2',
+    'jet.dashboard',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -58,6 +60,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -142,9 +145,11 @@ STATIC_ROOT = env_var('STATIC_ROOT', None)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Used for spam protection when creating user
 RECAPTCHA_PRIVATE_KEY = env_var('RECAPTCHA_PRIVATE_KEY')
 RECAPTCHA_PUBLIC_KEY = env_var('RECAPTCHA_PUBLIC_KEY')
 
+# We don't really have a proper login page, so we have to have a needlogin one
 LOGIN_URL = '/bruger/needlogin'
 LOGIN_REDIRECT_URL = '/'
 
@@ -162,6 +167,49 @@ if DEBUG:
     EMAIL_HOST_PASSWORD = ''
     EMAIL_USE_TLS = False
 
+# We use sendgrid to send mail
 SENDGRID_API_KEY = env_var('SENDGRID_API_KEY', None)
 if SENDGRID_API_KEY:
     EMAIL_BACKEND = "sgbackend.SendGridBackend"
+
+# We only have a few element so we collapse the sidebar
+JET_SIDE_MENU_COMPACT = True
+
+# Just show all themes.
+JET_THEMES = [
+    {
+        'theme': 'default',
+        'color': '#47bac1',
+        'title': 'Default'
+    },
+    {
+        'theme': 'green',
+        'color': '#44b78b',
+        'title': 'Green'
+    },
+    {
+        'theme': 'light-green',
+        'color': '#2faa60',
+        'title': 'Light Green'
+    },
+    {
+        'theme': 'light-violet',
+        'color': '#a464c4',
+        'title': 'Light Violet'
+    },
+    {
+        'theme': 'light-blue',
+        'color': '#5EADDE',
+        'title': 'Light Blue'
+    },
+    {
+        'theme': 'light-gray',
+        'color': '#222',
+        'title': 'Light Gray'
+    }
+]
+
+# All available languages
+LANGUAGES = [
+    ('da', 'Dansk'),
+]

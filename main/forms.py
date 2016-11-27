@@ -96,15 +96,6 @@ class TilmeldForm(forms.ModelForm):
             return True
 
 
-class LanProfileAdminForm(forms.ModelForm):
-    class Meta:
-        model = LanProfile
-        fields = '__all__'
-        widgets = {
-            'profile': autocomplete.ModelSelect2(url='autocomplete-profile')
-        }
-
-
 class EditUserForm(forms.ModelForm):
     class Meta:
         model = User
@@ -152,6 +143,12 @@ class EditProfileForm(forms.ModelForm):
     photo.widget.attrs = {'accept': 'image/*'}
 
     grade = forms.ChoiceField(sorted(GRADES, reverse=True), label='Klasse', widget=LabelSelect(label='Klasse'))
+
+
+class AdminLanProfileForm(forms.ModelForm):
+    class Meta:
+        model = LanProfile
+        fields = '__all__'
 
 
 class AdminProfileForm(forms.ModelForm):
