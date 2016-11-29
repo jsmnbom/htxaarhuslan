@@ -41,7 +41,7 @@ $(document).ready(function () {
                     }
                 });
             } else {
-                $(this).addClass('availible')
+                $(this).addClass('available')
             }
         }
     });
@@ -71,7 +71,7 @@ $(document).ready(function () {
             }
         } else {
             $('.seats td').removeClass('selected');
-            if ($(this).hasClass('availible')) {
+            if ($(this).hasClass('available')) {
                 $(this).addClass('selected');
                 $('input[name="seat"]').val($(this).text())
             } else if ($(this).hasClass('current')) {

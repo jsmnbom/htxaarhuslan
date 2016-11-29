@@ -247,11 +247,11 @@ div#countdown {
     user-select: none;
 }
 
-.seats table td.availible, .seats table td.occupied {
+.seats table td.available, .seats table td.occupied {
     border: solid #ccc;
 }
 
-.seats table td.availible {
+.seats table td.available {
     background: #090;
     cursor: pointer;
 }
