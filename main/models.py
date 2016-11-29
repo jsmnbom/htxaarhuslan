@@ -63,7 +63,7 @@ class Lan(models.Model):
     seats = models.TextField(verbose_name='pladser')
     schedule = models.TextField(verbose_name='tidsplan')
     blurb = models.TextField(verbose_name='blurb',
-                             help_text='Teksten, specifikt til dette lan, der bliver vist på forsiden.'
+                             help_text='Teksten, specifikt til dette lan, der bliver vist på forsiden.<br>'
                                        'Husk at wrappe tekst i &lt;p> tags!')
 
     def __str__(self):
