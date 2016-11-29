@@ -206,7 +206,7 @@ JET_THEMES = [
     },
     {
         'theme': 'light-gray',
-        'color': '#222',
+        'color': '#555',
         'title': 'Light Gray'
     }
 ]
