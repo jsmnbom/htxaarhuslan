@@ -73,8 +73,12 @@ $(document).ready(function() {
 
     /* Countdown clock (if tilmelding isn't open yet) */
     if ($('h3#notopen').length) {
-        $('div#countdown').countdown(parseInt($('div#countdown').attr('data-opens')), function(event) {
-            if (event.offset.totalDays > 1) {
+        var remainingTimeMillis = parseInt($('div#countdown').attr('data-opens')) * 1000
+        var now = new Date();
+        var opens = new Date(now.getTime() + remainingTimeMillis)
+        console.log(remainingTimeMillis, now, opens)
+        $('div#countdown').countdown(opens, function(event) {
+            if (event.offset.totalDays >= 1) {
                 $(this).html(event.strftime('%-D %!D:dag,dage;, %H:%M:%S'));
             } else {
                 $(this).html(event.strftime('%H:%M:%S'));

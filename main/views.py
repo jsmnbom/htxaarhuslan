@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import Http404
-from django.utils.timezone import utc
+from django.utils.timezone import now, utc
 from django.shortcuts import render, redirect
 from dal import autocomplete
 
@@ -49,8 +49,9 @@ def tilmeld(request):
             return redirect(reverse("tilmeld"))
     else:
         form = TilmeldForm(seats=seats)
+    open_time = (lan.open - now()).total_seconds()
     return render(request, 'tilmeld.html', {'current': current, 'seats': seats, 'form': form, 'open': lan.is_open(),
-                                            'opens_time': int(lan.open.timestamp() * 1000), 'count': count})
+                                            'opens_time': open_time, 'count': count})
 
 
 def tilmeldlist(request):
