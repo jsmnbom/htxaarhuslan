@@ -1,23 +1,24 @@
-$(document).ready(function() {
-    $(window).resize(function() {
-        var m = -1
-        $('.seats table td').each(function() {
-            var h = $(this).width()
+$(document).ready(function () {
+    var tabletd = $('.seats table td');
+    $(window).resize(function () {
+        var m = -1;
+        tabletd.each(function () {
+            var h = $(this).width();
             if (h > m) {
                 m = h
             }
-        })
-        var s = m/3
+        });
+        var s = m / 3;
         $('.seats table td').css({height: m, fontSize: s})
     }, 200).resize();
 
-    $('.seats table td').each(function() {
+    tabletd.each(function () {
         if ($(this).attr('data-name') !== undefined) {
             if ($(this).attr('data-name') !== '') {
-                $(this).addClass('occupied')
-                var url = $(this).attr('data-url')
-                var name = $(this).attr('data-name')
-                var grade = $(this).attr('data-grade')
+                $(this).addClass('occupied');
+                var url = $(this).attr('data-url');
+                var name = $(this).attr('data-name');
+                var grade = $(this).attr('data-grade');
                 $(this).qtip({
                     content: {
                         text: '<a href="' + url + '">' + name + '</a>' + '<br>' + '<span>' + grade + '</span>'
@@ -25,16 +26,16 @@ $(document).ready(function() {
                     position: {
                         my: "left center",
                         at: 'right center',
-                        viewport: true,
+                        viewport: true
                     },
                     style: {
-                        classes: "qtip-seat",
+                        classes: "qtip-seat"
                     },
                     events: {
-                        visible: function(event, api) {
+                        visible: function (event, api) {
                             $(event.originalEvent.target).addClass('open')
                         },
-                        hide: function(event, api) {
+                        hide: function (event, api) {
                             $(event.originalEvent.target).removeClass('open')
                         }
                     }
@@ -53,42 +54,42 @@ $(document).ready(function() {
         }
     }
 
-    var seat = $('.seats h4#current').attr('data-seat')
+    var seat = $('.seats h4#current').attr('data-seat');
 
     if (seat != undefined) {
-        $('input[name="seat"]').val(seat)
+        $('input[name="seat"]').val(seat);
         $('.seats form#tilmeld').hide()
     }
 
-    $('.seats table td').click(function() {
+    tabletd.click(function () {
         if ($(this).hasClass('selected')) {
-            $('.seats td').removeClass('selected')
+            $('.seats td').removeClass('selected');
             if (seat) {
                 $('input[name="seat"]').val(seat)
             } else {
                 $('input[name="seat"]').val('')
             }
         } else {
-            $('.seats td').removeClass('selected')
+            $('.seats td').removeClass('selected');
             if ($(this).hasClass('availible')) {
-                $(this).addClass('selected')
+                $(this).addClass('selected');
                 $('input[name="seat"]').val($(this).text())
             } else if ($(this).hasClass('current')) {
                 $('input[name="seat"]').val($(this).text())
             } else {
-                $('input[name="seat"]').val(seat)
+                $('input[name="seat"]').val(seat);
                 if ($(this).hasClass('open')) {
-                    window.location.href=$(this).attr('data-url');
+                    window.location.href = $(this).attr('data-url');
                 }
             }
         }
         showhideform()
     });
 
-    $('.seats a.button#reset').click(function(e) {
-        e.preventDefault()
-        $('.seats table td').removeClass('selected')
-        $('input[name="seat"]').val('')
+    $('.seats a.button#reset').click(function (e) {
+        e.preventDefault();
+        $('.seats table td').removeClass('selected');
+        $('input[name="seat"]').val('');
         showhideform()
     });
 });
