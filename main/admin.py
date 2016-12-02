@@ -17,7 +17,6 @@ class LanProfileAdmin(admin.ModelAdmin):
     search_fields = ('profile__user__first_name', 'profile__user__username', 'seat')
     form = AdminLanProfileForm
 
-
 class ProfileInline(admin.StackedInline):
     model = Profile
     form = AdminProfileForm
@@ -42,6 +41,18 @@ class MyUserAdmin(UserAdmin):
 @admin.register(Lan)
 class LanAdmin(admin.ModelAdmin):
     list_display = ('name', 'start', 'seats_count', 'is_open')
+
+    fieldsets = (
+        ('Tider', {
+            'fields': (('start', 'end'), 'open')
+        }),
+        ('Pladser', {
+            'fields': ('seats',)
+        }),
+        ('Tekst', {
+            'fields': ('name', 'schedule', 'blurb')
+        }),
+    )
 
     def get_changeform_initial_data(self, request):
         try:
