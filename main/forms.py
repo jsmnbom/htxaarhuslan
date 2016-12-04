@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 
-from .models import GRADES, Profile, LanProfile
+from .models import GRADES, Profile, LanProfile, Lan, PAYTYPES
 
 
 class UserRegForm(forms.ModelForm):
@@ -162,3 +162,12 @@ class AdminProfileForm(forms.ModelForm):
         instance = kwargs.get('instance', None)
         if instance:
             self.fields['grade'].choices += ((instance.grade, instance.grade),)
+
+
+class AdminLanForm(forms.ModelForm):
+    class Meta:
+        model = Lan
+        fields = '__all__'
+
+    paytypes = forms.MultipleChoiceField(choices=PAYTYPES,
+                                         label=Lan._meta.get_field('paytypes').verbose_name.title())

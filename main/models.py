@@ -26,6 +26,11 @@ for school, years in grades.items():
 
 GRADES += (('teacher', 'Lærer'),)
 
+PAYTYPES = (
+    ('mp', 'MobilePay'),
+    ('cash', 'Kontant')
+)
+
 
 def profile_picture_path(instance, orig):
     ext = orig.split('.')[-1]
@@ -61,10 +66,12 @@ class Lan(models.Model):
     name = models.CharField(max_length=255, verbose_name='navn')
     profiles = models.ManyToManyField(Profile, through='LanProfile')
     seats = models.TextField(verbose_name='pladser')
-    schedule = models.TextField(verbose_name='tidsplan')
+    schedule = models.TextField(verbose_name='tidsplan', null=True)
     blurb = models.TextField(verbose_name='blurb',
                              help_text='Teksten, specifikt til dette lan, der bliver vist på forsiden.<br>'
                                        'Husk at wrappe tekst i &lt;p> tags!')
+    paytypes = models.TextField(verbose_name='betalingstyper', null=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='pris', null=True)
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.start.strftime('%d. %b. %Y'))

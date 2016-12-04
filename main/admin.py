@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.forms import model_to_dict
 from django.utils.timezone import now
 
-from main.forms import AdminLanProfileForm, AdminProfileForm
+from main.forms import AdminLanProfileForm, AdminProfileForm, AdminLanForm
 from .models import Profile, Lan, LanProfile
 
 admin.site.unregister(User)
@@ -41,6 +41,7 @@ class MyUserAdmin(UserAdmin):
 @admin.register(Lan)
 class LanAdmin(admin.ModelAdmin):
     list_display = ('name', 'start', 'seats_count', 'is_open')
+    form = AdminLanForm
 
     fieldsets = (
         ('Tider', {
@@ -51,6 +52,9 @@ class LanAdmin(admin.ModelAdmin):
         }),
         ('Tekst', {
             'fields': ('name', 'schedule', 'blurb')
+        }),
+        ('Betaling', {
+            'fields': ('paytypes', 'price')
         }),
     )
 
