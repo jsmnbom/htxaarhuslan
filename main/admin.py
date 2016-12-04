@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.forms import model_to_dict
+from django.utils.safestring import mark_safe
 from django.utils.timezone import now
 
 from main.forms import AdminLanProfileForm, AdminProfileForm, AdminLanForm
@@ -21,6 +22,16 @@ class LanProfileAdmin(admin.ModelAdmin):
         return obj.get_paytype_display()
 
     get_paytype.short_description = LanProfile._meta.get_field('paytype').verbose_name
+
+    actions = ['paid', 'not_paid']
+
+    def paid(self, request, queryset):
+        queryset.update(paid=True)
+    paid.short_description = "Makér som betalt."
+
+    def not_paid (self, request, queryset):
+        queryset.update(paid=False)
+    not_paid.short_description = mark_safe(mark_safe("Markér som ikke betalt."))
 
 
 class ProfileInline(admin.StackedInline):
