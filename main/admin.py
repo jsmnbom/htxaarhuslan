@@ -2,18 +2,39 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.forms import model_to_dict
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.timezone import now
 
 from main.forms import AdminLanProfileForm, AdminProfileForm, AdminLanForm
-from .models import Profile, Lan, LanProfile
+from .models import Profile, Lan, LanProfile, get_next_lan
 
 admin.site.unregister(User)
 
 
+class DefaultFilterMixIn(admin.ModelAdmin):
+    def changelist_view(self, request, *args, **kwargs):
+        from django.http import HttpResponseRedirect
+        if self.default_filters:
+            try:
+                test = request.META['HTTP_REFERER'].split(request.META['PATH_INFO'])
+                if test and test[-1] and not test[-1].startswith('?'):
+                    url = reverse('admin:%s_%s_changelist' % (self.opts.app_label, self.opts.model_name))
+                    filters = []
+                    for filt in self.default_filters:
+                        key = filt.split('=')[0]
+                        if key not in request.GET:
+                            filters.append(filt)
+                    if filters:
+                        return HttpResponseRedirect("%s?%s" % (url, "&".join(filters)))
+            except KeyError:
+                pass
+        return super(DefaultFilterMixIn, self).changelist_view(request, *args, **kwargs)
+
+
 @admin.register(LanProfile)
-class LanProfileAdmin(admin.ModelAdmin):
-    list_filter = ('lan__name', 'paytype', 'paid')
+class LanProfileAdmin(DefaultFilterMixIn, admin.ModelAdmin):
+    list_filter = ('lan', 'paytype', 'paid')
     list_display = ('profile', 'lan', 'seat', 'get_paytype', 'paid')
     search_fields = ('profile__user__first_name', 'profile__user__username', 'seat')
     form = AdminLanProfileForm
@@ -27,11 +48,15 @@ class LanProfileAdmin(admin.ModelAdmin):
 
     def paid(self, request, queryset):
         queryset.update(paid=True)
+
     paid.short_description = "Makér som betalt."
 
-    def not_paid (self, request, queryset):
+    def not_paid(self, request, queryset):
         queryset.update(paid=False)
+
     not_paid.short_description = mark_safe(mark_safe("Markér som ikke betalt."))
+
+    default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
 
 
 class ProfileInline(admin.StackedInline):
