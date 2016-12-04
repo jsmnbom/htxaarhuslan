@@ -70,7 +70,7 @@ class Lan(models.Model):
     blurb = models.TextField(verbose_name='blurb',
                              help_text='Teksten, specifikt til dette lan, der bliver vist på forsiden.<br>'
                                        'Husk at wrappe tekst i &lt;p> tags!')
-    paytypes = models.TextField(verbose_name='betalingstyper', null=True)
+    paytypes = models.CharField(max_length=255, verbose_name='betalingstyper', null=True)
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='pris', null=True)
 
     def __str__(self):
@@ -115,6 +115,8 @@ class LanProfile(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, verbose_name='profil')
     lan = models.ForeignKey(Lan, on_delete=models.CASCADE, verbose_name='lan')
     seat = models.CharField(max_length=8, blank=True, null=True, verbose_name='plads')
+    paytype = models.CharField(max_length=255, null=True, blank=True, verbose_name='betalingstype', choices=PAYTYPES)
+    paid = models.NullBooleanField(verbose_name='betalt?')
 
     def __str__(self):
         return self.profile.user.username + '@' + self.lan.name

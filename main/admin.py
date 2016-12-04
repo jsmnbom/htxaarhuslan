@@ -12,10 +12,16 @@ admin.site.unregister(User)
 
 @admin.register(LanProfile)
 class LanProfileAdmin(admin.ModelAdmin):
-    list_filter = ('lan__name',)
-    list_display = ('profile', 'lan', 'seat')
+    list_filter = ('lan__name', 'paytype', 'paid')
+    list_display = ('profile', 'lan', 'seat', 'get_paytype', 'paid')
     search_fields = ('profile__user__first_name', 'profile__user__username', 'seat')
     form = AdminLanProfileForm
+
+    def get_paytype(self, obj):
+        return obj.get_paytype_display()
+
+    get_paytype.short_description = LanProfile._meta.get_field('paytype').verbose_name
+
 
 class ProfileInline(admin.StackedInline):
     model = Profile

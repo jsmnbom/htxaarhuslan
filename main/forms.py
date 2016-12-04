@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UsernameField
 from django.contrib.auth.password_validation import _password_validators_help_text_html as password_help
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.db.models.fields import BLANK_CHOICE_DASH
 
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
