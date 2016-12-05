@@ -450,7 +450,12 @@ form div#paytype {
 }
 
 form div#paytype input {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 40px;
+    opacity: 0;
+    overflow: hidden;
+    z-index: -1;
 }
 
 form div#paytype label {

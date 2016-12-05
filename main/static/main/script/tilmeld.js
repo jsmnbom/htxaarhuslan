@@ -93,11 +93,16 @@ $(document).ready(function () {
         showhideform()
     });
 
-    var paytype = $('.seats form#tilmeld div#paytype');
-    var inputs = paytype.find('input');
-    paytype.find('span').width(paytype.width()/inputs.length-3);
-    inputs.change(function(){
-        paytype.find('label').removeClass('selected');
-        paytype.find('label[for="' + $(this).attr('id') + '"]').addClass('selected');
+    $(window).resize(function () {
+        var paytype = $('.seats form#tilmeld div#paytype');
+        var inputs = paytype.find('input');
+        paytype.find('span').width(paytype.width() / inputs.length - 3);
+        inputs.change(function () {
+            paytype.find('label').removeClass('selected');
+            paytype.find('label[for="' + $(this).attr('id') + '"]').addClass('selected');
+        });
     });
+    setTimeout(function () {
+        $(window).resize();
+    }, 200);
 });

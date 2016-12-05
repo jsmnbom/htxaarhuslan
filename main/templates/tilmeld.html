@@ -49,6 +49,9 @@
                 <p>Det er muligt at betale med MobilePay på {{ phone }} eller kontant til selve LAN'et.</p>
                 {% if current != 0 %}
                     {% if current != -1 %}
+                        <p>Du kan framelde dig LAN ved at trykke herunder. Bemærk at din plads herefter vil blive
+                            frigivet til andre. Hvis du kun ønsker at skifte plads, skal du vælge en på bordene
+                            herover.</p>
                         <form action="{% url 'frameld' %}" method="POST" id="frameld">
                             {% csrf_token %}
                             <input type="submit" value="Frameld" name="frameld">
