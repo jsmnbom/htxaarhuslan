@@ -73,6 +73,7 @@ class TilmeldForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         ok_seats = [('', '')]
+        lan = kwargs.pop('lan')
         for row in kwargs.pop('seats'):
             for seat in row:
                 if seat[0] is not None and seat[1] is None:
@@ -80,6 +81,10 @@ class TilmeldForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['seat'] = forms.ChoiceField(choices=ok_seats, widget=forms.HiddenInput, required=False,
                                                 error_messages={'invalid_choice': 'Der opstod en fejl, prøv igen.'})
+        if lan.paytypes:
+            self.fields['paytype'] = forms.ChoiceField(label='Betalingstype', widget=forms.RadioSelect,
+                                                       choices=((k, v) for k, v in dict(PAYTYPES).items() if
+                                                                k in lan.paytypes))
 
     def save(self, commit=True, profile=None, lan=None):
         # Is the user already tilmeldt?

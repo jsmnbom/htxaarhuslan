@@ -39,7 +39,7 @@ def tilmeld(request):
         current = 0
     count = (LanProfile.objects.filter(lan=lan).count(), count)
     if request.method == 'POST':
-        form = TilmeldForm(request.POST, seats=seats)
+        form = TilmeldForm(request.POST, seats=seats, lan=lan)
         if form.is_valid() and lan.is_open() and count[0] < count[1]:
             created = form.save(profile=request.user.profile, lan=lan)
             if created:
@@ -48,10 +48,10 @@ def tilmeld(request):
                 messages.add_message(request, messages.SUCCESS, "Tilmelding ændret!")
             return redirect(reverse("tilmeld"))
     else:
-        form = TilmeldForm(seats=seats)
+        form = TilmeldForm(seats=seats, lan=lan)
     open_time = (lan.open - now()).total_seconds()
-    return render(request, 'tilmeld.html', {'current': current, 'seats': seats, 'form': form, 'open': lan.is_open(),
-                                            'opens_time': open_time, 'count': count})
+    return render(request, 'tilmeld.html', {'current': current, 'seats': seats, 'form': form, 'lan': lan,
+                                            'opens_time': open_time, 'count': count, 'phone': '+45 88 88 88 88'})
 
 
 def tilmeldlist(request):

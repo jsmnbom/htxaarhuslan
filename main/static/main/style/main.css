@@ -220,6 +220,7 @@ div#countdown {
 .box h4 {
     font-size: 1.4em;
     line-height: 1.3em;
+    margin: 25px 0;
 }
 
 /* Seat selection stuff */
