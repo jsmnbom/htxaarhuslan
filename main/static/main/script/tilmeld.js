@@ -92,4 +92,12 @@ $(document).ready(function () {
         $('input[name="seat"]').val('');
         showhideform()
     });
+
+    var paytype = $('.seats form#tilmeld div#paytype');
+    var inputs = paytype.find('input');
+    paytype.find('span').width(paytype.width()/inputs.length-3);
+    inputs.change(function(){
+        paytype.find('label').removeClass('selected');
+        paytype.find('label[for="' + $(this).attr('id') + '"]').addClass('selected');
+    });
 });

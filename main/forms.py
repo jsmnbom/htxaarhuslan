@@ -69,7 +69,7 @@ class TilmeldForm(forms.ModelForm):
 
     class Meta:
         model = LanProfile
-        fields = ('seat',)
+        fields = ('seat', 'paytype')
 
     def __init__(self, *args, **kwargs):
         ok_seats = [('', '')]
@@ -82,9 +82,11 @@ class TilmeldForm(forms.ModelForm):
         self.fields['seat'] = forms.ChoiceField(choices=ok_seats, widget=forms.HiddenInput, required=False,
                                                 error_messages={'invalid_choice': 'Der opstod en fejl, prøv igen.'})
         if lan.paytypes:
-            self.fields['paytype'] = forms.ChoiceField(label='Betalingstype', widget=forms.RadioSelect,
+            self.fields['paytype'] = forms.ChoiceField(label='Vælg ønskede betalingsmetode', widget=forms.RadioSelect,
                                                        choices=((k, v) for k, v in dict(PAYTYPES).items() if
                                                                 k in lan.paytypes))
+        else:
+            self.fields['paytype'] = None
 
     def save(self, commit=True, profile=None, lan=None):
         # Is the user already tilmeldt?

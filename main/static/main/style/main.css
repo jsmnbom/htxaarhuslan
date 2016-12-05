@@ -437,6 +437,65 @@ form span.helptext {
     display: none;
 }
 
+form div#paytype {
+    box-sizing: border-box;
+    vertical-align: bottom;
+    height: 40px;
+    margin: 10px auto;
+    font-size: 25px;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 5px;
+    border: none;
+    background-color: #d33e20;
+}
+
+form div#paytype input {
+    display: none;
+}
+
+form div#paytype label {
+    cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    tab-index: 0;
+    text-align: center;
+    height: 32px;
+    overflow: hidden;
+    padding: 8px 3px 0 3px;
+    width: 100%;
+}
+
+form div#paytype span {
+    display: inline-block;
+    height: 40px;
+    width: 48%;
+}
+
+form div#paytype span:not(:last-of-type) {
+    border-right: 1px solid #fff;
+    overflow: hidden;
+}
+
+form div#paytype label.selected {
+    background-color: #e5492d;
+}
+
+form div#paytype label:hover {
+    background-color: #e5492d;
+}
+
+form div#paytype span:first-of-type label {
+    border-radius: 5px 0 0 5px;
+}
+
+form div#paytype span:not(:first-of-type):not(:last-of-type) label {
+    border-radius: 0;
+}
+
+form div#paytype span:last-of-type label {
+    border-radius: 0 5px 5px 0;
+}
+
 ul.messages {
     list-style: none;
 }
