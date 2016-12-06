@@ -3,6 +3,7 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.contrib.sitemaps.views import sitemap
+from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
 from main.sitemaps import MainSitemap, TilmeldSitemap
@@ -57,6 +58,8 @@ urlpatterns = [
     # SEO AND ROBOTS STUFF
     url(r'^robots.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain'), name="robots"),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    # Other links
+    url(r'^discord$', RedirectView.as_view(url="https://discord.gg/3DJaNFY", permanent=False), name='discord'),
 ]
 
 if settings.DEBUG:

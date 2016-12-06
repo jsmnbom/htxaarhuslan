@@ -152,6 +152,10 @@ h2, strong {
     overflow: hidden;
 }
 
+a.h2, a.h2:visited, a.h2:hover {
+    color: #fff;
+}
+
 .box h2.huge {
     font-size: 7em;
     text-align: center;
