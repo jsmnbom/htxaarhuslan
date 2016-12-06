@@ -12,7 +12,7 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        {% if open %}
+        {% if lan.is_open %}
             <div class="seats">
                 <a href="{% url "tilmeldlist" %}" title="Klik her for at se en liste over alle tilmeldte."><h3
                         id="count">Antal tilmeldte: {{ count.0 }}/{{ count.1 }}</h3></a>
@@ -40,18 +40,37 @@
                     </tbody>
                 </table>
                 {# @formatter:on--> #}
-                <br>
                 {% if current != 0 %}
-                    <a class="button" id="reset" href="#">Jeg ønsker ikke at resevere plads</a>
+                    <a class="button" id="reset" href="#">Jeg ønsker ikke at reservere plads</a>
+                {% endif %}
+                <h3>Prisen for LAN er denne gang {{ lan.price|floatformat:"-2" }}kr.</h3>
+                <p>Tilmelding er ikke bindende, bemærk dog at penge indbetalt efter LAN'et er startet ikke gives
+                    retur.</p>
+                <p>Det er muligt at betale med MobilePay på {{ phone }} eller kontant til selve LAN'et.</p>
+                {% if current != 0 %}
                     {% if current != -1 %}
+                        <p>Du kan framelde dig LAN ved at trykke herunder. Bemærk at din plads herefter vil blive
+                            frigivet til andre. Hvis du kun ønsker at skifte plads, skal du vælge en på bordene
+                            herover.</p>
                         <form action="{% url 'frameld' %}" method="POST" id="frameld">
                             {% csrf_token %}
                             <input type="submit" value="Frameld" name="frameld">
                         </form>
                     {% endif %}
+
                     <form action="{% url "tilmeld" %}" method="post" id="tilmeld">
                         {% csrf_token %}
-                        {{ form.as_p }}
+                        {{ form.paytype.label }}
+                        <div id="paytype">
+                            {# @formatter:off--> #}
+                            {% for radio in form.paytype %}<span><label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label></span>{{ radio.tag }}{% endfor %}
+                            {# @formatter:on--> #}
+                        </div>
+                        {{ form.seat }}
+                        {% if current == -1 %}
+                            <p>Når du tilmelder dig LAN, accepterer du reglerne for tilmelding og ophold under LAN, som
+                                kan læses <a href="{% url 'info' %}#regler" target="_blank">her</a>.</p>
+                        {% endif %}
                         <input type="submit" value="{% if current == -1 %}Tilmeld{% else %}Skift plads{% endif %}"
                                name="tilmeld">
                     </form>

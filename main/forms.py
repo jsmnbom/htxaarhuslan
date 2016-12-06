@@ -6,11 +6,12 @@ from django.contrib.auth.forms import UsernameField
 from django.contrib.auth.password_validation import _password_validators_help_text_html as password_help
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.db.models.fields import BLANK_CHOICE_DASH
 
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 
-from .models import GRADES, Profile, LanProfile
+from .models import GRADES, Profile, LanProfile, Lan, PAYTYPES
 
 
 class UserRegForm(forms.ModelForm):
@@ -68,10 +69,11 @@ class TilmeldForm(forms.ModelForm):
 
     class Meta:
         model = LanProfile
-        fields = ('seat',)
+        fields = ('seat', 'paytype')
 
     def __init__(self, *args, **kwargs):
         ok_seats = [('', '')]
+        lan = kwargs.pop('lan')
         for row in kwargs.pop('seats'):
             for seat in row:
                 if seat[0] is not None and seat[1] is None:
@@ -79,6 +81,12 @@ class TilmeldForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['seat'] = forms.ChoiceField(choices=ok_seats, widget=forms.HiddenInput, required=False,
                                                 error_messages={'invalid_choice': 'Der opstod en fejl, prøv igen.'})
+        if lan.paytypes:
+            self.fields['paytype'] = forms.ChoiceField(label='Vælg ønsket betalingsmetode', widget=forms.RadioSelect,
+                                                       choices=((k, v) for k, v in dict(PAYTYPES).items() if
+                                                                k in lan.paytypes))
+        else:
+            self.fields['paytype'] = None
 
     def save(self, commit=True, profile=None, lan=None):
         # Is the user already tilmeldt?
