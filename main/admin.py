@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.timezone import now
 
-from main.forms import AdminLanProfileForm, AdminProfileForm, AdminLanForm
+from main.forms import AdminLanProfileForm, AdminProfileForm
 from .models import Profile, Lan, LanProfile, get_next_lan
 
 admin.site.unregister(User)
@@ -83,7 +83,7 @@ class MyUserAdmin(UserAdmin):
 @admin.register(Lan)
 class LanAdmin(admin.ModelAdmin):
     list_display = ('name', 'start', 'seats_count', 'is_open')
-    form = AdminLanForm
+    #form = AdminLanForm
 
     fieldsets = (
         ('Tider', {

@@ -82,7 +82,7 @@ class TilmeldForm(forms.ModelForm):
         self.fields['seat'] = forms.ChoiceField(choices=ok_seats, widget=forms.HiddenInput, required=False,
                                                 error_messages={'invalid_choice': 'Der opstod en fejl, prøv igen.'})
         if lan.paytypes:
-            self.fields['paytype'] = forms.ChoiceField(label='Vælg ænsket betalingsmetode', widget=forms.RadioSelect,
+            self.fields['paytype'] = forms.ChoiceField(label='Vælg ønsket betalingsmetode', widget=forms.RadioSelect,
                                                        choices=((k, v) for k, v in dict(PAYTYPES).items() if
                                                                 k in lan.paytypes))
         else:
@@ -170,12 +170,3 @@ class AdminProfileForm(forms.ModelForm):
         instance = kwargs.get('instance', None)
         if instance:
             self.fields['grade'].choices += ((instance.grade, instance.grade),)
-
-
-class AdminLanForm(forms.ModelForm):
-    class Meta:
-        model = Lan
-        fields = '__all__'
-
-    paytypes = forms.MultipleChoiceField(choices=PAYTYPES,
-                                         label=Lan._meta.get_field('paytypes').verbose_name.title())

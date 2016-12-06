@@ -1,6 +1,8 @@
 from collections import Counter
 
+from django import forms
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.timezone import now
 
@@ -55,6 +57,40 @@ class Profile(models.Model):
         return '{} ({})'.format(self.user.username, self.user.first_name)
 
 
+class StrippedMultipleChoiceFieldField(forms.MultipleChoiceField):
+    def __init__(self, *args, **kwargs):
+        kwargs.pop('max_length')
+        kwargs.pop('base_field')
+        super().__init__(*args, **kwargs)
+
+
+class ChoiceArrayField(ArrayField):
+    """
+    A field that allows us to store an array of choices.
+
+    Uses Django 1.9's postgres ArrayField
+    and a MultipleChoiceField for its formfield.
+
+    Usage:
+
+        choices = ChoiceArrayField(models.CharField(max_length=...,
+                                                    choices=(...,)),
+                                   default=[...])
+    """
+
+    def formfield(self, **kwargs):
+        defaults = {
+            'form_class': StrippedMultipleChoiceFieldField,
+            'base_field': self.base_field.formfield(),
+            'choices': self.base_field.choices,
+        }
+        defaults.update(kwargs)
+        # Skip our parent's formfield implementation completely as we don't
+        # care for it.
+        # pylint:disable=bad-super-call
+        return super().formfield(**defaults)
+
+
 class Lan(models.Model):
     class Meta:
         verbose_name = 'LAN'
@@ -70,7 +106,8 @@ class Lan(models.Model):
     blurb = models.TextField(verbose_name='blurb',
                              help_text='Teksten, specifikt til dette lan, der bliver vist på forsiden.<br>'
                                        'Husk at wrappe tekst i &lt;p> tags!')
-    paytypes = models.CharField(max_length=255, verbose_name='betalingstyper', null=True)
+    paytypes = ChoiceArrayField(models.CharField(max_length=127, choices=PAYTYPES), verbose_name='betalingstyper',
+                                null=True)
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='pris', null=True)
 
     def __str__(self):
