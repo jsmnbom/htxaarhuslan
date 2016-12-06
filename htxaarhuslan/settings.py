@@ -215,3 +215,5 @@ JET_THEMES = [
 LANGUAGES = [
     ('da', 'Dansk'),
 ]
+
+PAYMENT_PHONE = '(telefonnummer endnu ikke fastlagt, vend tilbage snarrest)'

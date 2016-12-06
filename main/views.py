@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import Http404
@@ -51,7 +52,7 @@ def tilmeld(request):
         form = TilmeldForm(seats=seats, lan=lan)
     open_time = (lan.open - now()).total_seconds()
     return render(request, 'tilmeld.html', {'current': current, 'seats': seats, 'form': form, 'lan': lan,
-                                            'opens_time': open_time, 'count': count, 'phone': '+45 88 88 88 88'})
+                                            'opens_time': open_time, 'count': count, 'phone': settings.PAYMENT_PHONE})
 
 
 def tilmeldlist(request):
