@@ -52,6 +52,7 @@ $(document).ready(function () {
         } else {
             $('.seats form#tilmeld').slideUp()
         }
+        $(window).resize();
     }
 
     var seat = $('.seats h4#current').attr('data-seat');
@@ -93,13 +94,20 @@ $(document).ready(function () {
         showhideform()
     });
 
+    var paytype = $('.seats form#tilmeld div#paytype');
+
+    function select(input) {
+            paytype.find('label').removeClass('selected');
+            paytype.find('label[for="' + $(input).attr('id') + '"]').addClass('selected');
+    }
+
+    select(paytype.find('input[type=radio]:checked'));
+
     $(window).resize(function () {
-        var paytype = $('.seats form#tilmeld div#paytype');
         var inputs = paytype.find('input');
         paytype.find('span').width(paytype.width() / inputs.length - 3);
         inputs.change(function () {
-            paytype.find('label').removeClass('selected');
-            paytype.find('label[for="' + $(this).attr('id') + '"]').addClass('selected');
+            select(this)
         });
     });
     setTimeout(function () {

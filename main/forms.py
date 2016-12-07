@@ -78,15 +78,22 @@ class TilmeldForm(forms.ModelForm):
             for seat in row:
                 if seat[0] is not None and seat[1] is None:
                     ok_seats.append((seat[0], seat[0]))
+
+        profile = kwargs.pop('profile', None)
         super().__init__(*args, **kwargs)
         self.fields['seat'] = forms.ChoiceField(choices=ok_seats, widget=forms.HiddenInput, required=False,
                                                 error_messages={'invalid_choice': 'Der opstod en fejl, prøv igen.'})
-        if lan.paytypes:
-            self.fields['paytype'] = forms.ChoiceField(label='Vælg ønsket betalingsmetode', widget=forms.RadioSelect,
-                                                       choices=((k, v) for k, v in dict(PAYTYPES).items() if
-                                                                k in lan.paytypes))
+        if lan.paytypes and profile:
+            try:
+                LanProfile.objects.get(profile=profile, lan=lan)
+                del self.fields['paytype']
+            except LanProfile.DoesNotExist:
+                self.fields['paytype'] = forms.ChoiceField(label='Vælg ønsket betalingsmetode',
+                                                           widget=forms.RadioSelect,
+                                                           choices=((k, v) for k, v in dict(PAYTYPES).items() if
+                                                                    k in lan.paytypes), )
         else:
-            self.fields['paytype'] = None
+            del self.fields['paytype']
 
     def save(self, commit=True, profile=None, lan=None):
         # Is the user already tilmeldt?

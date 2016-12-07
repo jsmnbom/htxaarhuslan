@@ -68,12 +68,14 @@
 
                     <form action="{% url "tilmeld" %}" method="post" id="tilmeld">
                         {% csrf_token %}
-                        {{ form.paytype.label }}
-                        <div id="paytype">
-                            {# @formatter:off--> #}
-                            {% for radio in form.paytype %}<span><label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label></span>{{ radio.tag }}{% endfor %}
-                            {# @formatter:on--> #}
-                        </div>
+                        {% if form.paytype %}
+                            {{ form.paytype.label }}
+                            <div id="paytype">
+                                {# @formatter:off--> #}
+                                {% for radio in form.paytype %}<span><label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label></span>{{ radio.tag }}{% endfor %}
+                                {# @formatter:on--> #}
+                            </div>
+                        {% endif %}
                         {{ form.seat }}
                         {% if current == -1 %}
                             <p>Når du tilmelder dig LAN, accepterer du reglerne for tilmelding og ophold under LAN, som
