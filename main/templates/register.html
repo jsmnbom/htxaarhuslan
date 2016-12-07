@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% load recaptcha2 %}
+
+{% block extrahead %}
+    {% recaptcha_init 'da' %}
+{% endblock %}
 
 {% block content %}
     <div class="box" id="register">
