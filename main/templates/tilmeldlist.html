@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static "main/style/tables.css" %}"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.js"></script>
+{% endblock %}
+
 {% block content %}
     <div class="box" id="tilmeldlist">
         <h2>{% block title %}Liste over tilmeldte{% endblock %}</h2>

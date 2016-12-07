@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
+{% load recaptcha2 %}
+
+{% block extrahead %}
+    <script src="{% static "main/script/tilmeld.js" %}"></script>
+    <script src="{% static "main/script/vendor/jquery.countdown.min.js" %}"></script>
+    {% recaptcha_init 'da' %}
+{% endblock %}
 
 {% block content %}
     <div class="box" id="tilmeld">
