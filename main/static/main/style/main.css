@@ -154,6 +154,7 @@ h2, strong {
 
 a.h2, a.h2:visited, a.h2:hover {
     color: #fff;
+    font-weight: 500;
 }
 
 .box h2.huge {
