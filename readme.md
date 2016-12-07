@@ -6,7 +6,7 @@
 (Ideally you should only have to do this once)
 
 1. Install python 3.5
-2. Install postgresSQL
+2. Install postgreSQL
 3. Set up a database and databse user
 
     Use pgAdmin to create a new database and new user, then give the user full access to the database.
