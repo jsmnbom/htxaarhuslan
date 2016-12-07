@@ -89,4 +89,17 @@
             <div id="countdown" data-opens="{{ opens_time }}"></div>
         {% endif %}
     </div>
+    {% if lan.is_open %}
+        <div class="box" id="penge">
+            <h2>Hvad bruger vi pengene på?</h2>
+            <p>For at LAN bliver en bedre oplevelse for alle, spørger vi denne gang om at I
+                giver {{ lan.price|floatformat:"-2" }}kr. for at deltage.</p>
+            <p>Disse penge vil gå til at opgradere vores udstyr (som servere, switches og strømforsyning), for at undgå
+                problemer som strømafbrydelser og internetproblemer. Det vil også gøre det muligt for os at leje/købe
+                servere til div. spil som Minecraft, CSGO osv. Derudover vil nogle af pengene gå til præmier til
+                turneringer for at opfordre flere til at være en del af dem.</p>
+            <p>I fremtiden vil pengene også kunne bruges på madordninger, hvis ønsket, så det bliver muligt at købe
+                mad/drikke til LAN.</p>
+        </div>
+    {% endif %}
 {% endblock %}
