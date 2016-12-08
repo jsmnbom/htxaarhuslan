@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load thumbnail %}
 
 {% block content %}
     <div class="box" id="profile">
@@ -18,7 +19,11 @@
                 <p>Bio:<br>{{ profile.bio|linebreaks }}</p>
             </div>
             {% if profile.photo %}
-                <img src="{{ profile.photo.url }}" alt="{{ profile.user.username }}s profilbillede"/>
+                {% thumbnail profile.photo "400" as im %}
+                    <a href="{{ profile.photo.url }}">
+                        <img src="{{ im.url }}" alt="{{ profile.user.username }}s profilbillede">
+                    </a>
+                {% endthumbnail %}
             {% endif %}
         </div>
         {% if user_form %}

@@ -5,6 +5,7 @@ from django.forms import model_to_dict
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.timezone import now
+from sorl.thumbnail.admin import AdminImageMixin
 
 from main.forms import AdminLanProfileForm, AdminProfileForm
 from .models import Profile, Lan, LanProfile, get_next_lan
@@ -60,7 +61,7 @@ class LanProfileAdmin(DefaultFilterMixIn, admin.ModelAdmin):
         default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
 
 
-class ProfileInline(admin.StackedInline):
+class ProfileInline(AdminImageMixin, admin.StackedInline):
     model = Profile
     form = AdminProfileForm
 
