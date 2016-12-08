@@ -264,7 +264,7 @@ div#countdown {
 
 .seats table td.occupied {
     background-color: #900;
-    cursor: not-allowed;
+    cursor: pointer;
 }
 
 .seats table td.selected {
