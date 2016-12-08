@@ -7,7 +7,7 @@
 
 1. Install python 3.5
 2. Install postgreSQL
-3. Set up a database and databse user
+3. Set up a database and database user
 
     Use pgAdmin to create a new database and new user, then give the user full access to the database.
 4. Clone this repository
