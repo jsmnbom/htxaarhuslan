@@ -1,9 +1,29 @@
 {% extends "base.html" %}
 {% load static %}
+{% load thumbnail %}
 
 {% block content %}
-    <div class="box" id="tilmeld">
-        <h2>{% block title %}Turneringer{% endblock %}</h2>
-        <p>Det er endnu ikke muligt at melde sig til turneringer.</p>
+    <div class="box" id="turnering">
+        <h2>{{ tournament.name }}</h2>
+        <p>{{ tournament.description }}</p>
+        {% if tournament.teams.all %}
+            <ul>
+                {% for team in tournament.teams.all %}
+                    <li>{{ team.name }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Ingen hold er tilmeldt denne turnering.</p>
+        {% endif %}
     </div>
+    <div class="box" id="tilmeldturnering" style="order: 1;">
+        <h2>Tilmeld hold til turnering</h2>
+        <p>Indtast ønsket holdnavn samt holdmedlemmer herunder, og tryk på tilmeld knappen.</p>
+        <form action="{{ get_full_path }}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Tilmeld til {{ tournament.name }}" name="profile">
+        </form>
+    </div>
+    {{ form.media }}
 {% endblock %}

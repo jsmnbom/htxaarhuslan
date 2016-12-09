@@ -126,6 +126,12 @@ $(document).ready(function () {
             }
         })
     }
+
+    // Tournament things
+    $('.game > a').click(function(e) {
+        e.preventDefault();
+        $(this).closest('div').find('div').slideToggle();
+    });
 });
 
 // Make iframes not flash on load.

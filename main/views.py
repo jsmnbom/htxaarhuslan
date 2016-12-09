@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime
 
 from django.contrib import messages
@@ -10,8 +11,8 @@ from django.utils.timezone import now, utc
 from django.shortcuts import render, redirect
 from dal import autocomplete
 
-from main.models import get_next_lan, LanProfile, Profile
-from .forms import UserRegForm, ProfileRegForm, TilmeldForm, EditUserForm, EditProfileForm
+from main.models import get_next_lan, LanProfile, Profile, Tournament
+from .forms import UserRegForm, ProfileRegForm, TilmeldForm, EditUserForm, EditProfileForm, TournamentTeamForm
 
 
 # Actual pages
@@ -53,7 +54,8 @@ def tilmeld(request):
             profile = request.user.profile
         else:
             profile = None
-        form = TilmeldForm(seats=seats, lan=lan, profile=request.user.profile if request.user.is_authenticated else None)
+        form = TilmeldForm(seats=seats, lan=lan,
+                           profile=request.user.profile if request.user.is_authenticated else None)
     open_time = (lan.open - now()).total_seconds()
     return render(request, 'tilmeld.html', {'current': current, 'seats': seats, 'form': form, 'lan': lan,
                                             'opens_time': open_time, 'count': count, 'phone': settings.PAYMENT_PHONE})
@@ -129,8 +131,26 @@ def profile(request, username=None):
                                             'profile': prof, 'start_edit': start_edit})
 
 
-def tournament(request):
-    return render(request, 'tournament.html')
+def tournaments(request):
+    lan = get_next_lan()
+    tournaments = Tournament.objects.filter(lan=lan).select_related('game')
+    games = defaultdict(list)
+    for t in tournaments:
+        games[t.game].append(t)
+    return render(request, 'tournaments.html', {'games': dict(games)})
+
+
+def tournament(request, game, lan_id, name):
+    t = Tournament.objects.get(game__name=game, lan__id=lan_id, name=name)
+    if request.method == 'POST':
+        form = TournamentTeamForm(request.POST, tournament=t, profile=request.user.profile)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'Hold tilmeldt successfuldt!')
+            form = TournamentTeamForm(tournament=t, profile=request.user.profile)
+    else:
+        form = TournamentTeamForm(tournament=t, profile=request.user.profile)
+    return render(request, 'tournament.html', {'tournament': t, 'form': form})
 
 
 def legacy(request):
@@ -198,10 +218,14 @@ def frameld(request):
 
 class ProfileAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        if not self.request.user.is_staff:
-            return Profile.objects.none()
+        if not self.request.user.is_authenticated:
+            return False
 
-        qs = Profile.objects.all()
+        lan = get_next_lan()
+        qs = Profile.objects.filter(lanprofile__lan=lan)
+
+        exclude = [int(x) for x in self.forwarded.values() if x] + [self.request.user.profile.id, ]
+        qs = qs.exclude(pk__in=exclude)
 
         if self.q:
             qs = qs.filter(Q(user__username__icontains=self.q) | Q(user__first_name__icontains=self.q))

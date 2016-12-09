@@ -1,4 +1,5 @@
 from collections import Counter
+from collections import defaultdict
 
 from django import forms
 from django.contrib.auth.models import User
@@ -170,3 +171,45 @@ def get_next_lan():
         return lans[0]
     else:
         return None
+
+
+class Game(models.Model):
+    class Meta:
+        verbose_name = 'spil'
+        verbose_name_plural = 'spil'
+
+    name = models.CharField(max_length=255, verbose_name='navn')
+    description = models.TextField(verbose_name='beskrivelse')
+    image = ImageField(upload_to='games/', storage=OverwriteStorage(), blank=True,
+                       verbose_name='billede')
+
+    def __str__(self):
+        return self.name
+
+
+class TournamentTeam(models.Model):
+    class Meta:
+        verbose_name = 'hold'
+        verbose_name_plural = 'hold'
+
+    profiles = models.ManyToManyField(Profile, verbose_name='medlemmer')
+    name = models.CharField(max_length=255, verbose_name='holdnavn')
+
+    def __str__(self):
+        return self.name
+
+
+class Tournament(models.Model):
+    class Meta:
+        verbose_name = 'turnering'
+        verbose_name_plural = 'turneringer'
+
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, verbose_name='spil')
+    lan = models.ForeignKey(Lan, on_delete=models.CASCADE, verbose_name='lan')
+    name = models.CharField(max_length=255, verbose_name='navn')
+    description = models.TextField(verbose_name='beskrivelse')
+    team_size = models.IntegerField()
+    teams = models.ManyToManyField('TournamentTeam')
+
+    def __str__(self):
+        return self.name

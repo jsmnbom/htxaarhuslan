@@ -63,7 +63,7 @@
                                 <a href="{{ url }}" class="{% if request.get_full_path == url %}current{% endif %}">Information</a>
                                 {% url "tilmeld" as url %}
                                 <a href="{{ url }}" class="{% if request.get_full_path == url %}current{% endif %}">Tilmelding</a>
-                                {% url "turne" as url %}
+                                {% url "tournaments" as url %}
                                 <a href="{{ url }}" class="{% if request.get_full_path == url %}current{% endif %}">Turnering</a>
                             </div>
                         </nav>

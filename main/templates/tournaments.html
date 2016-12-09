@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% load thumbnail %}
+
+{% block content %}
+    <div class="box" id="turneringer">
+        <h2>{% block title %}Turneringer{% endblock %}</h2>
+        <h3>Vælg et spil herunder ved at klikke på det.</h3>
+        {% for game, tournaments in games.items %}
+            <div class="game">
+                <a href="#"> <img src="{{ game.image.url }}" alt="{{ game.name }}"></a>
+                <div class="hidden">
+                    <p>{{ game.description }}</p>
+                    <p>Der er {{ tournaments|length }} turnering{{ tournaments|length|pluralize:"er" }} planlagt
+                        for {{ game.name }}. Klik på en af dem herunder for at se hvilke hold der er tilmeldt samt
+                        tilmelde dit eget.</p>
+                    {% for t in tournaments %}
+                        <a href="{% url 'tournament' game=game.name lan_id=t.lan.id name=t.name  %}"><h4>{{ t.name }}</h4></a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% empty %}
+            <p>Ingen turneringer fundet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

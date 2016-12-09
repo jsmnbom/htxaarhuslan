@@ -8,7 +8,7 @@ from django.utils.timezone import now
 from sorl.thumbnail.admin import AdminImageMixin
 
 from main.forms import AdminLanProfileForm, AdminProfileForm
-from .models import Profile, Lan, LanProfile, get_next_lan
+from .models import Profile, Lan, LanProfile, get_next_lan, Tournament, Game, TournamentTeam
 
 admin.site.unregister(User)
 
@@ -108,3 +108,7 @@ class LanAdmin(admin.ModelAdmin):
             return model_to_dict(prev_lan, ['blurb', 'seats', 'schedule'])
         except (Lan.DoesNotExist, AttributeError, IndexError):
             return {}
+
+admin.site.register(Game)
+admin.site.register(Tournament)
+admin.site.register(TournamentTeam)

@@ -342,6 +342,10 @@ input, select, a.button, textarea {
     -webkit-appearance: none;
 }
 
+input[readonly] {
+    cursor: default;
+}
+
 input:not([type="submit"]), select, textarea {
     color: #e74c3c;
 }
@@ -562,6 +566,41 @@ a.button {
     box-sizing: border-box;
     padding-top: 8px;
     margin: 20px 0;
+}
+
+/* Tournament */
+.game > a > img {
+    width: 100%;
+}
+
+.select2-container {
+    text-align: center;
+    width: 100% !important;
+    font-size: 25px !important;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 5px;
+    border: none;
+    padding: 0;
+    color: #e74c3c;
+    margin: 10px 0 !important;
+}
+
+.select2-container input {
+    margin: 0;
+}
+
+.select2-container .select2-selection--single {
+    height: 40px !important;
+}
+
+.select2-container--default .select2-selection--single * {
+    height: 40px !important;
+    color: #e74c3c !important;
+    line-height: 40px !important;
+}
+
+.select2-container--open .select2-dropdown--below, .select2-container--open .select2-dropdown--above {
+    margin-top: -10px;
 }
 
 /* Handle smaller screens */
