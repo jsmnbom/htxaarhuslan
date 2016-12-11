@@ -208,6 +208,11 @@ a:hover {
     color: #d33e20;
 }
 
+a.centered {
+    margin-top:0px;
+    text-align:center;
+}
+
 h3#notopen {
     text-align: center;
 }
