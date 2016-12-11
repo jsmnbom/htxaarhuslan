@@ -138,20 +138,27 @@ def tournaments(request):
     games = defaultdict(list)
     for t in tournaments:
         games[t.game].append(t)
-    return render(request, 'tournaments.html', {'games': dict(games)})
+    if request.user.is_authenticated:
+        teams = TournamentTeam.objects.filter(tournament__lan=lan, profiles__in=[request.user.profile])
+    else:
+        teams = None
+    return render(request, 'tournaments.html', {'games': dict(games), 'teams': teams})
 
 
 def tournament(request, game, lan_id, name):
     t = Tournament.objects.get(game__name=game, lan__id=lan_id, name=name)
     teams = TournamentTeam.objects.filter(tournament=t)
-    if request.method == 'POST':
-        form = TournamentTeamForm(request.POST, tournament=t, profile=request.user.profile)
-        if form.is_valid():
-            form.save()
-            messages.add_message(request, messages.SUCCESS, 'Hold tilmeldt successfuldt!')
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = TournamentTeamForm(request.POST, tournament=t, profile=request.user.profile)
+            if form.is_valid():
+                form.save()
+                messages.add_message(request, messages.SUCCESS, 'Hold tilmeldt successfuldt!')
+                form = TournamentTeamForm(tournament=t, profile=request.user.profile)
+        else:
             form = TournamentTeamForm(tournament=t, profile=request.user.profile)
     else:
-        form = TournamentTeamForm(tournament=t, profile=request.user.profile)
+        form = None
     return render(request, 'tournament.html', {'tournament': t, 'teams': teams, 'form': form})
 
 

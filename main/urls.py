@@ -32,11 +32,12 @@ urlpatterns = [
     url(r'^bruger/gammel$', views.legacy, name='legacy'),
     url(r'^bruger/needlogin$', views.needlogin, name='needlogin'),
     url(r'^privatliv$', views.policy, name='policy'),
-    url(
-        r'^autocomplete/profile/$',
+
+    # Autocompletes
+    url(r'^autocomplete/profile/$',
         ProfileAutocomplete.as_view(),
-        name='autocomplete-profile',
-    ),
+        name='autocomplete-profile'),
+
     # Change/forgot password stuff
     url(r'^bruger/kode/glemt/$',
         auth_views.password_reset,
@@ -56,9 +57,11 @@ urlpatterns = [
     url(r'^bruger/kode/skift/done$',
         auth_views.password_change_done,
         name="password_change_done"),
+
     # SEO AND ROBOTS STUFF
     url(r'^robots.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain'), name="robots"),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+
     # Other links
     url(r'^discord$', RedirectView.as_view(url="https://discord.gg/3DJaNFY", permanent=False), name='discord'),
 ]

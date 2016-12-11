@@ -602,6 +602,10 @@ a.button {
     line-height: 40px !important;
 }
 
+.select2-container .select2-selection--single .select2-selection__placeholder * {
+    color: #999 !important;
+}
+
 .select2-container .select2-selection--single .select2-selection__arrow {
     height: 40px !important;
 }
@@ -636,6 +640,21 @@ a.button {
 
 .select2-container .select2-results .loading-results, .select2-container .select2-results__message {
     height: 25px;
+}
+
+body .select2-hidden-accessible {
+    position: relative !important;
+    left: 50% !important;
+    top: 40px !important;
+    opacity: 0;
+}
+
+table.teams {
+    width: 100%;
+}
+
+table.teams thead {
+    font-size: 1.2em;
 }
 
 /* Handle smaller screens */

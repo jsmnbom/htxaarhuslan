@@ -197,7 +197,7 @@ class TournamentTeamForm(forms.ModelForm):
                 widget=autocomplete.ModelSelect2(
                     url='autocomplete-profile',
                     forward=forward,
-                    attrs={'data-html': 'true'}
+                    attrs={'data-html': 'true', 'data-placeholder': 'Søg efter brugere som er tilmeldt LAN'},
                 ),
                 label='Medlem {}'.format(i + 1),
             )

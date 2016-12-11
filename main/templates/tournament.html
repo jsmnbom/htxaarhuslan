@@ -19,12 +19,16 @@
     </div>
     <div class="box" id="tilmeldturnering" style="order: 1;">
         <h2>Tilmeld hold til turnering</h2>
-        <p>Indtast ønsket holdnavn samt holdmedlemmer herunder, og tryk på tilmeld knappen.</p>
-        <form action="{{ get_full_path }}" method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Tilmeld til {{ tournament.name }}" name="profile">
-        </form>
+        {% if form %}
+            <p>Indtast ønsket holdnavn samt holdmedlemmer herunder, og tryk på tilmeld knappen.</p>
+            <form action="{{ get_full_path }}" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Tilmeld til {{ tournament.name }}" name="profile">
+            </form>
+        {% else %}
+            <p>Du skal være logget ind for at kunne tilmelde et hold til denne turnering.</p>
+        {% endif %}
     </div>
     {{ form.media }}
 {% endblock %}
