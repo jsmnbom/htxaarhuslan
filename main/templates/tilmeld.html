@@ -20,7 +20,7 @@
         {% if lan.is_open %}
             <div class="seats">
                 <h3 id="count">Antal tilmeldte: {{ count.0 }}/{{ count.1 }}</h3>
-                <a href="{% url "tilmeldlist" %}" class="centered"><p>Se liste over tilmeldte</p></a>
+                <a href="{% url "tilmeldlist" %}"><p class="centered">Se liste over tilmeldte</p></a>
                 {% if current == 0 %}
                     <h4 id="current">Du skal logge ind for at kunne tilmelde dig til LAN</h4>
                 {% elif current == -1 %}
