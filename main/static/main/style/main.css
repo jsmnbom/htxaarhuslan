@@ -208,11 +208,6 @@ a:hover {
     color: #d33e20;
 }
 
-a.centered {
-    margin-top:0px;
-    text-align:center;
-}
-
 h3#notopen {
     text-align: center;
 }
@@ -231,6 +226,11 @@ div#countdown {
     font-size: 1.4em;
     line-height: 1.3em;
     margin: 25px 0;
+}
+
+p.centered {
+    margin-top:0px;
+    text-align:center;
 }
 
 /* Seat selection stuff */
