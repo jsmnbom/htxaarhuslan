@@ -85,7 +85,7 @@ class MyUserAdmin(UserAdmin):
 @admin.register(Lan)
 class LanAdmin(admin.ModelAdmin):
     list_display = ('name', 'start', 'seats_count', 'is_open')
-    #form = AdminLanForm
+    # form = AdminLanForm
 
     fieldsets = (
         ('Tider', {
@@ -109,6 +109,29 @@ class LanAdmin(admin.ModelAdmin):
         except (Lan.DoesNotExist, AttributeError, IndexError):
             return {}
 
+
+class TournamentTeamInline(admin.TabularInline):
+    model = TournamentTeam
+
+
+@admin.register(Tournament)
+class TournamentAdmin(admin.ModelAdmin):
+    list_filter = ('lan', 'game')
+    list_display = ('name', 'game', 'lan', 'get_teams_count')
+    search_fields = ('name', 'game', 'lan')
+
+    inlines = [
+        TournamentTeamInline
+    ]
+
+    def get_teams_count(self, tournament):
+        return tournament.tournamentteam_set.count()
+
+    get_teams_count.short_description = 'Antal hold'
+
+    if get_next_lan():
+        default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
+
+
 admin.site.register(Game)
-admin.site.register(Tournament)
 admin.site.register(TournamentTeam)

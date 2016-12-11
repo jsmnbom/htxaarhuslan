@@ -10,8 +10,9 @@ from django.http import Http404
 from django.utils.timezone import now, utc
 from django.shortcuts import render, redirect
 from dal import autocomplete
+from sorl.thumbnail import get_thumbnail
 
-from main.models import get_next_lan, LanProfile, Profile, Tournament
+from main.models import get_next_lan, LanProfile, Profile, Tournament, TournamentTeam
 from .forms import UserRegForm, ProfileRegForm, TilmeldForm, EditUserForm, EditProfileForm, TournamentTeamForm
 
 
@@ -142,6 +143,7 @@ def tournaments(request):
 
 def tournament(request, game, lan_id, name):
     t = Tournament.objects.get(game__name=game, lan__id=lan_id, name=name)
+    teams = TournamentTeam.objects.filter(tournament=t)
     if request.method == 'POST':
         form = TournamentTeamForm(request.POST, tournament=t, profile=request.user.profile)
         if form.is_valid():
@@ -150,7 +152,7 @@ def tournament(request, game, lan_id, name):
             form = TournamentTeamForm(tournament=t, profile=request.user.profile)
     else:
         form = TournamentTeamForm(tournament=t, profile=request.user.profile)
-    return render(request, 'tournament.html', {'tournament': t, 'form': form})
+    return render(request, 'tournament.html', {'tournament': t, 'teams': teams, 'form': form})
 
 
 def legacy(request):
@@ -228,6 +230,19 @@ class ProfileAutocomplete(autocomplete.Select2QuerySetView):
         qs = qs.exclude(pk__in=exclude)
 
         if self.q:
-            qs = qs.filter(Q(user__username__icontains=self.q) | Q(user__first_name__icontains=self.q))
+            qs = qs.filter(Q(user__username__icontains=self.q) |
+                           Q(user__first_name__icontains=self.q) |
+                           Q(grade__icontains=self.q))
 
         return qs
+
+    def get_result_label(self, item):
+        html = ''
+        if item.photo:
+            im = get_thumbnail(item.photo, '50x50', crop='center')
+            if im:
+                html += '<img src="{}" />'.format(im.url)
+        html += '<span>{}</span><br><span>{}<span>&nbsp;({})</span></span>'.format(item.user.first_name,
+                                                                                   item.user.username,
+                                                                                   item.get_grade_display())
+        return html

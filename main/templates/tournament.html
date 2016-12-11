@@ -6,9 +6,10 @@
     <div class="box" id="turnering">
         <h2>{{ tournament.name }}</h2>
         <p>{{ tournament.description }}</p>
-        {% if tournament.teams.all %}
+        {% if teams %}
+            <h4>Tilmeldte hold</h4>
             <ul>
-                {% for team in tournament.teams.all %}
+                {% for team in teams %}
                     <li>{{ team.name }}</li>
                 {% endfor %}
             </ul>

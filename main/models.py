@@ -187,18 +187,6 @@ class Game(models.Model):
         return self.name
 
 
-class TournamentTeam(models.Model):
-    class Meta:
-        verbose_name = 'hold'
-        verbose_name_plural = 'hold'
-
-    profiles = models.ManyToManyField(Profile, verbose_name='medlemmer')
-    name = models.CharField(max_length=255, verbose_name='holdnavn')
-
-    def __str__(self):
-        return self.name
-
-
 class Tournament(models.Model):
     class Meta:
         verbose_name = 'turnering'
@@ -209,7 +197,20 @@ class Tournament(models.Model):
     name = models.CharField(max_length=255, verbose_name='navn')
     description = models.TextField(verbose_name='beskrivelse')
     team_size = models.IntegerField()
-    teams = models.ManyToManyField('TournamentTeam')
+
+    def __str__(self):
+        return self.name
+
+
+class TournamentTeam(models.Model):
+    class Meta:
+        verbose_name = 'hold'
+        verbose_name_plural = 'hold'
+        unique_together = (('name', 'tournament'),)
+
+    profiles = models.ManyToManyField(Profile, verbose_name='medlemmer')
+    name = models.CharField(max_length=255, verbose_name='holdnavn')
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name

@@ -4,7 +4,7 @@ from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UsernameField
 from django.contrib.auth.password_validation import _password_validators_help_text_html as password_help
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.core.validators import MinLengthValidator
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -165,7 +165,15 @@ class EditProfileForm(forms.ModelForm):
 class TournamentTeamForm(forms.ModelForm):
     class Meta:
         model = TournamentTeam
-        fields = ('name', 'profiles')
+        fields = ('name', 'profiles', 'tournament')
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                'unique_together': "Et hold med dette navn existerer allerede!",
+            }
+        }
+
+    class Media:
+        js = ('autocomplete_light/vendor/select2/dist/js/i18n/da.js',)
 
     def __init__(self, *args, **kwargs):
         self.tournament = kwargs.pop('tournament')
@@ -175,6 +183,9 @@ class TournamentTeamForm(forms.ModelForm):
         lan = get_next_lan()
 
         del self.fields['profiles']
+        self.fields['tournament'] = forms.ModelChoiceField(queryset=Tournament.objects.all(),
+                                                           widget=forms.HiddenInput())
+        self.initial['tournament'] = self.tournament
 
         self.fields['profile_0'] = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'readonly': True, }),
                                                    label='Medlem 1 (dig selv)')
@@ -186,33 +197,26 @@ class TournamentTeamForm(forms.ModelForm):
                 widget=autocomplete.ModelSelect2(
                     url='autocomplete-profile',
                     forward=forward,
-                    attrs={'disabled': False, }
+                    attrs={'data-html': 'true'}
                 ),
                 label='Medlem {}'.format(i + 1),
             )
 
-        self.initial['profile_0'] = self.profile
+        self.initial['profile_0'] = self.profile.user.first_name
 
         self.fields['name'].validators.append(MinLengthValidator(3))
 
-    def clean_name(self):
-        try:
-            TournamentTeam.objects.get(name=self.cleaned_data['name'], tournament=self.tournament)
-            raise ValidationError('Et hold med dette navn er allerede tilmeldt denne turnering.')
-        except TournamentTeam.DoesNotExist:
-            return self.cleaned_data['name']
-
-    def save(self, *args, **kwargs):
+    def clean(self):
         self.cleaned_data['profiles'] = []
         for name in list(self.cleaned_data.keys()):
             if name.startswith('profile_'):
                 if name != 'profile_0':
                     self.cleaned_data['profiles'].append(self.cleaned_data[name])
                 else:
-                    self.cleaned_data['profiles'].append(self.profile.id)
-                    del self.cleaned_data[name]
-        team = super().save(*args, **kwargs)
-        self.tournament.teams.add(team)
+                    self.cleaned_data['profiles'].append(self.profile)
+                del self.cleaned_data[name]
+        self.cleaned_data['tournament'] = self.tournament
+        super().clean()
 
 
 class AdminLanProfileForm(forms.ModelForm):
