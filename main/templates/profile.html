@@ -4,14 +4,7 @@
 {% block content %}
     <div class="box" id="profile">
         <h2>{% block title %}{{ profile.user.username }}{% endblock %}</h2>
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li{% if message.tags %}
-                        class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+        {% include 'messages.html' %}
         <div id="show" {% if start_edit %}class="hide"{% endif %}>
             <div class="info">
                 <p>Navn: {{ profile.user.first_name }}</p>

@@ -138,7 +138,20 @@ def tournaments(request):
     games = defaultdict(list)
     for t in tournaments:
         games[t.game].append(t)
+
     if request.user.is_authenticated:
+        if request.method == 'POST':
+            if 'frameld' in request.POST:
+                try:
+                    team = TournamentTeam.objects.get(id=int(request.POST['frameld']),
+                                                      profiles__in=[request.user.profile])
+                    messages.add_message(request, messages.SUCCESS,
+                                         'Holder {} er blevet frameldt turneringen'.format(team.name))
+                    team.delete()
+                except (TournamentTeam.DoesNotExist, ValueError):
+                    messages.add_message(request, messages.ERROR,
+                                         'Der opstod en fejl. Prøv igen senere, eller kontakt LanCrew.')
+
         teams = TournamentTeam.objects.filter(tournament__lan=lan, profiles__in=[request.user.profile])
     else:
         teams = None

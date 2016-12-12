@@ -6,19 +6,34 @@
     <div class="box" id="turnering">
         <h2>{{ tournament.name }}</h2>
         <p>{{ tournament.description }}</p>
-        {% if teams %}
-            <h4>Tilmeldte hold</h4>
-            <ul>
-                {% for team in teams %}
-                    <li>{{ team.name }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>Ingen hold er tilmeldt denne turnering.</p>
+        {% if not teams %}
+            <p>Ingen hold er tilmeldt denne turnering endnu.</p>
         {% endif %}
     </div>
+    {% if teams %}
+        <div class="box" id="hold" style="order: 1;">
+            <h2>Tilmeldte hold</h2>
+            <table class="teams">
+                    <thead>
+                        <tr>
+                            <td>Holdnavn</td>
+                            <td>Medlemmer</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for team in teams %}
+                            <tr>
+                                <td>{{ team.name }}</td>
+                                <td>{% for profile in team.profiles.all %}<a href="{% url 'profile' username=profile.user.username %}">{{ profile.user.first_name }}</a>{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} og {% else %}, {% endifequal %}{% else %}{% endif %} {% endfor %}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+    {% endif %}
     <div class="box" id="tilmeldturnering" style="order: 1;">
         <h2>Tilmeld hold til turnering</h2>
+        {% include 'messages.html' %}
         {% if form %}
             <p>Indtast ønsket holdnavn samt holdmedlemmer herunder, og tryk på tilmeld knappen.</p>
             <form action="{{ get_full_path }}" method="post">

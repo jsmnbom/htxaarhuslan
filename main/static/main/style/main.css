@@ -657,6 +657,20 @@ table.teams thead {
     font-size: 1.2em;
 }
 
+table.teams tbody td {
+    padding: 5px 5px 5px 0;
+}
+
+table form {
+    margin: 0;
+}
+
+table form input[type="submit"] {
+    height: auto;
+    font-size: 23px;
+    margin: 0;
+}
+
 /* Handle smaller screens */
 
 @media (max-width: 1150px) {

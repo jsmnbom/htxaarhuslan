@@ -30,6 +30,7 @@
     {% if request.user.is_authenticated %}
         <div class="box" id="mine-hold">
             <h2>Mine hold</h2>
+            {% include 'messages.html' %}
             {% if teams %}
                 <p>Herunder kan du se en liste over de hold du er med i til det næste/nuværende LAN.</p>
                 <p>Klik på frameld for at framelde <strong>hele</strong> holdet fra turneringen.</p>
@@ -50,7 +51,7 @@
                                 <td>{{ team.tournament.game }}</td>
                                 <td><a href="{% url 'tournament' game=team.tournament.game.name lan_id=team.tournament.lan.id name=team.tournament.name %}">{{ team.tournament.name }}</a></td>
                                 <td>{% for profile in team.profiles.all %}<a href="{% url 'profile' username=profile.user.username %}">{{ profile.user.first_name }}</a>{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} og {% else %}, {% endifequal %}{% else %}{% endif %} {% endfor %}</td>
-                                <td>Frameld</td>
+                                <td><form action="{{ get_full_path }}" method="POST">{% csrf_token %} <input type="hidden" name="frameld" value="{{ team.id }}"><input type="submit" value="frameld"></form></td>
                             </tr>
                         {% endfor %}
                     </tbody>
