@@ -97,8 +97,8 @@ $(document).ready(function () {
     var paytype = $('.seats form#tilmeld div#paytype');
 
     function select(input) {
-            paytype.find('label').removeClass('selected');
-            paytype.find('label[for="' + $(input).attr('id') + '"]').addClass('selected');
+        paytype.find('label').removeClass('selected');
+        paytype.find('label[for="' + $(input).attr('id') + '"]').addClass('selected');
     }
 
     select(paytype.find('input[type=radio]:checked'));
@@ -113,4 +113,19 @@ $(document).ready(function () {
     setTimeout(function () {
         $(window).resize();
     }, 200);
+
+
+    // Frameld dialog
+    $('form#frameld').on('submit', function (e) {
+        e.preventDefault();
+        vex.dialog.confirm({
+            message: 'Er du sikker på at du vil framelde dig fra LAN? Hvis du er på nogle hold der er meldt til turneringer vil de automatisk blive afmeldt, da du ikke længere kommer. Hvis du bare ønsker at skifte plads, skal du trykke på Nej og derefter vælge en ny plads.',
+            callback: function (value) {
+                if (value) {
+                    e.target.submit();
+                }
+            },
+            className: 'vex-theme-plain'
+        });
+    });
 });
