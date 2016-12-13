@@ -1,3 +1,4 @@
+import logging
 from collections import defaultdict
 from datetime import datetime
 
@@ -227,6 +228,12 @@ def frameld(request):
         try:
             current = LanProfile.objects.get(lan=lan, profile=request.user.profile)
             success = current.delete(keep_parents=True)
+            try:
+                teams = TournamentTeam.objects.filter(tournament__lan=lan,
+                                                      profiles__in=[request.user.profile])
+                teams.delete()
+            except (TournamentTeam.DoesNotExist, ValueError):
+                pass
         except LanProfile.DoesNotExist:
             pass
         except AttributeError:

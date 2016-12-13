@@ -212,6 +212,14 @@ class TournamentTeamForm(forms.ModelForm):
             if name.startswith('profile_'):
                 if name != 'profile_0':
                     self.cleaned_data['profiles'].append(self.cleaned_data[name])
+                    try:
+                        LanProfile.objects.get(profile=self.cleaned_data[name])
+                    except LanProfile.DoesNotExist:
+                        raise ValidationError(
+                            '%(profile)s er ikke tilmeldt LAN og kan derfor ikke være med på dit hold.',
+                            params={'profile': self.cleaned_data[name].user.first_name},
+                            code='missingtilmelding'
+                        )
                 else:
                     self.cleaned_data['profiles'].append(self.profile)
                 del self.cleaned_data[name]
