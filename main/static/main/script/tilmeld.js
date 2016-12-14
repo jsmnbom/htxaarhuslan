@@ -114,6 +114,8 @@ $(document).ready(function () {
         $(window).resize();
     }, 200);
 
+    vex.dialog.buttons.YES.text = 'Ja';
+    vex.dialog.buttons.NO.text = 'Nej';
 
     // Frameld dialog
     $('form#frameld').on('submit', function (e) {
