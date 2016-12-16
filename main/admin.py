@@ -112,12 +112,13 @@ class LanAdmin(admin.ModelAdmin):
 
 class TournamentTeamInline(admin.TabularInline):
     model = TournamentTeam
+    fields = ('profiles', 'name')
 
 
 @admin.register(Tournament)
 class TournamentAdmin(admin.ModelAdmin):
     list_filter = ('lan', 'game')
-    list_display = ('name', 'game', 'lan', 'get_teams_count')
+    list_display = ('name', 'game', 'lan', 'challonge_link', 'get_teams_count', 'live', 'open')
     search_fields = ('name', 'game', 'lan')
 
     inlines = [
@@ -131,6 +132,12 @@ class TournamentAdmin(admin.ModelAdmin):
 
     if get_next_lan():
         default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
+
+    def challonge_link(self, tournament):
+        return '<a href="http://challonge.com/{0}" target="_blank">{0}</a>'.format(tournament.get_challonge_url())
+
+    challonge_link.allow_tags = True
+    challonge_link.short_description = 'Challonge'
 
 
 admin.site.register(Game)

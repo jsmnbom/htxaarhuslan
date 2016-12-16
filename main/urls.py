@@ -6,6 +6,8 @@ from django.contrib.sitemaps.views import sitemap
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
+import challonge
+
 from main.sitemaps import MainSitemap, TilmeldSitemap
 from main.views import ProfileAutocomplete
 from . import views
@@ -68,3 +70,6 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.CHALLONGE_USER and settings.CHALLONGE_API_KEY:
+    challonge.set_credentials(settings.CHALLONGE_USER, settings.CHALLONGE_API_KEY)

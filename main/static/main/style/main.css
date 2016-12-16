@@ -181,12 +181,12 @@ a.h2, a.h2:visited, a.h2:hover {
     margin: 2px 0;
 }
 
-.box#discord div {
+.box div.iframe {
     padding: 0;
     margin: 0 15px;
 }
 
-.box#discord iframe {
+.box .iframe iframe {
     width: 100%;
     height: 500px;
 }

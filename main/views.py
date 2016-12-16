@@ -165,7 +165,7 @@ def tournament(request, game, lan_id, name):
     if request.user.is_authenticated:
         if request.method == 'POST':
             form = TournamentTeamForm(request.POST, tournament=t, profile=request.user.profile)
-            if form.is_valid():
+            if form.is_valid() and t.open:
                 form.save()
                 messages.add_message(request, messages.SUCCESS, 'Hold tilmeldt successfuldt!')
                 form = TournamentTeamForm(tournament=t, profile=request.user.profile)

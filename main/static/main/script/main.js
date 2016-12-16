@@ -141,7 +141,7 @@ $(document).ready(function () {
         ref = document.getElementsByTagName('base')[0] ||
             document.getElementsByTagName('script')[0];
 
-    div.innerHTML = '&shy;<style> iframe { visibility: hidden; } </style>';
+    div.innerHTML = '&shy;<style> div#discord iframe { visibility: hidden; } </style>';
 
     ref.parentNode.insertBefore(div, ref);
 

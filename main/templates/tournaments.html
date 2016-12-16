@@ -16,9 +16,11 @@
                             for {{ game.name }}. Klik på en af dem herunder for at se hvilke hold der er tilmeldt samt
                             tilmelde dit eget.</p>
                         {% for t in tournaments %}
-                            <h4>
-                                <a href="{% url 'tournament' game=game.name lan_id=t.lan.id name=t.name %}">{{ t.name }}</a>
-                            </h4>
+                            {% if t.open or request.user.is_staff %}
+                                <h4>
+                                    <a href="{% url 'tournament' game=game.name lan_id=t.lan.id name=t.name %}">{{ t.name }}</a>
+                                </h4>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>

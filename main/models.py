@@ -1,10 +1,15 @@
+import json
 from collections import Counter
 from collections import defaultdict
 
+import challonge
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from django.urls import reverse
 from django.utils.timezone import now
 from sorl.thumbnail import ImageField
 
@@ -196,10 +201,60 @@ class Tournament(models.Model):
     lan = models.ForeignKey(Lan, on_delete=models.CASCADE, verbose_name='lan')
     name = models.CharField(max_length=255, verbose_name='navn')
     description = models.TextField(verbose_name='beskrivelse')
-    team_size = models.IntegerField()
+    team_size = models.IntegerField(verbose_name='Holdstørrelse')
+    challonge_id = models.IntegerField(verbose_name='Challonge id', help_text="Udfyles selv, når du trykker gem.",
+                                       null=True, blank=True)
+    extra_challonge = models.TextField(null=True, verbose_name='Extra challonge data', blank=True,
+                                       help_text='Advannceret: ekstra data til challonge API. Angives i JSON format.')
+    live = models.BooleanField(help_text='Er turneringen i gang? (viser live opdates på siden hvis ja)')
+    open = models.BooleanField(verbose_name='Tilmelding mulig?',
+                               help_text='Er der åbent for tilmelding? Hvis nej bliver turneringen ikke vist på siden.'
+                                         'Bemærk at LanCrew medlemmer dog altid kan tilmelde sig.')
 
     def __str__(self):
         return self.name
+
+    def get_challonge_url(self):
+        return '{}_{}_{}'.format('htxaarhuslan', self.lan.id, self.id)
+
+
+@receiver(post_save, sender=Tournament, dispatch_uid='create_challonge')
+def create_challonge(sender, instance, **kwargs):
+    created = kwargs.get('created', False)
+    if created:
+        params = {
+            'description': instance.description
+        }
+        if instance.extra_challonge:
+            params.update(json.loads(instance.extra_challonge))
+        tournament = challonge.tournaments.create(
+            '{} – {} – {}'.format('HTXAarhusLAN', instance.lan.name, instance.name),
+            instance.get_challonge_url(),
+            params.get('tournament_type', 'single elimination'), **params)
+        instance.challonge_id = tournament['id']
+        instance.save()
+    elif instance.challonge_id:
+        url_params = {
+            'game': instance.game.name,
+            'lan_id': instance.lan.id,
+            'name': instance.name
+        }
+        params = {
+            'description': '{}<br><br>Tilmeld dig på: '
+                           '<a href="https://htxaarhuslan.dk{}" target="_blank">{}</a>'.format(instance.description,
+                                                                        reverse('tournament', kwargs=url_params),
+                                                                        'HTXAarhuslan.dk'),
+            'name': '{} – {} – {}'.format('HTXAarhusLAN', instance.lan.name, instance.name),
+            'url': instance.get_challonge_url()
+        }
+        if instance.extra_challonge:
+            params.update(json.loads(instance.extra_challonge))
+        challonge.tournaments.update(instance.challonge_id, **params)
+
+
+@receiver(post_delete, sender=Tournament, dispatch_uid='delete_challonge')
+def delete_challonge(sender, instance, **kwargs):
+    challonge.tournaments.destroy(instance.challonge_id)
 
 
 class TournamentTeam(models.Model):
@@ -211,6 +266,24 @@ class TournamentTeam(models.Model):
     profiles = models.ManyToManyField(Profile, verbose_name='medlemmer')
     name = models.CharField(max_length=255, verbose_name='holdnavn')
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, null=True)
+    challonge_id = models.IntegerField(verbose_name='Challonge id', help_text='Udfyldes selv, når du trykker gem.',
+                                       null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+
+@receiver(post_save, sender=TournamentTeam, dispatch_uid='create_challonge_team')
+def create_challonge_team(sender, instance, **kwargs):
+    created = kwargs.get('created', False)
+    if created:
+        participant = challonge.participants.create(instance.tournament.challonge_id,
+                                                    instance.name,
+                                                    misc=instance.id)
+        instance.challonge_id = participant['id']
+        instance.save()
+
+
+@receiver(post_delete, sender=TournamentTeam, dispatch_uid='delete_challonge_team')
+def delete_challonge_team(sender, instance, **kwargs):
+    challonge.participants.destroy(instance.tournament.challonge_id, instance.challonge_id)

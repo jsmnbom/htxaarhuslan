@@ -11,3 +11,5 @@ six==1.10.0
 sendgrid-django==4.0.1
 feedparser==5.2.1
 django-jet==1.0.3
+python-dateutil==2.4.2
+-e git+http://github.com/russ-/pychallonge#egg=pychallonge

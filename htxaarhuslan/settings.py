@@ -219,3 +219,6 @@ LANGUAGES = [
 ]
 
 PAYMENT_PHONE = '(telefonnummer endnu ikke fastlagt, vend tilbage snarrest)'
+
+CHALLONGE_USER = env_var('CHALLONGE_USER')
+CHALLONGE_API_KEY = env_var('CHALLONGE_API_KEY')
