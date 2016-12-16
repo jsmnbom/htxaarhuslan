@@ -5,9 +5,12 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import Http404
+from django.template.loader import render_to_string
 from django.utils.timezone import now, utc
 from django.shortcuts import render, redirect
 from dal import autocomplete
@@ -166,14 +169,24 @@ def tournament(request, game, lan_id, name):
         if request.method == 'POST':
             form = TournamentTeamForm(request.POST, tournament=t, profile=request.user.profile)
             if form.is_valid() and t.open:
-                form.save()
+                team = form.save()
                 messages.add_message(request, messages.SUCCESS, 'Hold tilmeldt successfuldt!')
+                send_tournament_mails(request, team)
                 form = TournamentTeamForm(tournament=t, profile=request.user.profile)
         else:
             form = TournamentTeamForm(tournament=t, profile=request.user.profile)
     else:
         form = None
     return render(request, 'tournament.html', {'tournament': t, 'teams': teams, 'form': form})
+
+
+def send_tournament_mails(request, team):
+    site = 'https://' if request.is_secure() else 'http://' + get_current_site(request).domain
+    for p in team.profiles.all():
+        p.user.email_user(
+            '{} tilmeldt til {} på HTXAarhusLAN.dk'.format(team.name, team.tournament.name),
+            render_to_string('tournament_mail.html', {'team': team, 'profile': p, 'site': site})
+        )
 
 
 def legacy(request):

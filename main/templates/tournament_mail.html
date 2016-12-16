@@ -1,0 +1,11 @@
+{% autoescape off %}
+Hej {{ profile.user.first_name }}
+
+Du modtager denne mail fordi du er blevet tilføjet til holdet {{ team.name }} for turneringen {{ team.tournament.name }}.
+
+Hvis dette var en fejl kan du framelde dig på nedstående link:
+{{ site }}{% url "tournaments" %}
+
+Med venlig hilsen,
+LanCrew, HTXAarhusLAN
+{% endautoescape %}
