@@ -8,10 +8,11 @@ class MainSitemap(sitemaps.Sitemap):
     changefreq = 'daily'
 
     def items(self):
-        return ['index', 'info', 'turne', 'policy']
+        return ['index', 'info', 'tournaments', 'policy']
 
     def location(self, item):
         return reverse(item)
+
 
 class TilmeldSitemap(sitemaps.Sitemap):
     priority = 0.5
@@ -22,4 +23,3 @@ class TilmeldSitemap(sitemaps.Sitemap):
 
     def location(self, item):
         return reverse(item)
-
