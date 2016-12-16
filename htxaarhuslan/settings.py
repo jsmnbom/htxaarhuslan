@@ -33,6 +33,7 @@ SECRET_KEY = env_var('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env_var('DEBUG', False)
+THUMBNAIL_DEBUG = DEBUG
 
 ALLOWED_HOSTS = env_var('ALLOWED_HOSTS', '').split(',')
 
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'snowpenguin.django.recaptcha2',
+    'sorl.thumbnail'
 ]
 
 MIDDLEWARE = [
@@ -217,3 +219,6 @@ LANGUAGES = [
 ]
 
 PAYMENT_PHONE = '(telefonnummer endnu ikke fastlagt, vend tilbage snarrest)'
+
+CHALLONGE_USER = env_var('CHALLONGE_USER')
+CHALLONGE_API_KEY = env_var('CHALLONGE_API_KEY')

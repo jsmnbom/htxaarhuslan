@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% load thumbnail %}
+
+{% block content %}
+    <div class="box" id="turneringer">
+        <h2>{% block title %}Turneringer{% endblock %}</h2>
+        {% if games %}
+            <h3>Vælg et spil herunder ved at klikke på det.</h3>
+            {% for game, tournaments in games.items %}
+                <div class="game">
+                    <a href="#"> <img src="{{ game.image.url }}" alt="{{ game.name }}"></a>
+                    <div class="hidden">
+                        <p>{{ game.description }}</p>
+                        <p>Der er {{ tournaments|length }} turnering{{ tournaments|length|pluralize:"er" }} planlagt
+                            for {{ game.name }}. Klik på en af dem herunder for at se hvilke hold der er tilmeldt samt
+                            tilmelde dit eget.</p>
+                        {% for t in tournaments %}
+                            {% if t.open or request.user.is_staff %}
+                                <h4>
+                                    <a href="{% url 'tournament' game=game.name lan_id=t.lan.id name=t.name %}">{{ t.name }}</a>
+                                </h4>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Der er ingen turneringer åbne lige nu. Vend tilbage når vi nærmer os næste LAN.</p>
+        {% endif %}
+    </div>
+    {% if request.user.is_authenticated %}
+        <div class="box" id="mine-hold">
+            <h2>Mine hold</h2>
+            {% include 'messages.html' %}
+            {% if teams %}
+                <p>Herunder kan du se en liste over de hold du er med i til det næste/nuværende LAN.</p>
+                <p>Klik på frameld for at framelde <strong>hele</strong> holdet fra turneringen.</p>
+                <table class="teams">
+                    <thead>
+                        <tr>
+                            <td>Holdnavn</td>
+                            <td>Spil</td>
+                            <td>Turnering</td>
+                            <td>Medlemmer</td>
+                            <td>Frameld</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for team in teams %}
+                            <tr>
+                                <td>{{ team.name }}</td>
+                                <td>{{ team.tournament.game }}</td>
+                                <td><a href="{% url 'tournament' game=team.tournament.game.name lan_id=team.tournament.lan.id name=team.tournament.name %}">{{ team.tournament.name }}</a></td>
+                                <td>{% for profile in team.profiles.all %}<a href="{% url 'profile' username=profile.user.username %}">{{ profile.user.first_name }}</a>{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} og {% else %}, {% endifequal %}{% else %}{% endif %} {% endfor %}</td>
+                                <td><form action="{{ get_full_path }}" method="POST">{% csrf_token %} <input type="hidden" name="frameld" value="{{ team.id }}"><input type="submit" value="frameld"></form></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Du er ikke tilmeldt nogle hold på nuværende tidspunkt.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

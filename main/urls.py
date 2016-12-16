@@ -6,6 +6,8 @@ from django.contrib.sitemaps.views import sitemap
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
+import challonge
+
 from main.sitemaps import MainSitemap, TilmeldSitemap
 from main.views import ProfileAutocomplete
 from . import views
@@ -21,7 +23,8 @@ urlpatterns = [
     url(r'^tilmeldliste$', views.tilmeldlist, name='tilmeldlist'),
     url(r'^tilmeld$', views.tilmeld, name='tilmeld'),
     url(r'^frameld$', views.frameld, name='frameld'),
-    url(r'^turneringer$', views.tournament, name='turne'),
+    url(r'^turnering$', views.tournaments, name='tournaments'),
+    url(r'^turnering/(?P<game>.+)/(?P<lan_id>.+)/(?P<name>.+)$', views.tournament, name='tournament'),
     url(r'^bruger/logind$', views.login_view, name='login'),
     url(r'^bruger/logud$', views.logout_view, name='logout'),
     url(r'^bruger/registreret$', views.registered, name='registered'),
@@ -31,11 +34,12 @@ urlpatterns = [
     url(r'^bruger/gammel$', views.legacy, name='legacy'),
     url(r'^bruger/needlogin$', views.needlogin, name='needlogin'),
     url(r'^privatliv$', views.policy, name='policy'),
-    url(
-        r'^autocomplete/profile/$',
+
+    # Autocompletes
+    url(r'^autocomplete/profile/$',
         ProfileAutocomplete.as_view(),
-        name='autocomplete-profile',
-    ),
+        name='autocomplete-profile'),
+
     # Change/forgot password stuff
     url(r'^bruger/kode/glemt/$',
         auth_views.password_reset,
@@ -55,12 +59,17 @@ urlpatterns = [
     url(r'^bruger/kode/skift/done$',
         auth_views.password_change_done,
         name="password_change_done"),
+
     # SEO AND ROBOTS STUFF
     url(r'^robots.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain'), name="robots"),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+
     # Other links
     url(r'^discord$', RedirectView.as_view(url="https://discord.gg/3DJaNFY", permanent=False), name='discord'),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.CHALLONGE_USER and settings.CHALLONGE_API_KEY:
+    challonge.set_credentials(settings.CHALLONGE_USER, settings.CHALLONGE_API_KEY)

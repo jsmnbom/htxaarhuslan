@@ -5,9 +5,10 @@ from django.forms import model_to_dict
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.timezone import now
+from sorl.thumbnail.admin import AdminImageMixin
 
 from main.forms import AdminLanProfileForm, AdminProfileForm
-from .models import Profile, Lan, LanProfile, get_next_lan
+from .models import Profile, Lan, LanProfile, get_next_lan, Tournament, Game, TournamentTeam
 
 admin.site.unregister(User)
 
@@ -60,7 +61,7 @@ class LanProfileAdmin(DefaultFilterMixIn, admin.ModelAdmin):
         default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
 
 
-class ProfileInline(admin.StackedInline):
+class ProfileInline(AdminImageMixin, admin.StackedInline):
     model = Profile
     form = AdminProfileForm
 
@@ -84,7 +85,7 @@ class MyUserAdmin(UserAdmin):
 @admin.register(Lan)
 class LanAdmin(admin.ModelAdmin):
     list_display = ('name', 'start', 'seats_count', 'is_open')
-    #form = AdminLanForm
+    # form = AdminLanForm
 
     fieldsets = (
         ('Tider', {
@@ -107,3 +108,37 @@ class LanAdmin(admin.ModelAdmin):
             return model_to_dict(prev_lan, ['blurb', 'seats', 'schedule'])
         except (Lan.DoesNotExist, AttributeError, IndexError):
             return {}
+
+
+class TournamentTeamInline(admin.TabularInline):
+    model = TournamentTeam
+    fields = ('profiles', 'name')
+
+
+@admin.register(Tournament)
+class TournamentAdmin(admin.ModelAdmin):
+    list_filter = ('lan', 'game')
+    list_display = ('name', 'game', 'lan', 'challonge_link', 'get_teams_count', 'live', 'open')
+    search_fields = ('name', 'game', 'lan')
+
+    inlines = [
+        TournamentTeamInline
+    ]
+
+    def get_teams_count(self, tournament):
+        return tournament.tournamentteam_set.count()
+
+    get_teams_count.short_description = 'Antal hold'
+
+    if get_next_lan():
+        default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
+
+    def challonge_link(self, tournament):
+        return '<a href="http://challonge.com/{0}" target="_blank">{0}</a>'.format(tournament.get_challonge_url())
+
+    challonge_link.allow_tags = True
+    challonge_link.short_description = 'Challonge'
+
+
+admin.site.register(Game)
+admin.site.register(TournamentTeam)

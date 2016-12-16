@@ -1,9 +1,64 @@
 {% extends "base.html" %}
 {% load static %}
+{% load thumbnail %}
 
 {% block content %}
-    <div class="box" id="tilmeld">
-        <h2>{% block title %}Turneringer{% endblock %}</h2>
-        <p>Det er endnu ikke muligt at melde sig til turneringer.</p>
+    <div class="box" id="turnering">
+        <h2>{% block title %}{{ tournament.name }} - Turnering{% endblock %}</h2>
+        <p>{{ tournament.description }}</p>
+        {% if not teams %}
+            <p>Ingen hold er tilmeldt denne turnering endnu.</p>
+        {% endif %}
     </div>
+    {% if tournament.live %}
+        <div class="box" id="live" style="order: 1;">
+            <h2>Live turneringsbrackets</h2>
+            <div class="iframe">
+                <iframe src="http://challonge.com/{{ tournament.get_challonge_url }}/module?theme=2"
+                        frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+            </div>
+            <a href="http://challonge.com/{{ tournament.get_challonge_url }}" target="_blank">Klik her for at se på
+                Challonge.com</a>
+        </div>
+    {% endif %}
+    {% if teams %}
+        <div class="box" id="hold" style="order: 1;">
+            <h2>Tilmeldte hold</h2>
+            <table class="teams">
+                <thead>
+                    <tr>
+                        <td>Holdnavn</td>
+                        <td>Medlemmer</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {# @formatter:off--> #}
+                    {% for team in teams %}
+                        <tr>
+                            <td>{{ team.name }}</td>
+                            <td>{% for profile in team.profiles.all %}<a href="{% url 'profile' username=profile.user.username %}">{{ profile.user.first_name }}</a>{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} og {% else %},{% endifequal %}{% else %}{% endif %} {% endfor %}</td>
+                        </tr>
+                    {% endfor %}
+                    {# @formatter:on--> #}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    <div class="box" id="tilmeldturnering" style="order: 1;">
+        <h2>Tilmeld hold til turnering</h2>
+        {% include 'messages.html' %}
+        {% if form and tournament.open %}
+            <p>Indtast ønsket holdnavn samt holdmedlemmer herunder, og tryk på tilmeld knappen.</p>
+            <form action="{{ get_full_path }}" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Tilmeld til {{ tournament.name }}" name="profile">
+            </form>
+        {% elif not tournament.open %}
+            <p>Tilmelding til denne turnering er ikke åben.</p>
+        {% else %}
+            <p>Du skal være logget ind for at kunne tilmelde et hold til denne turnering.</p>
+        {% endif %}
+    </div>
+    {{ form.media }}
 {% endblock %}

@@ -4,6 +4,8 @@ from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UsernameField
 from django.contrib.auth.password_validation import _password_validators_help_text_html as password_help
+from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
+from django.core.validators import MinLengthValidator
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.db.models.fields import BLANK_CHOICE_DASH
@@ -11,7 +13,7 @@ from django.db.models.fields import BLANK_CHOICE_DASH
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 
-from .models import GRADES, Profile, LanProfile, Lan, PAYTYPES
+from .models import GRADES, Profile, LanProfile, Lan, PAYTYPES, TournamentTeam, get_next_lan, Tournament
 
 
 class UserRegForm(forms.ModelForm):
@@ -158,6 +160,71 @@ class EditProfileForm(forms.ModelForm):
     photo.widget.attrs = {'accept': 'image/*'}
 
     grade = forms.ChoiceField(sorted(GRADES, reverse=True), label='Klasse', widget=LabelSelect(label='Klasse'))
+
+
+class TournamentTeamForm(forms.ModelForm):
+    class Meta:
+        model = TournamentTeam
+        fields = ('name', 'profiles', 'tournament')
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                'unique_together': "Et hold med dette navn existerer allerede!",
+            }
+        }
+
+    class Media:
+        js = ('autocomplete_light/vendor/select2/dist/js/i18n/da.js',)
+
+    def __init__(self, *args, **kwargs):
+        self.tournament = kwargs.pop('tournament')
+        self.profile = kwargs.pop('profile')
+        super().__init__(*args, **kwargs)
+
+        lan = get_next_lan()
+
+        del self.fields['profiles']
+        self.fields['tournament'] = forms.ModelChoiceField(queryset=Tournament.objects.all(),
+                                                           widget=forms.HiddenInput())
+        self.initial['tournament'] = self.tournament
+
+        self.fields['profile_0'] = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'readonly': True, }),
+                                                   label='Medlem 1 (dig selv)')
+
+        for i in range(1, self.tournament.team_size):
+            forward = ['profile_{}'.format(j) for j in range(1, self.tournament.team_size) if j != i]
+            self.fields['profile_{}'.format(i)] = forms.ModelChoiceField(
+                queryset=Profile.objects.filter(lanprofile__lan=lan),
+                widget=autocomplete.ModelSelect2(
+                    url='autocomplete-profile',
+                    forward=forward,
+                    attrs={'data-html': 'true', 'data-placeholder': 'Søg efter brugere som er tilmeldt LAN'},
+                ),
+                label='Medlem {}'.format(i + 1),
+            )
+
+        self.initial['profile_0'] = self.profile.user.first_name
+
+        self.fields['name'].validators.append(MinLengthValidator(3))
+
+    def clean(self):
+        self.cleaned_data['profiles'] = []
+        for name in list(self.cleaned_data.keys()):
+            if name.startswith('profile_'):
+                if name != 'profile_0':
+                    self.cleaned_data['profiles'].append(self.cleaned_data[name])
+                    try:
+                        LanProfile.objects.get(profile=self.cleaned_data[name])
+                    except LanProfile.DoesNotExist:
+                        raise ValidationError(
+                            '%(profile)s er ikke tilmeldt LAN og kan derfor ikke være med på dit hold.',
+                            params={'profile': self.cleaned_data[name].user.first_name},
+                            code='missingtilmelding'
+                        )
+                else:
+                    self.cleaned_data['profiles'].append(self.profile)
+                del self.cleaned_data[name]
+        self.cleaned_data['tournament'] = self.tournament
+        super().clean()
 
 
 class AdminLanProfileForm(forms.ModelForm):

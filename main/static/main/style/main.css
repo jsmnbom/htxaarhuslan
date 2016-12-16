@@ -14,6 +14,9 @@ body {
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     color: #fff;
+
+    overflow-y: visible !important;
+    overflow-x: hidden;
 }
 
 /* Make everything non bold, and then a few things bold */
@@ -178,12 +181,12 @@ a.h2, a.h2:visited, a.h2:hover {
     margin: 2px 0;
 }
 
-.box#discord div {
+.box div.iframe {
     padding: 0;
     margin: 0 15px;
 }
 
-.box#discord iframe {
+.box .iframe iframe {
     width: 100%;
     height: 500px;
 }
@@ -269,7 +272,7 @@ p.centered {
 
 .seats table td.occupied {
     background-color: #900;
-    cursor: not-allowed;
+    cursor: pointer;
 }
 
 .seats table td.selected {
@@ -345,6 +348,10 @@ input, select, a.button, textarea {
     border: none;
     padding: 0;
     -webkit-appearance: none;
+}
+
+input[readonly] {
+    cursor: default;
 }
 
 input:not([type="submit"]), select, textarea {
@@ -567,6 +574,109 @@ a.button {
     box-sizing: border-box;
     padding-top: 8px;
     margin: 20px 0;
+}
+
+/* Tournament */
+.game > a > img {
+    width: 100%;
+}
+
+.select2 {
+    width: 100% !important;
+}
+
+.select2-container {
+    font-size: 25px !important;
+    font-family: 'Roboto', sans-serif;
+    color: #e74c3c;
+    text-align: center;
+    min-width: 0 !important;
+    margin: 10px 0 !important;
+    border-radius: 5px;
+    border: none;
+    padding: 0;
+}
+
+.select2-container input {
+    margin: 0;
+}
+
+.select2-container .select2-selection--single {
+    height: 40px !important;
+}
+
+.select2-container .select2-selection--single * {
+    color: #e74c3c !important;
+    line-height: 40px !important;
+}
+
+.select2-container .select2-selection--single .select2-selection__placeholder * {
+    color: #999 !important;
+}
+
+.select2-container .select2-selection--single .select2-selection__arrow {
+    height: 40px !important;
+}
+
+.select2-container--open .select2-dropdown--below, .select2-container--open .select2-dropdown--above {
+    margin-top: -10px;
+}
+
+.select2-selection__rendered {
+    height: 40px;
+    line-height: 1em;
+}
+
+.select2-results__option {
+    height: 50px;
+    line-height: 1em;
+}
+
+.select2-selection__rendered > span img {
+    display: none;
+}
+
+.select2-results__option > span > span:last-of-type {
+    font-size: 0.7em;
+}
+
+.select2-results__option > span img {
+    height: 50px;
+    position: absolute;
+    right: 6px;
+}
+
+.select2-container .select2-results .loading-results, .select2-container .select2-results__message {
+    height: 25px;
+}
+
+body .select2-hidden-accessible {
+    position: relative !important;
+    left: 50% !important;
+    top: 40px !important;
+    opacity: 0;
+}
+
+table.teams {
+    width: 100%;
+}
+
+table.teams thead {
+    font-size: 1.2em;
+}
+
+table.teams tbody td {
+    padding: 5px 5px 5px 0;
+}
+
+table form {
+    margin: 0;
+}
+
+table form input[type="submit"] {
+    height: auto;
+    font-size: 23px;
+    margin: 0;
 }
 
 /* Handle smaller screens */
