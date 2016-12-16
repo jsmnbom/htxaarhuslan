@@ -642,8 +642,8 @@ a.button {
 
 .select2-results__option > span img {
     height: 50px;
-    position: absolute;
     right: 6px;
+    float: right;
 }
 
 .select2-container .select2-results .loading-results, .select2-container .select2-results__message {
