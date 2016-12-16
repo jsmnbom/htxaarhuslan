@@ -147,7 +147,7 @@ def tournaments(request):
                     team = TournamentTeam.objects.get(id=int(request.POST['frameld']),
                                                       profiles__in=[request.user.profile])
                     messages.add_message(request, messages.SUCCESS,
-                                         'Holder {} er blevet frameldt turneringen'.format(team.name))
+                                         'Holdet {} er blevet frameldt turneringen'.format(team.name))
                     team.delete()
                 except (TournamentTeam.DoesNotExist, ValueError):
                     messages.add_message(request, messages.ERROR,
