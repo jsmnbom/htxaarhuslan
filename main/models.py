@@ -1,13 +1,14 @@
 import json
 from collections import Counter
 from collections import defaultdict
+from urllib.error import HTTPError
 
 import challonge
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_delete
 from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.timezone import now
@@ -227,12 +228,15 @@ def create_challonge(sender, instance, **kwargs):
         }
         if instance.extra_challonge:
             params.update(json.loads(instance.extra_challonge))
-        tournament = challonge.tournaments.create(
-            '{} – {} – {}'.format('HTXAarhusLAN', instance.lan.name, instance.name),
-            instance.get_challonge_url(),
-            params.get('tournament_type', 'single elimination'), **params)
-        instance.challonge_id = tournament['id']
-        instance.save()
+        try:
+            tournament = challonge.tournaments.create(
+                '{} – {} – {}'.format('HTXAarhusLAN', instance.lan.name, instance.name),
+                instance.get_challonge_url(),
+                params.get('tournament_type', 'single elimination'), **params)
+            instance.challonge_id = tournament['id']
+            instance.save()
+        except HTTPError:
+            pass
     elif instance.challonge_id:
         url_params = {
             'game': instance.game.name,
@@ -241,20 +245,27 @@ def create_challonge(sender, instance, **kwargs):
         }
         params = {
             'description': '{}<br><br>Tilmeld dig på: '
-                           '<a href="https://htxaarhuslan.dk{}" target="_blank">{}</a>'.format(instance.description,
-                                                                        reverse('tournament', kwargs=url_params),
-                                                                        'HTXAarhuslan.dk'),
+                           '<a href="https://htxaarhuslan.dk{}" '
+                           'target="_blank">{}</a>'.format(instance.description,
+                                                           reverse('tournament', kwargs=url_params),
+                                                           'HTXAarhuslan.dk'),
             'name': '{} – {} – {}'.format('HTXAarhusLAN', instance.lan.name, instance.name),
             'url': instance.get_challonge_url()
         }
         if instance.extra_challonge:
             params.update(json.loads(instance.extra_challonge))
-        challonge.tournaments.update(instance.challonge_id, **params)
+        try:
+            challonge.tournaments.update(instance.challonge_id, **params)
+        except HTTPError:
+            pass
 
 
-@receiver(post_delete, sender=Tournament, dispatch_uid='delete_challonge')
+@receiver(pre_delete, sender=Tournament, dispatch_uid='delete_challonge')
 def delete_challonge(sender, instance, **kwargs):
-    challonge.tournaments.destroy(instance.challonge_id)
+    try:
+        challonge.tournaments.destroy(instance.challonge_id)
+    except HTTPError:
+        pass
 
 
 class TournamentTeam(models.Model):
@@ -277,13 +288,19 @@ class TournamentTeam(models.Model):
 def create_challonge_team(sender, instance, **kwargs):
     created = kwargs.get('created', False)
     if created:
-        participant = challonge.participants.create(instance.tournament.challonge_id,
-                                                    instance.name,
-                                                    misc=instance.id)
-        instance.challonge_id = participant['id']
-        instance.save()
+        try:
+            participant = challonge.participants.create(instance.tournament.challonge_id,
+                                                        instance.name,
+                                                        misc=instance.id)
+            instance.challonge_id = participant['id']
+            instance.save()
+        except HTTPError:
+            pass
 
 
-@receiver(post_delete, sender=TournamentTeam, dispatch_uid='delete_challonge_team')
+@receiver(pre_delete, sender=TournamentTeam, dispatch_uid='delete_challonge_team')
 def delete_challonge_team(sender, instance, **kwargs):
-    challonge.participants.destroy(instance.tournament.challonge_id, instance.challonge_id)
+    try:
+        challonge.participants.destroy(instance.tournament.challonge_id, instance.challonge_id)
+    except HTTPError:
+        pass
