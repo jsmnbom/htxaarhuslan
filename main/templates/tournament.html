@@ -5,7 +5,7 @@
 {% block content %}
     <div class="box" id="turnering">
         <h2>{% block title %}{{ tournament.name }} - Turnering{% endblock %}</h2>
-        <p>{{ tournament.description }}</p>
+        <p>{{ tournament.description|safe }}</p>
         {% if not teams %}
             <p>Ingen hold er tilmeldt denne turnering endnu.</p>
         {% endif %}

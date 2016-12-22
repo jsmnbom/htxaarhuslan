@@ -11,7 +11,7 @@
                 <div class="game">
                     <a href="#"> <img src="{{ game.image.url }}" alt="{{ game.name }}"></a>
                     <div class="hidden">
-                        <p>{{ game.description }}</p>
+                        <p>{{ game.description|safe }}</p>
                         <p>Der er {{ tournaments|length }} turnering{{ tournaments|length|pluralize:"er" }} planlagt
                             for {{ game.name }}. Klik på en af dem herunder for at se hvilke hold der er tilmeldt samt
                             tilmelde dit eget.</p>
