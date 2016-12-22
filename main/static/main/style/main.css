@@ -301,10 +301,12 @@ p.centered {
     background: #67809f;
     color: #fff;
     padding: 5px;
+    font-size: 25px;
+    line-height: 25px;
 }
 
-.qtip-seat a {
-    font-size: 20px;
+.qtip-seat span {
+    font-size: 0.7em
 }
 
 .qtip-seat a.visited, .qtip-seat a.unvisited, .qtip-seat a {
