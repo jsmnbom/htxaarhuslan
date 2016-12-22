@@ -232,8 +232,8 @@ div#countdown {
 }
 
 p.centered {
-    margin-top:0px;
-    text-align:center;
+    margin-top: 0;
+    text-align: center;
 }
 
 /* Seat selection stuff */
@@ -576,6 +576,9 @@ a.button {
     box-sizing: border-box;
     padding-top: 8px;
     margin: 20px 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 /* Tournament */
