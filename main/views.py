@@ -279,7 +279,7 @@ class ProfileAutocomplete(autocomplete.Select2QuerySetView):
     def get_result_label(self, item):
         html = ''
         if item.photo:
-            im = get_thumbnail(item.photo, '50x50', crop='center')
+            im = get_thumbnail(item.photo, '60x60', crop='center')
             if im:
                 html += '<img src="{}" />'.format(im.url)
         html += '<span>{}</span><br><span>{}<span>&nbsp;({})</span></span>'.format(item.user.first_name,

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load thumbnail %}
 
 {% block extrahead %}
     <script src="{% static "main/script/tilmeld.js" %}"></script>
@@ -38,7 +39,7 @@
                     <tbody>
                         {% for row in seats %}
                             <tr>
-                                {% for seat in row %}{% if seat.0 %}<td {% if current == seat.0 %}class="current" {% endif %}tabindex="0" role="button" data-url="{% if seat.1.user.username %}{% url "profile" username=seat.1.user.username %}{% endif %}" data-name="{{ seat.1.user.first_name }}" data-grade="{{ seat.1.user.profile.get_grade_display }}">{{ seat.0 }}</td>{% else %}<td>&nbsp;</td>{% endif %}
+                                {% for seat in row %}{% if seat.0 %}<td {% if current == seat.0 %}class="current" {% endif %}tabindex="0" role="button" {% if seat.1.user %}{% thumbnail seat.1.user.profile.photo "60x60" crop="center" as im %}style="background-image: url({{ im.url }})"{% endthumbnail %} data-url="{% url "profile" username=seat.1.user.username %}" data-name="{{ seat.1.user.first_name }}" data-username="{{ seat.1.user.username }}" data-grade="{{ seat.1.user.profile.get_grade_display }}" {% endif %}><span>{{ seat.0 }}</span></td>{% else %}<td>&nbsp;</td>{% endif %}
                                 {% empty %} <td>&nbsp;</td>{% endfor %}
                             </tr>
                         {% endfor %}

@@ -259,6 +259,9 @@ p.centered {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    padding: 0;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .seats table td.available, .seats table td.occupied {
@@ -300,12 +303,12 @@ p.centered {
 .qtip-seat {
     background: #67809f;
     color: #fff;
-    padding: 5px;
     font-size: 25px;
     line-height: 25px;
+    padding: 5px;
 }
 
-.qtip-seat span {
+.qtip-seat div > span {
     font-size: 0.7em
 }
 

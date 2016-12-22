@@ -13,15 +13,25 @@ $(document).ready(function () {
     }, 200).resize();
 
     tabletd.each(function () {
-        if ($(this).attr('data-name') !== undefined) {
-            if ($(this).attr('data-name') !== '') {
+        if ($(this).attr('role') == 'button') {
+            if ($(this).attr('data-name')) {
                 $(this).addClass('occupied');
                 var url = $(this).attr('data-url');
                 var name = $(this).attr('data-name');
+                var username = $(this).attr('data-username');
                 var grade = $(this).attr('data-grade');
+                var thumbnail = $(this).attr('data-thumbnail');
+
+                var content = '';
+                if (thumbnail) {
+                    content += '<img src="' + thumbnail + '" />'
+                }
+                content += '<a href="' + url + '">' + name + '</a>' + '<br>';
+                content += '<span>' + username + '<span>&nbsp(' + grade + ')</span></span>';
+
                 $(this).qtip({
                     content: {
-                        text: '<a href="' + url + '">' + name + '</a>' + '<br>' + '<span>' + grade + '</span>'
+                        text: content
                     },
                     position: {
                         my: "left center",
