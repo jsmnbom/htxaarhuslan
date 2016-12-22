@@ -57,8 +57,10 @@ class LanProfileAdmin(DefaultFilterMixIn, admin.ModelAdmin):
 
     not_paid.short_description = mark_safe(mark_safe("Markér som ikke betalt."))
 
-    if get_next_lan():
-        default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
+    def __init__(self, model, admin_site):
+        super().__init__(model, admin_site)
+        if get_next_lan():
+            self.default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
 
 
 class ProfileInline(AdminImageMixin, admin.StackedInline):
