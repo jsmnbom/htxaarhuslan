@@ -296,6 +296,14 @@ p.centered {
     }
 }
 
+.seats table td span.overlay {
+    text-shadow:
+            -1px -1px 1px #000,
+            1px -1px 1px #000,
+            -1px 1px 1px #000,
+            1px 1px 1px #000;
+}
+
 .seats form input {
     margin: 0;
 }
