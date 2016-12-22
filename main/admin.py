@@ -68,6 +68,12 @@ class ProfileInline(AdminImageMixin, admin.StackedInline):
 
 @admin.register(User)
 class MyUserAdmin(UserAdmin):
+    def get_readonly_fields(self, request, obj=None):
+        if request.user.is_superuser:
+            return self.readonly_fields
+        return self.readonly_fields + ('is_staff', 'is_superuser',
+                                       'groups', 'user_permissions')
+
     list_display = ('username', 'email', 'first_name', 'get_grade', 'is_staff')
 
     def get_grade(self, user):
