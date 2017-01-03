@@ -215,7 +215,7 @@ class Tournament(models.Model):
                                help_text='Er der åbent for tilmelding? Hvis nej bliver turneringen ikke vist på siden.'
                                          'Bemærk at LanCrew medlemmer dog altid kan tilmelde sig.')
     start = models.DateTimeField(verbose_name='Start', null=True)
-    end = models.DateTimeField(verbose_name='Slut', null=True)
+    end = models.DateTimeField(verbose_name='Slut', null=True, blank=True)
 
     def __str__(self):
         return self.name
