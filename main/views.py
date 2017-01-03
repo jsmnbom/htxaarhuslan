@@ -5,7 +5,6 @@ from dal import autocomplete
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.core.serializers import serialize
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import Http404, JsonResponse
@@ -290,15 +289,16 @@ def calendar(request, feed_name):
     lan = get_next_lan()
     events = []
     if feed_name == 'tournament':
-        ts = Tournament.objects.filter(lan=lan)  # and date fields are not null
+        ts = Tournament.objects.filter(lan=lan, start__isnull=False)
         for t in ts:
-            events.append(
-                {
-                    'title': '{}'.format(t.name),
-                    'start': '2016-11-27',  # Testing
-                    'id': t.pk  # Is this really needed?
-                }
-            )
+            event = {
+                'title': '{}'.format(t.name),
+                'start': t.start.isoformat(),
+                'id': t.pk
+            }
+            if t.end:
+                event['end'] = t.end.isoformat()
+            events.append(event)
     else:
         raise Http404
     return JsonResponse(events, safe=False)
