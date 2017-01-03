@@ -1,6 +1,5 @@
 import json
 from collections import Counter
-from collections import defaultdict
 from urllib.error import HTTPError
 
 import challonge
@@ -8,7 +7,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from django.db.models.signals import post_save, post_delete, pre_delete
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.timezone import now
@@ -116,6 +115,10 @@ class Lan(models.Model):
     paytypes = ChoiceArrayField(models.CharField(max_length=127, choices=PAYTYPES), verbose_name='betalingstyper',
                                 null=True)
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='pris', null=True)
+    show_calendar = models.BooleanField(default=False, verbose_name='Vis kalender',
+                                        help_text='Hvorvidt en kalender skal vises på forsiden. '
+                                                  'Slå kun dette til hvis turneringer og andre events '
+                                                  'efterhånden er ved at være klar.')
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.start.strftime('%d. %b. %Y'))
@@ -211,6 +214,8 @@ class Tournament(models.Model):
     open = models.BooleanField(verbose_name='Tilmelding mulig?',
                                help_text='Er der åbent for tilmelding? Hvis nej bliver turneringen ikke vist på siden.'
                                          'Bemærk at LanCrew medlemmer dog altid kan tilmelde sig.')
+    start = models.DateTimeField(verbose_name='Start', null=True)
+    end = models.DateTimeField(verbose_name='Slut', null=True)
 
     def __str__(self):
         return self.name

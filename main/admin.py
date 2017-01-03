@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
+from django.db import ProgrammingError
 from django.forms import model_to_dict
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -59,8 +60,11 @@ class LanProfileAdmin(DefaultFilterMixIn, admin.ModelAdmin):
 
     def __init__(self, model, admin_site):
         super().__init__(model, admin_site)
-        if get_next_lan():
-            self.default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
+        try:
+            if get_next_lan():
+                self.default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
+        except ProgrammingError:
+            pass
 
 
 class ProfileInline(AdminImageMixin, admin.StackedInline):
@@ -138,8 +142,13 @@ class TournamentAdmin(admin.ModelAdmin):
 
     get_teams_count.short_description = 'Antal hold'
 
-    if get_next_lan():
-        default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
+    def __init__(self, model, admin_site):
+        super().__init__(model, admin_site)
+        try:
+            if get_next_lan():
+                self.default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
+        except ProgrammingError:
+            pass
 
     def challonge_link(self, tournament):
         return '<a href="http://challonge.com/{0}" target="_blank">{0}</a>'.format(tournament.get_challonge_url())
