@@ -9,7 +9,7 @@ from django.utils.timezone import now
 from sorl.thumbnail.admin import AdminImageMixin
 
 from main.forms import AdminLanProfileForm, AdminProfileForm
-from .models import Profile, Lan, LanProfile, get_next_lan, Tournament, Game, TournamentTeam
+from .models import Profile, Lan, LanProfile, get_next_lan, Tournament, Game, TournamentTeam, Event
 
 admin.site.unregister(User)
 
@@ -156,6 +156,6 @@ class TournamentAdmin(admin.ModelAdmin):
     challonge_link.allow_tags = True
     challonge_link.short_description = 'Challonge'
 
-
 admin.site.register(Game)
 admin.site.register(TournamentTeam)
+admin.site.register(Event)

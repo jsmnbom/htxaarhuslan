@@ -13,7 +13,7 @@ from django.template.loader import render_to_string
 from django.utils.timezone import now, utc
 from sorl.thumbnail import get_thumbnail
 
-from main.models import get_next_lan, LanProfile, Profile, Tournament, TournamentTeam
+from main.models import get_next_lan, LanProfile, Profile, Tournament, TournamentTeam, Event
 from .forms import UserRegForm, ProfileRegForm, TilmeldForm, EditUserForm, EditProfileForm, TournamentTeamForm
 
 
@@ -290,16 +290,22 @@ def calendar(request, feed_name):
     events = []
     if feed_name == 'tournament':
         ts = Tournament.objects.filter(lan=lan, start__isnull=False)
-        for t in ts:
-            event = {
-                'title': '{}'.format(t.name),
-                'start': t.start.isoformat(),
-                'id': t.pk,
-                'url': t.get_absolute_url()
-            }
-            if t.end:
-                event['end'] = t.end.isoformat()
-            events.append(event)
+    elif feed_name:
+        ts = Event.objects.filter(lan=lan, start__isnull=False)
     else:
         raise Http404
+    for t in ts:
+        try:
+            url = t.url
+        except AttributeError:
+            url = t.get_absolute_url()
+        event = {
+            'title': '{}'.format(t.name),
+            'start': t.start.isoformat(),
+            'id': t.pk,
+            'url': url
+        }
+        if t.end:
+            event['end'] = t.end.isoformat()
+        events.append(event)
     return JsonResponse(events, safe=False)

@@ -312,3 +312,16 @@ def delete_challonge_team(sender, instance, **kwargs):
         challonge.participants.destroy(instance.tournament.challonge_id, instance.challonge_id)
     except HTTPError:
         pass
+
+
+class Event(models.Model):
+    class Meta:
+        verbose_name = 'begivenhed'
+        verbose_name_plural = 'begivenheder'
+
+    lan = models.ForeignKey(Lan, on_delete=models.CASCADE, verbose_name='lan')
+    name = models.CharField(max_length=255, verbose_name='navn')
+    url = models.URLField(max_length=255, verbose_name='link', help_text='Valgfri. Link som kan klikkes på kalenderen.',
+                          null=True, blank=True)
+    start = models.DateTimeField(verbose_name='Start', null=True)
+    end = models.DateTimeField(verbose_name='Slut', null=True, blank=True)
