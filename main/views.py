@@ -1,19 +1,17 @@
-import logging
 from collections import defaultdict
 from datetime import datetime
 
+from dal import autocomplete
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.conf import settings
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import send_mail
+from django.core.serializers import serialize
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import Http404
+from django.http import Http404, JsonResponse
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.utils.timezone import now, utc
-from django.shortcuts import render, redirect
-from dal import autocomplete
 from sorl.thumbnail import get_thumbnail
 
 from main.models import get_next_lan, LanProfile, Profile, Tournament, TournamentTeam
@@ -286,3 +284,21 @@ class ProfileAutocomplete(autocomplete.Select2QuerySetView):
                                                                                    item.user.username,
                                                                                    item.get_grade_display())
         return html
+
+
+def calendar(request, feed_name):
+    lan = get_next_lan()
+    events = []
+    if feed_name == 'tournament':
+        ts = Tournament.objects.filter(lan=lan)  # and date fields are not null
+        for t in ts:
+            events.append(
+                {
+                    'title': '{}'.format(t.name),
+                    'start': '2016-11-27',  # Testing
+                    'id': t.pk  # Is this really needed?
+                }
+            )
+    else:
+        raise Http404
+    return JsonResponse(events, safe=False)

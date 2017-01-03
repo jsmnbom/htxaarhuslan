@@ -236,6 +236,33 @@ p.centered {
     text-align: center;
 }
 
+/* Calendar / schedule stuff */
+#calendar_loading {
+    display: none;
+}
+
+#calendar_loading h4:after {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  -webkit-animation: ellipsis steps(4,end) 900ms infinite;
+  animation: ellipsis steps(4,end) 900ms infinite;
+  content: "...";
+  width: 0;
+}
+
+@keyframes ellipsis {
+  to {
+    width: 25px;
+  }
+}
+
+@-webkit-keyframes ellipsis {
+  to {
+    width: 25px;
+  }
+}
+
 /* Seat selection stuff */
 .seats {
     margin: 0 auto;

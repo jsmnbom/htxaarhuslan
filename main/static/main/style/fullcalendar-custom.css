@@ -1,0 +1,20 @@
+.fc-unthemed .fc-content, .fc-unthemed .fc-divider, .fc-unthemed .fc-list-heading td, .fc-unthemed .fc-list-view, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead {
+    border: none;   
+}
+
+.fc-unthemed .fc-divider, .fc-unthemed .fc-list-heading td, .fc-unthemed .fc-popover .fc-header {
+    background: #363032;
+    font-size: 1.25em;
+}
+
+.fc-list-item:hover td {
+    background: #85899b;
+}
+
+.fc-unthemed .fc-list-empty {
+    background: #363032;
+}
+
+.fc-list-empty {
+    font-size: 1.25em;
+}

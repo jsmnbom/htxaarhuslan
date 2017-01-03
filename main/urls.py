@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^bruger/gammel$', views.legacy, name='legacy'),
     url(r'^bruger/needlogin$', views.needlogin, name='needlogin'),
     url(r'^privatliv$', views.policy, name='policy'),
+    url(r'^calendar/(?P<feed_name>.+).json$', views.calendar, name='calendar'),
 
     # Autocompletes
     url(r'^autocomplete/profile/$',

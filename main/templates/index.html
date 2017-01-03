@@ -1,18 +1,63 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Forside{% endblock %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css">
+    <link rel="stylesheet" href="{% static 'main/style/fullcalendar-custom.css' %}">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/locale/da.js"></script>
+{% endblock %}
 
 {% block content %}
     <div class="box" id="næstelan">
         {% if next_lan %}
-        <h2>Næste LAN: {{ next_lan.name }}</h2>
-        <h4>Dato: <strong>{{ next_lan.start }}</strong></h4>
-        {{ next_lan.blurb|safe }}
+            <h2>Næste LAN: {{ next_lan.name }}</h2>
+            <h4>Dato: <strong>{{ next_lan.start }}</strong></h4>
+            {{ next_lan.blurb|safe }}
         {% else %}
             <h2>Ingen LAN planlagt</h2>
             <p>Der er ingen lan planlagt på nuværende tidspunkt.</p>
         {% endif %}
     </div>
+    {% if next_lan %}
+        <div class="box" id="plan">
+            <h2>Tidsplan</h2>
+            <div id="calendar_loading"><h4>Indlæser</h4></div>
+            <div id="calendar"></div>
+            <script>
+                // Kinda gross to have all this here, but it's easiest so ¯\_(ツ)_/¯
+                $('#calendar').fullCalendar({
+                    eventSources: [
+                        {
+                            url: '/calendar/tournament.json',
+                            color: '#4fb0d7'
+                        },
+                        {
+                            url: '/calendar/misc.json',
+                            color: '#d33e20'
+                        }
+                    ],
+                    loading: function (bool) {
+                        $('#calendar_loading').toggle(bool);
+                    },
+                    defaultView: 'lan',
+                    views: {
+                        lan: {
+                            type: 'list',
+                            duration: {days: 3},
+                            buttonText: 'lan'
+                        }
+                    },
+                    defaultDate: '{{ next_lan.start.isoformat }}',
+                    header: false,
+                    firstDay: 1
+                })
+            </script>
+        </div>
+    {% endif %}
     <div class="box" id="hvaderhal">
         <h2>Hvad er HAL?</h2>
         <p>HAL <span class="acronym">(<span>H</span>TX<span>A</span>arhus<span>L</span>AN)</span> er navnet på det LAN
@@ -25,7 +70,8 @@
             skrevne regler.</p>
         <p>Under <a href="{% url "tilmeld" %}">Tilmelding</a>, kan du tilmelde dig til næste LAN. Hvis du ikke gør
             dette, kan du ikke komme ind!</p>
-        <p>Under <a href="{% url "tournaments" %}">Turnering</a>, kan du melde dig til turneringerne ved næste LAN, og det er
+        <p>Under <a href="{% url "tournaments" %}">Turnering</a>, kan du melde dig til turneringerne ved næste LAN, og
+            det er
             også her der kommer live opdateringer på turneringerne under LAN'et! </p>
     </div>
 {% endblock %}
