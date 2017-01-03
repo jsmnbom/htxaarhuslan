@@ -294,7 +294,8 @@ def calendar(request, feed_name):
             event = {
                 'title': '{}'.format(t.name),
                 'start': t.start.isoformat(),
-                'id': t.pk
+                'id': t.pk,
+                'url': t.get_absolute_url()
             }
             if t.end:
                 event['end'] = t.end.isoformat()

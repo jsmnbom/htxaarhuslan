@@ -223,6 +223,9 @@ class Tournament(models.Model):
     def get_challonge_url(self):
         return '{}_{}_{}'.format('htxaarhuslan', self.lan.id, self.id)
 
+    def get_absolute_url(self):
+        return reverse('tournament', kwargs={'game': self.game.name, 'lan_id': self.lan.id, 'name': self.name})
+
 
 @receiver(post_save, sender=Tournament, dispatch_uid='create_challonge')
 def create_challonge(sender, instance, **kwargs):

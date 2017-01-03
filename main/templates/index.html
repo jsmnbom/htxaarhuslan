@@ -17,12 +17,15 @@
             <h2>Næste LAN: {{ next_lan.name }}</h2>
             <h4>Dato: <strong>{{ next_lan.start }}</strong></h4>
             {{ next_lan.blurb|safe }}
+            {% if not next_lan.show_calendar %}
+                <p>Tidsplan er endnu ikke helt færdiggjort, men vil blive vist herunder snarrest.</p>
+            {% endif %}
         {% else %}
             <h2>Ingen LAN planlagt</h2>
             <p>Der er ingen lan planlagt på nuværende tidspunkt.</p>
         {% endif %}
     </div>
-    {% if next_lan %}
+    {% if next_lan and next_lan.show_calendar %}
         <div class="box" id="plan">
             <h2>Tidsplan</h2>
             <div id="calendar_loading"><h4>Indlæser</h4></div>

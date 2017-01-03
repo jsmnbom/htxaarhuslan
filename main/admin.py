@@ -101,7 +101,7 @@ class LanAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Tider', {
-            'fields': (('start', 'end'), 'open')
+            'fields': (('start', 'end'), 'open', 'show_calendar')
         }),
         ('Pladser', {
             'fields': ('seats',)

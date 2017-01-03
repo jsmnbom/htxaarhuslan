@@ -18,7 +18,7 @@
                         {% for t in tournaments %}
                             {% if t.open or request.user.is_staff %}
                                 <h4>
-                                    <a href="{% url 'tournament' game=game.name lan_id=t.lan.id name=t.name %}">{{ t.name }}</a>
+                                    <a href="{{ t.get_absolute_url }}">{{ t.name }}</a>
                                 </h4>
                             {% endif %}
                         {% endfor %}
@@ -51,7 +51,7 @@
                             <tr>
                                 <td>{{ team.name }}</td>
                                 <td>{{ team.tournament.game }}</td>
-                                <td><a href="{% url 'tournament' game=team.tournament.game.name lan_id=team.tournament.lan.id name=team.tournament.name %}">{{ team.tournament.name }}</a></td>
+                                <td><a href="{{ team.tournament.get_absolute_url }}">{{ team.tournament.name }}</a></td>
                                 <td>{% for profile in team.profiles.all %}<a href="{% url 'profile' username=profile.user.username %}">{{ profile.user.first_name }}</a>{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} og {% else %}, {% endifequal %}{% else %}{% endif %} {% endfor %}</td>
                                 <td><form action="{{ get_full_path }}" method="POST">{% csrf_token %} <input type="hidden" name="frameld" value="{{ team.id }}"><input type="submit" value="frameld"></form></td>
                             </tr>
