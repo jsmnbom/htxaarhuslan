@@ -218,7 +218,7 @@ LANGUAGES = [
     ('da', 'Dansk'),
 ]
 
-PAYMENT_PHONE = '(telefonnummer endnu ikke fastlagt, vend tilbage snarrest)'
+PAYMENT_PHONE = '(+45) 29 10 84 47'
 
 CHALLONGE_USER = env_var('CHALLONGE_USER')
 CHALLONGE_API_KEY = env_var('CHALLONGE_API_KEY')
