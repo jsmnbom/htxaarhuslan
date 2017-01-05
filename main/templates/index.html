@@ -29,37 +29,8 @@
         <div class="box" id="plan">
             <h2>Tidsplan</h2>
             <div id="calendar_loading"><h4>Indlæser</h4></div>
-            <div id="calendar"></div>
-            <script>
-                // Kinda gross to have all this here, but it's easiest so ¯\_(ツ)_/¯
-                $('#calendar').fullCalendar({
-                    eventSources: [
-                        {
-                            url: '/calendar/tournament.json',
-                            color: '#4fb0d7'
-                        },
-                        {
-                            url: '/calendar/misc.json',
-                            color: '#d33e20'
-                        }
-                    ],
-                    loading: function (bool) {
-                        $('#calendar_loading').toggle(bool);
-                    },
-                    defaultView: 'lan',
-                    views: {
-                        lan: {
-                            type: 'list',
-                            duration: {days: 3},
-                            buttonText: 'lan'
-                        }
-                    },
-                    defaultDate: '{{ next_lan.start.isoformat }}',
-                    header: false,
-                    firstDay: 1,
-                    timezone: 'local'
-                })
-            </script>
+            <div id="calendar" data-date="{{ next_lan.start.isoformat }}"></div>
+            <script src="{% static "main/script/calendar.js" %}"></script>
         </div>
     {% endif %}
     <div class="box" id="hvaderhal">
