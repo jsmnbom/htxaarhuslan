@@ -16,7 +16,7 @@
                             for {{ game.name }}. Klik på en af dem herunder for at se hvilke hold der er tilmeldt samt
                             tilmelde dit eget.</p>
                         {% for t in tournaments %}
-                            {% if t.open or request.user.is_staff %}
+                            {% if t.open or request.user.is_staff or t.live %}
                                 <h4>
                                     <a href="{{ t.get_absolute_url }}">{{ t.name }}</a>
                                 </h4>
