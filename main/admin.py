@@ -1,42 +1,45 @@
 from django.contrib import admin
+from django.contrib.admin import SimpleListFilter
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from django.db import ProgrammingError
 from django.forms import model_to_dict
-from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.timezone import now
 from sorl.thumbnail.admin import AdminImageMixin
 
 from main.forms import AdminLanProfileForm, AdminProfileForm
-from .models import Profile, Lan, LanProfile, get_next_lan, Tournament, Game, TournamentTeam, Event
+from .models import Profile, Lan, LanProfile, Tournament, Game, TournamentTeam, Event, get_next_lan
 
 admin.site.unregister(User)
 
 
-class DefaultFilterMixIn(admin.ModelAdmin):
-    def changelist_view(self, request, *args, **kwargs):
-        from django.http import HttpResponseRedirect
-        if self.default_filters:
-            try:
-                test = request.META['HTTP_REFERER'].split(request.META['PATH_INFO'])
-                if test and test[-1] and not test[-1].startswith('?'):
-                    url = reverse('admin:%s_%s_changelist' % (self.opts.app_label, self.opts.model_name))
-                    filters = []
-                    for filt in self.default_filters:
-                        key = filt.split('=')[0]
-                        if key not in request.GET:
-                            filters.append(filt)
-                    if filters:
-                        return HttpResponseRedirect("%s?%s" % (url, "&".join(filters)))
-            except KeyError:
-                pass
-        return super(DefaultFilterMixIn, self).changelist_view(request, *args, **kwargs)
+# Allows us to have a default filter
+class LanFilter(SimpleListFilter):
+    title = 'lan'
+    parameter_name = 'lan'
+
+    def lookups(self, request, model_admin):
+        return [(str(lan.pk), str(lan)) for lan in Lan.objects.all().order_by('-end')] + [('all', 'Vis alle')]
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value and not value == 'all':
+            return queryset.filter(lan_id=value)
+        return queryset
+
+    def value(self):
+        # What would the value have been?
+        value = super().value()
+        if value is None:
+            lan = get_next_lan()
+            if lan:
+                value = lan.pk
+        return str(value)
 
 
 @admin.register(LanProfile)
-class LanProfileAdmin(DefaultFilterMixIn, admin.ModelAdmin):
-    list_filter = ('lan', 'paytype', 'paid', 'profile__grade', 'profile__user__is_staff')
+class LanProfileAdmin(admin.ModelAdmin):
+    list_filter = (LanFilter, 'paytype', 'paid', 'profile__grade', 'profile__user__groups')
     list_display = ('profile', 'lan', 'seat', 'get_paytype', 'paid')
     search_fields = ('profile__user__first_name', 'profile__user__username', 'seat')
     form = AdminLanProfileForm
@@ -57,14 +60,6 @@ class LanProfileAdmin(DefaultFilterMixIn, admin.ModelAdmin):
         queryset.update(paid=False)
 
     not_paid.short_description = mark_safe(mark_safe("Markér som ikke betalt."))
-
-    def __init__(self, model, admin_site):
-        super().__init__(model, admin_site)
-        try:
-            if get_next_lan():
-                self.default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
-        except ProgrammingError:
-            pass
 
 
 class ProfileInline(AdminImageMixin, admin.StackedInline):
@@ -129,7 +124,7 @@ class TournamentTeamInline(admin.TabularInline):
 
 @admin.register(Tournament)
 class TournamentAdmin(admin.ModelAdmin):
-    list_filter = ('lan', 'game')
+    list_filter = (LanFilter, 'game')
     list_display = ('name', 'game', 'lan', 'challonge_link', 'get_teams_count', 'live', 'open')
     search_fields = ('name', 'game', 'lan')
 
@@ -142,19 +137,12 @@ class TournamentAdmin(admin.ModelAdmin):
 
     get_teams_count.short_description = 'Antal hold'
 
-    def __init__(self, model, admin_site):
-        super().__init__(model, admin_site)
-        try:
-            if get_next_lan():
-                self.default_filters = ('lan__id__exact={}'.format(get_next_lan().id),)
-        except ProgrammingError:
-            pass
-
     def challonge_link(self, tournament):
         return '<a href="http://challonge.com/{0}" target="_blank">{0}</a>'.format(tournament.get_challonge_url())
 
     challonge_link.allow_tags = True
     challonge_link.short_description = 'Challonge'
+
 
 admin.site.register(Game)
 admin.site.register(TournamentTeam)
