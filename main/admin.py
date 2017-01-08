@@ -24,7 +24,10 @@ class LanFilter(SimpleListFilter):
     def queryset(self, request, queryset):
         value = self.value()
         if value and not value == 'all':
-            return queryset.filter(lan_id=value)
+            if queryset.model == TournamentTeam:
+                return queryset.filter(tournament__lan_id=value)
+            else:
+                return queryset.filter(lan_id=value)
         return queryset
 
     def value(self):
@@ -119,7 +122,9 @@ class LanAdmin(admin.ModelAdmin):
 
 class TournamentTeamInline(admin.TabularInline):
     model = TournamentTeam
-    fields = ('profiles', 'name')
+    show_change_link = True
+
+    fields = ('name',)  # If we show profiles too it slows down the SQL
 
 
 @admin.register(Tournament)
@@ -144,6 +149,26 @@ class TournamentAdmin(admin.ModelAdmin):
     challonge_link.short_description = 'Challonge'
 
 
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_filter = (LanFilter,)
+    list_display = ('name', 'lan', 'start', 'end')
+    search_fields = ('name', 'description')
+
+
+@admin.register(TournamentTeam)
+class TournamentTeamAdmin(admin.ModelAdmin):
+    list_filter = (LanFilter, 'tournament__game', 'tournament')
+    list_display = ('name', 'get_game', 'tournament', 'get_lan')
+    search_fields = ('name', 'profiles')
+
+    def get_game(self, team):
+        return team.tournament.game
+    get_game.short_description = 'spil'
+
+    def get_lan(self, team):
+        return team.tournament.lan
+    get_lan.short_description = 'lan'
+
+
 admin.site.register(Game)
-admin.site.register(TournamentTeam)
-admin.site.register(Event)
