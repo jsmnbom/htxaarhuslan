@@ -56,10 +56,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'snowpenguin.django.recaptcha2',
-    'sorl.thumbnail'
+    'sorl.thumbnail',
+    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -222,3 +224,5 @@ PAYMENT_PHONE = '(+45) 29 10 84 47'
 
 CHALLONGE_USER = env_var('CHALLONGE_USER')
 CHALLONGE_API_KEY = env_var('CHALLONGE_API_KEY')
+
+INTERNAL_IPS = ['127.0.0.1', 'localhost']
