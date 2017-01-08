@@ -36,7 +36,7 @@ class DefaultFilterMixIn(admin.ModelAdmin):
 
 @admin.register(LanProfile)
 class LanProfileAdmin(DefaultFilterMixIn, admin.ModelAdmin):
-    list_filter = ('lan', 'paytype', 'paid')
+    list_filter = ('lan', 'paytype', 'paid', 'user__profile__grade', 'user__is_staff')
     list_display = ('profile', 'lan', 'seat', 'get_paytype', 'paid')
     search_fields = ('profile__user__first_name', 'profile__user__username', 'seat')
     form = AdminLanProfileForm
