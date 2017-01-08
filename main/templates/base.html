@@ -82,16 +82,39 @@
                     {% block sidebar %}
                         <div class="box login" id="login">
                             {% if request.user.is_authenticated %}
-                                <h2>Velkommen {{ request.user.first_name }}</h2>
-                                <div class="buttons">
-                                    <a class="button" href="{% url "tilmeld" %}">Tilmeld til lan</a>
-                                    <a class="button" href="{% url "profile" username=user.username %}">Vis/rediger
-                                        profil</a>
-                                    {% if request.user.is_staff %}
-                                        <a class="button" href="{% url "admin:index" %}">Admin</a>{% endif %}
-                                    <a class="button" href="{% url "logout" %}?next={{ request.get_full_path }}">Log
-                                        af</a>
-                                </div>
+                                {% with request.user.profile.get_lanprofile_for_next_lan as lp %}
+                                    <h2>Velkommen {{ request.user.first_name }}</h2>
+                                    <div class="status">
+                                        {% if lp %}
+                                            {% if lp.paytype and not lp.paid %}
+                                                {% if lp.paytype == 'mp' %}
+                                                    <p>Du er tilmeldt LAN, men din MobilePay betaling er ikke
+                                                        gennemført. Klik på eller scan din unikke QR kode herunder for
+                                                        at betale. (Bemærk at det kan tage op til et par timer før din
+                                                        betaling går igennem.)</p>
+                                                    <a href="{{ lp.get_payment_url }}">
+                                                        <img src="{{ lp.get_payment_qr_url }}"
+                                                             alt="Unik MobilePay QR kode. Klik eller scan.">
+                                                    </a>
+                                                {% elif lp.paytype == 'cash' %}
+                                                    <p>Du er tilmeldt LAN, og har valgt at betale med kontanter. Find
+                                                        venligt et LanCrew medlem når du ankommer til LAN.</p>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="buttons">
+                                        {% if not lp %}
+                                            <a class="button" href="{% url "tilmeld" %}">Tilmeld til lan</a>
+                                        {% endif %}
+                                        <a class="button" href="{% url "profile" username=user.username %}">Vis/rediger
+                                            profil</a>
+                                        {% if request.user.is_staff %}
+                                            <a class="button" href="{% url "admin:index" %}">Admin</a>{% endif %}
+                                        <a class="button" href="{% url "logout" %}?next={{ request.get_full_path }}">Log
+                                            af</a>
+                                    </div>
+                                {% endwith %}
                             {% else %}
                                 <h2>Login</h2>
                                 {% include 'messages.html' %}

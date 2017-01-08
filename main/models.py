@@ -4,12 +4,14 @@ from urllib.error import HTTPError
 
 import challonge
 from django import forms
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django.urls import reverse
+from django.utils.encoding import escape_uri_path
 from django.utils.timezone import now
 from sorl.thumbnail import ImageField
 
@@ -61,6 +63,13 @@ class Profile(models.Model):
 
     def __str__(self):
         return '{} ({})'.format(self.user.username, self.user.first_name)
+
+    def get_lanprofile_for_next_lan(self):
+        lan = get_next_lan()
+        try:
+            return LanProfile.objects.get(lan=lan, profile=self)
+        except LanProfile.DoesNotExist:
+            return None
 
 
 class StrippedMultipleChoiceFieldField(forms.MultipleChoiceField):
@@ -172,6 +181,24 @@ class LanProfile(models.Model):
         if not self.seat:
             self.seat = None
         super().save(*args, **kwargs)
+
+    def get_payment_url(self):
+        attrs = {
+            'price': self.lan.price,
+            'phone': settings.PAYMENT_PHONE_NUMBER,
+            'comment': 'LAN|{}'.format(self.profile.user.username)
+        }
+        return 'mobilepay://send?amount={price}&phone={phone}&comment={comment}'.format(**attrs)
+
+    def get_payment_qr_url(self):
+        attrs = {
+            'size': '300',
+            'error': 'M',
+            'margin': '2',
+            'data': escape_uri_path(self.get_payment_url())
+        }
+        return ('https://chart.googleapis.com/'
+                'chart?cht=qr&chs={size}x{size}&chl={data}&chld={error}|{margin}').format(**attrs)
 
 
 def get_next_lan():
@@ -325,7 +352,6 @@ class Event(models.Model):
                           null=True, blank=True)
     start = models.DateTimeField(verbose_name='Start', null=True)
     end = models.DateTimeField(verbose_name='Slut', null=True, blank=True)
-    
+
     def __str__(self):
         return self.name
-
