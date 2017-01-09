@@ -10,6 +10,15 @@
                 <p>Navn: {{ profile.user.first_name }}</p>
                 <p>Klasse: {{ profile.get_grade_display }}</p>
                 <p>Bio:<br>{{ profile.bio|linebreaks }}</p>
+                {% with profile.get_lanprofile_for_next_lan as lp %}
+                    {% if lp %}
+                        {% if lp.seat %}
+                            <p>Har reserveret pladsen: {{ lp.seat }}</p>
+                            {% else %}
+                            <p>Er tilmeldt næste LAN, men har ikke valgt plads.</p>
+                        {% endif %}
+                    {% endif %}
+                {% endwith %}
             </div>
             {% if profile.photo %}
                 {% thumbnail profile.photo "400" as im %}
@@ -18,6 +27,7 @@
                     </a>
                 {% endthumbnail %}
             {% endif %}
+
         </div>
         {% if user_form %}
             <form action="{{ get_full_path }}" method="post" enctype='multipart/form-data'>
