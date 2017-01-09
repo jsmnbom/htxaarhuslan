@@ -148,8 +148,7 @@ class Lan(models.Model):
                     tables[s] += 1
                     seat = '{}{:02d}'.format(s, tables[s])
                     try:
-                        profile = lps[seat].profile
-                        parsed[-1].append((seat, profile))
+                        parsed[-1].append((seat, lps[seat]))
                     except KeyError:
                         parsed[-1].append((seat, None))
                 else:
