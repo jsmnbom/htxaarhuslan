@@ -44,8 +44,6 @@ def tilmeld(request):
     except AttributeError:
         current = 0
 
-    count = (LanProfile.objects.filter(lan=lan).count(), count)
-
     if request.method == 'POST':
         form = TilmeldForm(request.POST, seats=seats, lan=lan, profile=request.user.profile)
         if form.is_valid() and lan.is_open() and count[0] < count[1]:

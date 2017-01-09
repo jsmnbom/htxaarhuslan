@@ -140,7 +140,7 @@ class Lan(models.Model):
     def parse_seats(self):
         parsed = []
         tables = Counter()
-        lps = {lp.seat: lp for lp in LanProfile.objects.filter(lan=self).select_related('profile').all()}
+        lps = {lp.seat: lp for lp in LanProfile.objects.filter(lan=self).select_related('profile', 'profile__user').all()}
         for row in self.seats.splitlines():
             parsed.append([])
             for s in row:
@@ -153,10 +153,10 @@ class Lan(models.Model):
                         parsed[-1].append((seat, None))
                 else:
                     parsed[-1].append((None, None))
-        return parsed, sum(tables.values())
+        return parsed, (len(lps), sum(tables.values()))
 
     def seats_count(self):
-        return self.parse_seats()[1]
+        return self.parse_seats()[1][1]
 
     seats_count.short_description = 'Antal pladser'
 
