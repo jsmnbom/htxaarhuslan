@@ -131,7 +131,7 @@ def profile(request, username=None):
         pass
 
     return render(request, 'profile.html', {'user_form': user_form, 'profile_form': profile_form,
-                                            'profile': prof, 'start_edit': start_edit})
+                                            'profile': prof, 'start_edit': start_edit, 'lan': get_next_lan()})
 
 
 def tournaments(request):

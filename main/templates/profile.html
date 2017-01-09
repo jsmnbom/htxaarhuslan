@@ -10,15 +10,19 @@
                 <p>Navn: {{ profile.user.first_name }}</p>
                 <p>Klasse: {{ profile.get_grade_display }}</p>
                 <p>Bio:<br>{{ profile.bio|linebreaks }}</p>
-                {% with profile.get_lanprofile_for_next_lan as lp %}
-                    {% if lp %}
-                        {% if lp.seat %}
-                            <p>Har reserveret pladsen: {{ lp.seat }}</p>
+                {% if lan %}
+                    <p>Næste LAN: denne bruger{% with profile.get_lanprofile_for_next_lan as lp %}
+                        {% if lp %}
+                            {% if lp.seat %}
+                                har reserveret plads {{ lp.seat }}
                             {% else %}
-                            <p>Er tilmeldt næste LAN, men har ikke valgt plads.</p>
+                                er tilmeldt men har ikke reserveret plads
+                            {% endif %}
+                        {% else %}
+                            er ikke tilmeldt
                         {% endif %}
-                    {% endif %}
-                {% endwith %}
+                    {% endwith %}</p>
+                {% endif %}
             </div>
             {% if profile.photo %}
                 {% thumbnail profile.photo "400" as im %}
