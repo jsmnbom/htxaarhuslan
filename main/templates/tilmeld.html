@@ -49,11 +49,13 @@
                 {% if current != 0 %}
                     <a class="button" id="reset" href="#">Jeg ønsker ikke at reservere plads</a>
                 {% endif %}
-                <h3>Prisen for LAN er denne gang {{ lan.price|floatformat:"-2" }}kr.</h3>
-                <p>Tilmelding er ikke bindende, bemærk dog at penge indbetalt efter LAN'et er startet ikke gives
-                    retur.</p>
-                <p>Det er muligt at betale med MobilePay på {{ phone }} eller kontant til selve LAN'et. Hvis du betaler
-                    via MobilePay, skal du skrive dit brugernavn i kommentarfeltet, så vi ved hvem betalingen kommer fra.</p>
+                {% if lan.paytypes %}
+                    <h3>Prisen for LAN er denne gang {{ lan.price|floatformat:"-2" }}kr.</h3>
+                    <p>Tilmelding er ikke bindende, bemærk dog at penge indbetalt efter LAN'et er startet ikke gives
+                        retur.</p>
+                    <p>Det er muligt at betale med MobilePay på {{ phone }} eller kontant til selve LAN'et. Hvis du betaler
+                        via MobilePay, skal du skrive dit brugernavn i kommentarfeltet, så vi ved hvem betalingen kommer fra.</p>
+                {% endif %}
                 {% if current != 0 %}
                     {% if current != -1 %}
                         <p>Du kan framelde dig LAN ved at trykke herunder. Bemærk at din plads herefter vil blive

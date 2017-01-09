@@ -122,8 +122,8 @@ class Lan(models.Model):
                              help_text='Teksten, specifikt til dette lan, der bliver vist på forsiden.<br>'
                                        'Husk at wrappe tekst i &lt;p> tags!')
     paytypes = ChoiceArrayField(models.CharField(max_length=127, choices=PAYTYPES), verbose_name='betalingstyper',
-                                null=True)
-    price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='pris', null=True)
+                                null=True, blank=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='pris', null=True, blank=True)
     show_calendar = models.BooleanField(default=False, verbose_name='Vis kalender',
                                         help_text='Hvorvidt en kalender skal vises på forsiden. '
                                                   'Slå kun dette til hvis turneringer og andre events '
