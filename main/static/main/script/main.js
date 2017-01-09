@@ -35,6 +35,7 @@ $(document).ready(function () {
             e.preventDefault();
             $('.box#profile #show').slideUp();
             $('.box#profile #edit').slideDown();
+            $('.box#profile form input[type="submit"]').val('Gem profil');
             hidden = false
         }
         setTimeout(function () {
