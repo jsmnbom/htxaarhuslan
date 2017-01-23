@@ -92,7 +92,7 @@
             <div id="countdown" data-opens="{{ opens_time }}"></div>
         {% endif %}
     </div>
-    {% if lan.is_open %}
+    {% if lan.is_open and lan.paytypes %}
         <div class="box" id="penge">
             <h2>Hvad bruger vi pengene på?</h2>
             <p>For at LAN bliver en bedre oplevelse for alle, spørger vi denne gang om at I
