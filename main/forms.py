@@ -213,7 +213,7 @@ class TournamentTeamForm(forms.ModelForm):
                 if name != 'profile_0':
                     self.cleaned_data['profiles'].append(self.cleaned_data[name])
                     try:
-                        LanProfile.objects.get(profile=self.cleaned_data[name])
+                        LanProfile.objects.get(profile=self.cleaned_data[name], lan=get_next_lan())
                     except LanProfile.DoesNotExist:
                         raise ValidationError(
                             '%(profile)s er ikke tilmeldt LAN og kan derfor ikke være med på dit hold.',
