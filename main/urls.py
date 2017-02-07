@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^bruger/needlogin$', views.needlogin, name='needlogin'),
     url(r'^privatliv$', views.policy, name='policy'),
     url(r'^calendar/(?P<feed_name>.+).json$', views.calendar, name='calendar'),
+    url(r'^mad$', views.food, name='food'),
 
     # Autocompletes
     url(r'^autocomplete/profile/$',

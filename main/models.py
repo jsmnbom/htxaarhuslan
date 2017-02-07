@@ -378,10 +378,29 @@ class FoodOrder(models.Model):
         verbose_name = 'madbestilling'
         verbose_name_plural = 'madbestillinger'
 
-    lanprofile = models.ForeignKey(Lan, on_delete=models.CASCADE, verbose_name='tilmelding')
+    time = models.DateTimeField(verbose_name='tid')
+    lanprofile = models.ForeignKey(LanProfile, on_delete=models.CASCADE, verbose_name='tilmelding')
     order = models.TextField(verbose_name='ordre')
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='pris', null=True, blank=True)
     paid = models.BooleanField(default=False, verbose_name='betalt')
 
     def __str__(self):
         return self.order
+
+    def get_payment_url(self):
+        attrs = {
+            'price': self.price,
+            'phone': self.lanprofile.lan.food_phone,
+            'comment': 'LAN_MAD|{}'.format(self.pk)
+        }
+        return 'mobilepay://send?amount={price}&phone={phone}&comment={comment}'.format(**attrs)
+
+    def get_payment_qr_url(self):
+        attrs = {
+            'size': '300',
+            'error': 'M',
+            'margin': '2',
+            'data': escape_uri_path(self.get_payment_url())
+        }
+        return ('https://chart.googleapis.com/'
+                'chart?cht=qr&chs={size}x{size}&chl={data}&chld={error}|{margin}').format(**attrs)

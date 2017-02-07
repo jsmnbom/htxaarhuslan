@@ -8,7 +8,7 @@ from django.utils.timezone import now
 from sorl.thumbnail.admin import AdminImageMixin
 
 from main.forms import AdminLanProfileForm, AdminProfileForm
-from .models import Profile, Lan, LanProfile, Tournament, Game, TournamentTeam, Event, get_next_lan
+from .models import Profile, Lan, LanProfile, Tournament, Game, TournamentTeam, Event, get_next_lan, FoodOrder
 
 admin.site.unregister(User)
 
@@ -172,3 +172,4 @@ class TournamentTeamAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Game)
+admin.site.register(FoodOrder)

@@ -707,15 +707,15 @@ body .select2-hidden-accessible {
     opacity: 0;
 }
 
-table.teams {
+table.wide {
     width: 100%;
 }
 
-table.teams thead {
+table.wide thead {
     font-size: 1.2em;
 }
 
-table.teams tbody td {
+table.wide tbody td {
     padding: 5px 5px 5px 0;
 }
 

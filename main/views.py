@@ -13,7 +13,7 @@ from django.template.loader import render_to_string
 from django.utils.timezone import now, utc
 from sorl.thumbnail import get_thumbnail
 
-from main.models import get_next_lan, LanProfile, Profile, Tournament, TournamentTeam, Event
+from main.models import get_next_lan, LanProfile, Profile, Tournament, TournamentTeam, Event, FoodOrder
 from .forms import UserRegForm, ProfileRegForm, TilmeldForm, EditUserForm, EditProfileForm, TournamentTeamForm
 
 
@@ -201,6 +201,20 @@ def needlogin(request):
 
 def policy(request):
     return render(request, 'policy.html')
+
+
+def food(request):
+    orders = []
+    lan = get_next_lan()
+    show = False
+    if request.user.is_authenticated():
+        try:
+            lp = LanProfile.objects.get(lan=lan, profile=request.user.profile)
+            orders = FoodOrder.objects.filter(lanprofile=lp)
+        except LanProfile.DoesNotExist:
+            show = False
+
+    return render(request, 'food.html', {'lan': lan, 'show': show, 'orders': orders})
 
 
 # Meta pages
