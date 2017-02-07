@@ -2,6 +2,18 @@
 {% load static %}
 {% load thumbnail %}
 
+{% block extrahead %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="{% static "main/script/food.js" %}"></script>
+
+    <style>
+        .select2-results__option {
+            height: auto;
+            line-height: 1em;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     {% if request.user.is_authenticated %}
         <div class="box" id="mine">
@@ -38,7 +50,37 @@
         </div>
     {% endif %}
     {% if show %}
-
+        <div class="box" id="bestilling">
+            <h2>Bestil mad</h2>
+            <p>Vi bestiller mad fra Byens Burger. Menukortet kan ses <a href="http://www.byensburger.dk/menukort/"
+                                                                        target="_blank">her</a>.</p>
+            <form id="food">
+                <select id="category" data-placeholder="Vælg kategori" title="Kategori">
+                    <option></option>
+                </select>
+                <select id="product" data-placeholder="Vælg produkt" title="Produkt">
+                    <option></option>
+                </select>
+                <select id="part1" data-placeholder="Vælg" title="Del 1">
+                    <option></option>
+                </select>
+                <select id="part2" data-placeholder="Vælg" title="Del 2">
+                    <option></option>
+                </select>
+                <select id="part3" data-placeholder="Vælg" title="Del 3">
+                    <option></option>
+                </select>
+                <select id="acc1" data-placeholder="Vælg" title="Tilbehør 1">
+                    <option></option>
+                </select>
+                <select id="acc2" data-placeholder="Vælg" title="Tilbehør 2">
+                    <option></option>
+                </select>
+                <select id="acc3" data-placeholder="Vælg" title="Tilbehør 3">
+                    <option></option>
+                </select>
+            </form>
+        </div>
     {% else %}
         <div class="box" id="ikkeåben">
             <h2>{% block title %}Madbestilling{% endblock %} er ikke åben</h2>
@@ -46,6 +88,7 @@
                 medlem.</p>
             <p>Denne fejl vises også hvis du ikke er tilmeldt nuværende lan. Du kan kun lave en madbestilling hvis du er
                 tilmeldt LAN!</p>
+
         </div>
     {% endif %}
 {% endblock %}

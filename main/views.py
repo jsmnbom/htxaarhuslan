@@ -206,7 +206,7 @@ def policy(request):
 def food(request):
     orders = []
     lan = get_next_lan()
-    show = False
+    show = lan is not None and lan.is_open() and lan.food_open
     if request.user.is_authenticated():
         try:
             lp = LanProfile.objects.get(lan=lan, profile=request.user.profile)

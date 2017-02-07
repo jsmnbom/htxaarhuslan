@@ -110,6 +110,9 @@ class LanAdmin(admin.ModelAdmin):
         ('Betaling', {
             'fields': ('paytypes', 'price')
         }),
+        ('Madbestilling', {
+            'fields': ('food_open', 'food_phone')
+        }),
     )
 
     def get_changeform_initial_data(self, request):
