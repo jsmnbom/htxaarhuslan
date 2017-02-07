@@ -5,6 +5,10 @@
 {% block content %}
     <div class="box" id="turnering">
         <h2>{% block title %}{{ tournament.name }} - Turnering{% endblock %}</h2>
+        <h4>Forventet start: <strong>{{ tournament.start|date:"l, j. F Y G:i" }}</strong></h4>
+        {% if tournament.end %}
+            <h4>Forventet slut: <strong>{{ tournament.end|date:"l, j. F Y G:i" }}</strong></h4>
+        {% endif %}
         <p>{{ tournament.description|safe }}</p>
         {% if not teams %}
             <p>Ingen hold er tilmeldt denne turnering endnu.</p>
