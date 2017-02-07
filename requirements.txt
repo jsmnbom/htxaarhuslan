@@ -15,3 +15,5 @@ python-dateutil==2.4.2
 iso8601==0.1.11
 -e git+http://github.com/russ-/pychallonge#egg=pychallonge
 sorl-thumbnail==12.3
+reportlab==3.3.0
+
