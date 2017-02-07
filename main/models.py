@@ -143,6 +143,7 @@ class Lan(models.Model):
                                                   'Slå kun dette til hvis turneringer og andre events '
                                                   'efterhånden er ved at være klar.')
     food_open = models.BooleanField(default=False, verbose_name='Er madbestilling åben?')
+    food_phone = models.IntegerField(verbose_name='madbestillingstelefonnummer', null=True, blank=True)
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.start.strftime('%d. %b. %Y'))
@@ -379,6 +380,8 @@ class FoodOrder(models.Model):
 
     lanprofile = models.ForeignKey(Lan, on_delete=models.CASCADE, verbose_name='tilmelding')
     order = models.TextField(verbose_name='ordre')
+    price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='pris', null=True, blank=True)
+    paid = models.BooleanField(default=False, verbose_name='betalt')
 
     def __str__(self):
         return self.order
