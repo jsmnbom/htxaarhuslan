@@ -24,14 +24,14 @@ grades = {
         15: ['a', 'b', 'c', 'd', 'e', 'j', 'p', 'r'],
         16: ['a', 'b', 'c', 'd', 'e', 'f', 'j', 'p', 'r']
     },
-    
+
     'xv': {
         13: [],
         14: ['u', 'x', 'y', 'z'],
         15: ['u', 't', 'x', 'z'],
         16: ['u', 'x', 'y', 'z']
     },
-    
+
     'xs': {
         13: [],
         14: ['i', 'm'],
@@ -142,6 +142,7 @@ class Lan(models.Model):
                                         help_text='Hvorvidt en kalender skal vises på forsiden. '
                                                   'Slå kun dette til hvis turneringer og andre events '
                                                   'efterhånden er ved at være klar.')
+    food_open = models.BooleanField(default=False, verbose_name='Er madbestilling åben?')
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.start.strftime('%d. %b. %Y'))
@@ -154,7 +155,8 @@ class Lan(models.Model):
     def parse_seats(self):
         parsed = []
         tables = Counter()
-        lps = {lp.seat: lp for lp in LanProfile.objects.filter(lan=self).select_related('profile', 'profile__user').all()}
+        lps = {lp.seat: lp for lp in
+               LanProfile.objects.filter(lan=self).select_related('profile', 'profile__user').all()}
         for row in self.seats.splitlines():
             parsed.append([])
             for s in row:
@@ -368,3 +370,15 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class FoodOrder(models.Model):
+    class Meta:
+        verbose_name = 'madbestilling'
+        verbose_name_plural = 'madbestillinger'
+
+    lanprofile = models.ForeignKey(Lan, on_delete=models.CASCADE, verbose_name='tilmelding')
+    order = models.TextField(verbose_name='ordre')
+
+    def __str__(self):
+        return self.order
