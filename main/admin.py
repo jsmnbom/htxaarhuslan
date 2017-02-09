@@ -33,6 +33,8 @@ class LanFilter(SimpleListFilter):
         if value and not value == 'all':
             if queryset.model == TournamentTeam:
                 return queryset.filter(tournament__lan_id=value)
+            elif queryset.model == FoodOrder:
+                return queryset.filter(lanprofile__lan_id=value)
             else:
                 return queryset.filter(lan_id=value)
         return queryset
@@ -183,8 +185,22 @@ class TournamentTeamAdmin(admin.ModelAdmin):
     get_lan.short_description = 'lan'
 
 
+@admin.register(FoodOrder)
+class FoodOrderAdmin(admin.ModelAdmin):
+    list_filter = (LanFilter, 'time')
+    list_display = ('time', 'get_lan', 'order', 'get_profile', 'price', 'paid')
+
+    def get_profile(self, food_order):
+        return food_order.lanprofile.profile
+
+    get_profile.short_description = 'profil'
+
+    def get_lan(self, food_order):
+        return food_order.lanprofile.lan
+
+    get_lan.short_description = 'lan'
+
 admin.site.register(Game)
-admin.site.register(FoodOrder)
 
 
 def table_pdf(request):
