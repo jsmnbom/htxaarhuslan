@@ -35,7 +35,7 @@
                     <tbody>
                         {% for order in orders %}
                             <tr>
-                                <td>{{ order.time|date:"j/n/Y G:i" }}</td>
+                                <td>{{ order.time|date:"l, G:i" }}</td>
                                 <td>{{ order.order }}</td>
                                 <td>{{ order.price|floatformat:"-2" }}kr.</td>
                                 <td>{% if order.paid %}Ja :){% else %}<a href="{{ order.get_payment_url }}"><img
@@ -52,33 +52,42 @@
     {% if show %}
         <div class="box" id="bestilling">
             <h2>Bestil mad</h2>
+            {% include 'messages.html' %}
             <p>Vi bestiller mad fra Byens Burger. Menukortet kan ses <a href="http://www.byensburger.dk/menukort/"
                                                                         target="_blank">her</a>.</p>
-            <form id="food">
-                <select id="category" data-placeholder="Vælg kategori" title="Kategori">
+            <p>Vælg den mad du ønsker herunder og tryk derefter på knappen "Placér bestilling" som dukker op hvis din
+                ordre er gyldig.</p>
+            <form id="food" action="{{ get_full_path }}" method="post">
+                {% csrf_token %}
+                <select id="category" data-placeholder="Vælg kategori" title="Kategori" name="category">
                     <option></option>
                 </select>
-                <select id="product" data-placeholder="Vælg produkt" title="Produkt">
+                <select id="product" data-placeholder="Vælg produkt" title="Produkt" name="product">
                     <option></option>
                 </select>
-                <select id="part1" data-placeholder="Vælg" title="Del 1">
+                <select id="part1" data-placeholder="Vælg" title="Del 1" name="part1">
                     <option></option>
                 </select>
-                <select id="part2" data-placeholder="Vælg" title="Del 2">
+                <select id="part2" data-placeholder="Vælg" title="Del 2" name="part2">
                     <option></option>
                 </select>
-                <select id="part3" data-placeholder="Vælg" title="Del 3">
+                <select id="part3" data-placeholder="Vælg" title="Del 3" name="part3">
                     <option></option>
                 </select>
-                <select id="acc1" data-placeholder="Vælg" title="Tilbehør 1">
+                <select id="acc1" data-placeholder="Vælg" title="Tilbehør 1" name="acc1">
                     <option></option>
                 </select>
-                <select id="acc2" data-placeholder="Vælg" title="Tilbehør 2">
+                <select id="acc2" data-placeholder="Vælg" title="Tilbehør 2" name="acc2">
                     <option></option>
                 </select>
-                <select id="acc3" data-placeholder="Vælg" title="Tilbehør 3">
+                <select id="acc3" data-placeholder="Vælg" title="Tilbehør 3" name="acc3">
                     <option></option>
                 </select>
+                <input type="hidden" name="price" id="price" value="0">
+                <p>Du får en QR kode du kan bruge til at betale på næste side når du har lavet din bestilling.</p>
+                <p>Hvis du ønsker at lave mere end en bestilling får du også mulighed for det på næste side.</p>
+                <h4 id="price">Pris: <span>0</span>kr.</h4>
+                <input type="submit" value="Placér bestilling" name="submit"/>
             </form>
         </div>
     {% else %}
@@ -87,8 +96,9 @@
             <p>Madbestilling er ikke åben på nuværende tidspunkt. Hvis du mener dette er en fejl, kontakt et crew
                 medlem.</p>
             <p>Denne fejl vises også hvis du ikke er tilmeldt nuværende lan. Du kan kun lave en madbestilling hvis du er
-                tilmeldt LAN!</p>
-
+                tilmeldt LAN! Husk også at logge ind hvis du ikke allerede er det.</p>
+            <p>Vi bestiller mad fra Byens Burger. Menukortet kan ses <a href="http://www.byensburger.dk/menukort/"
+                                                                        target="_blank">her</a>.</p>
         </div>
     {% endif %}
 {% endblock %}

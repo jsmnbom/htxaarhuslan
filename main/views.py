@@ -206,14 +206,31 @@ def policy(request):
 def food(request):
     orders = []
     lan = get_next_lan()
-    show = lan is not None and lan.is_open() and lan.food_open
+    show = lan is not None and lan.is_open() and lan.food_open and request.user.is_authenticated()
     if request.user.is_authenticated():
         try:
             lp = LanProfile.objects.get(lan=lan, profile=request.user.profile)
+
+            if request.method == 'POST':
+                try:
+                    keys = ['category', 'product', 'part1', 'part2', 'part3', 'acc1', 'acc2', 'acc3']
+                    values = []
+                    for key in keys:
+                        value = request.POST.get(key)
+                        if value:
+                            values.append(value)
+                    text = ' - '.join(values)
+                    FoodOrder.objects.create(time=now(), lanprofile=lp, order=text,
+                                             price=int(request.POST.get('price')))
+                    messages.add_message(request, messages.SUCCESS,
+                                         'Din bestilling er modtaget. Du kan du betale herover.')
+                except KeyError:
+                    pass
+
             orders = FoodOrder.objects.filter(lanprofile=lp)
+
         except LanProfile.DoesNotExist:
             show = False
-
     return render(request, 'food.html', {'lan': lan, 'show': show, 'orders': orders})
 
 
