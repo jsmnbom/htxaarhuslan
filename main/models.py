@@ -177,6 +177,11 @@ class Lan(models.Model):
 
     seats_count.short_description = 'Antal pladser'
 
+    def is_ongoing(self):
+        return self.start <= now() <= self.end
+
+    is_ongoing.short_description = 'Er i gang?'
+
 
 class LanProfile(models.Model):
     class Meta:

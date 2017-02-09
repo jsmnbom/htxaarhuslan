@@ -729,6 +729,10 @@ table form input[type="submit"] {
     margin: 0;
 }
 
+table.food img {
+    width: 70%;
+}
+
 /* Handle smaller screens */
 
 @media (max-width: 1150px) {

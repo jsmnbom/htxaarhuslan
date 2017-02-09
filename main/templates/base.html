@@ -107,6 +107,8 @@
                                     <div class="buttons">
                                         {% if not lp %}
                                             <a class="button" href="{% url "tilmeld" %}">Tilmeld til lan</a>
+                                        {% elif lp.lan.is_ongoing %}
+                                            <a class="button" href="{% url "food" %}">Madbestilling</a>
                                         {% endif %}
                                         <a class="button" href="{% url "profile" username=user.username %}">Vis/rediger
                                             profil</a>

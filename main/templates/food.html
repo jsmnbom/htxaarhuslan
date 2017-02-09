@@ -23,13 +23,13 @@
                 mobil kan du også bare trykke på QR koden for at komme til mobilepay. Hvis QR koden ikke virker så tal
                 venligst med et lan crew medlem.</p>
             {% if orders %}
-                <table class="wide">
+                <table class="wide food">
                     <thead>
                         <tr>
                             <td>Tid</td>
                             <td>Ordre</td>
                             <td>Pris</td>
-                            <td>Betal(t)</td>
+                            <td>Betaling</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,7 +38,8 @@
                                 <td>{{ order.time|date:"l, G:i" }}</td>
                                 <td>{{ order.order }}</td>
                                 <td>{{ order.price|floatformat:"-2" }}kr.</td>
-                                <td>{% if order.paid %}Ja :){% else %}<a href="{{ order.get_payment_url }}"><img
+                                <td>{% if order.paid %}Betalt :){% else %}Ikke betalt. Scan eller klik:<a
+                                        href="{{ order.get_payment_url }}"><img
                                         src="{{ order.get_payment_qr_url }}"></a>{% endif %}</td>
                             </tr>
                         {% endfor %}
