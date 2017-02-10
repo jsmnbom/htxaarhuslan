@@ -187,8 +187,8 @@ class TournamentTeamAdmin(admin.ModelAdmin):
 
 @admin.register(FoodOrder)
 class FoodOrderAdmin(admin.ModelAdmin):
-    list_filter = (LanFilter, 'time')
-    list_display = ('time', 'get_lan', 'order', 'get_profile', 'price', 'paid')
+    list_filter = ('time',)
+    list_display = ('pk', 'time', 'get_lan', 'order', 'get_profile', 'price', 'paid')
 
     def get_profile(self, food_order):
         return food_order.lanprofile.profile
