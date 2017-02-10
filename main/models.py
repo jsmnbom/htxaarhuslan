@@ -11,7 +11,7 @@ from django.db import models
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django.urls import reverse
-from django.utils.encoding import escape_uri_path
+from django.utils.encoding import filepath_to_uri
 from django.utils.timezone import now
 from sorl.thumbnail import ImageField
 
@@ -216,7 +216,7 @@ class LanProfile(models.Model):
             'size': '300',
             'error': 'M',
             'margin': '2',
-            'data': escape_uri_path(self.get_payment_url())
+            'data': filepath_to_uri(self.get_payment_url())
         }
         return ('https://chart.googleapis.com/'
                 'chart?cht=qr&chs={size}x{size}&chl={data}&chld={error}|{margin}').format(**attrs)
@@ -405,7 +405,7 @@ class FoodOrder(models.Model):
             'size': '300',
             'error': 'M',
             'margin': '2',
-            'data': escape_uri_path(self.get_payment_url())
+            'data': filepath_to_uri(self.get_payment_url())
         }
         return ('https://chart.googleapis.com/'
                 'chart?cht=qr&chs={size}x{size}&chl={data}&chld={error}|{margin}').format(**attrs)
