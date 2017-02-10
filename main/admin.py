@@ -189,7 +189,7 @@ class TournamentTeamAdmin(admin.ModelAdmin):
 class FoodOrderAdmin(admin.ModelAdmin):
     list_filter = ('time',)
     list_display = ('pk', 'time', 'get_lan', 'order', 'get_profile', 'price', 'paid')
-    search_fields = ('lanprofile__profile__user__first_name', 'lanprofile__profile__user__username', 'order', 'pk')
+    search_fields = ('lanprofile__profile__user__first_name', 'lanprofile__profile__user__username', 'order')
 
     def get_profile(self, food_order):
         return food_order.lanprofile.profile
