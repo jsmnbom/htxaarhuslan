@@ -151,6 +151,7 @@ def tournaments(request):
                 except (TournamentTeam.DoesNotExist, ValueError):
                     messages.add_message(request, messages.ERROR,
                                          'Der opstod en fejl. Prøv igen senere, eller kontakt LanCrew.')
+                return redirect(reverse('tournaments'))
 
         teams = TournamentTeam.objects.filter(tournament__lan=lan, profiles__in=[request.user.profile])
     else:
@@ -168,7 +169,7 @@ def tournament(request, game, lan_id, name):
                 team = form.save()
                 messages.add_message(request, messages.SUCCESS, 'Hold tilmeldt successfuldt!')
                 send_tournament_mails(request, team)
-                form = TournamentTeamForm(tournament=t, profile=request.user.profile)
+                return redirect(reverse('tournament'))
         else:
             form = TournamentTeamForm(tournament=t, profile=request.user.profile)
     else:
@@ -224,6 +225,7 @@ def food(request):
                                              price=int(request.POST.get('price')))
                     messages.add_message(request, messages.SUCCESS,
                                          'Din bestilling er modtaget. Du kan du betale herover.')
+                    return redirect(reverse('food'))
                 except KeyError:
                     pass
 
