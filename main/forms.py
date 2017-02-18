@@ -225,22 +225,3 @@ class TournamentTeamForm(forms.ModelForm):
                 del self.cleaned_data[name]
         self.cleaned_data['tournament'] = self.tournament
         super().clean()
-
-
-class AdminLanProfileForm(forms.ModelForm):
-    class Meta:
-        model = LanProfile
-        fields = '__all__'
-
-
-class AdminProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        instance = kwargs.get('instance', None)
-        if instance:
-            self.fields['grade'].choices += ((instance.grade, instance.grade),)
