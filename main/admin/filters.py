@@ -1,4 +1,5 @@
 from django.contrib.admin import SimpleListFilter
+from django.core.exceptions import FieldError
 
 from main.models import Lan, get_next_lan
 
@@ -13,7 +14,10 @@ class LanFilter(SimpleListFilter):
     def queryset(self, request, queryset):
         value = self.value()
         if value and value != 'all':
-            return queryset.filter(lan_id=value)
+            try:
+                return queryset.filter(lan_id=value)
+            except FieldError:
+                return queryset.filter(tournament__lan_id=value)
         return queryset
 
     def value(self):
