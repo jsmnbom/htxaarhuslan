@@ -16,12 +16,20 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
+from rest_framework import routers
+
+from main.api import FoodViewSet
+
+router = routers.DefaultRouter()
+router.register(r'food', FoodViewSet)
 
 urlpatterns = [
     url(r'^', include('main.urls')),
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^api/auth/', include('rest_framework.urls')),
+    url(r'^api/', include(router.urls))
 ]
 
 admin.site.site_header = 'HTX Aarhus LAN administation'
@@ -29,6 +37,7 @@ admin.site.site_title = admin.site.site_header
 
 if settings.DEBUG:
     import debug_toolbar
+
     urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]

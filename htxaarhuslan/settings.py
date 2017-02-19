@@ -43,6 +43,8 @@ SECURE_BROWSER_XSS_FILTER = True
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
+    'rest_framework.authtoken', # Need this before our main app since we need to overwrite the admin
     'main.apps.MainConfig',
     'dal',
     'dal_select2',
@@ -57,7 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'snowpenguin.django.recaptcha2',
     'sorl.thumbnail',
-    'debug_toolbar'
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -227,3 +229,15 @@ CHALLONGE_USER = env_var('CHALLONGE_USER')
 CHALLONGE_API_KEY = env_var('CHALLONGE_API_KEY')
 
 INTERNAL_IPS = ['127.0.0.1', 'localhost']
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissions',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
