@@ -603,6 +603,15 @@ ul.messages li {
     padding: 1% 2%;
 }
 
+.footer .do-logo-wrapper {
+    height: 100%;
+}
+
+.footer .do-logo {
+    height: 40px;
+    margin: 10px 65px 10px 0;
+}
+
 /* Common stuff */
 .right {
     float: right;
