@@ -3,6 +3,7 @@ from collections import Counter
 from urllib.error import HTTPError
 
 import challonge
+from ckeditor_uploader.fields import RichTextUploadingField
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -132,9 +133,9 @@ class Lan(models.Model):
     profiles = models.ManyToManyField(Profile, through='LanProfile')
     seats = models.TextField(verbose_name='pladser')
     schedule = models.TextField(verbose_name='tidsplan', null=True)
-    blurb = models.TextField(verbose_name='blurb',
-                             help_text='Teksten, specifikt til dette lan, der bliver vist på forsiden.<br>'
-                                       'Husk at wrappe tekst i &lt;p> tags!')
+    blurb = RichTextUploadingField(verbose_name='blurb',
+                                   help_text='Teksten, specifikt til dette lan, der bliver vist på forsiden.<br>'
+                                             'Husk at wrappe tekst i &lt;p> tags!')
     paytypes = ChoiceArrayField(models.CharField(max_length=127, choices=PAYTYPES), verbose_name='betalingstyper',
                                 null=True, blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='pris', null=True, blank=True)
@@ -236,7 +237,7 @@ class Game(models.Model):
         verbose_name_plural = 'spil'
 
     name = models.CharField(max_length=255, verbose_name='navn')
-    description = models.TextField(verbose_name='beskrivelse')
+    description = RichTextUploadingField(verbose_name='beskrivelse')
     image = ImageField(upload_to='games/', storage=OverwriteStorage(), blank=True,
                        verbose_name='billede')
 
@@ -252,7 +253,7 @@ class Tournament(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, verbose_name='spil')
     lan = models.ForeignKey(Lan, on_delete=models.CASCADE, verbose_name='lan')
     name = models.CharField(max_length=255, verbose_name='navn')
-    description = models.TextField(verbose_name='beskrivelse')
+    description = RichTextUploadingField(verbose_name='beskrivelse')
     team_size = models.IntegerField(verbose_name='Holdstørrelse')
     challonge_id = models.IntegerField(verbose_name='Challonge id', help_text="Udfyles selv, når du trykker gem.",
                                        null=True, blank=True)

@@ -29,7 +29,8 @@ urlpatterns = [
     url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/auth/', include('rest_framework.urls')),
-    url(r'^api/', include(router.urls))
+    url(r'^api/', include(router.urls)),
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]
 
 admin.site.site_header = 'HTX Aarhus LAN administation'

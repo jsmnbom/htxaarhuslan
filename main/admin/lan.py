@@ -8,7 +8,6 @@ from main.models import Lan
 @admin.register(Lan)
 class LanAdmin(admin.ModelAdmin):
     list_display = ('name', 'start', 'seats_count', 'is_open')
-    # form = AdminLanForm
 
     fieldsets = (
         ('Tider', {
