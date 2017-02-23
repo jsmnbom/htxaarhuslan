@@ -16,4 +16,9 @@ iso8601==0.1.11
 -e git+http://github.com/russ-/pychallonge#egg=pychallonge
 sorl-thumbnail==12.3
 reportlab==3.3.0
+django-ckeditor==5.2.1
+djangorestframework==3.5.3
+websockets==3.2
+
+
 
