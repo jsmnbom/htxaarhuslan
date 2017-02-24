@@ -139,6 +139,8 @@ class Lan(models.Model):
     paytypes = ChoiceArrayField(models.CharField(max_length=127, choices=PAYTYPES), verbose_name='betalingstyper',
                                 null=True, blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='pris', null=True, blank=True)
+    payphone = models.CharField(max_length=128, verbose_name='Betalingstelefonnummer', null=True, blank=True,
+                                help_text='Skriv kun tal. (+45) skrives automatisk foran.')
     show_calendar = models.BooleanField(default=False, verbose_name='Vis kalender',
                                         help_text='Hvorvidt en kalender skal vises på forsiden. '
                                                   'Slå kun dette til hvis turneringer og andre events '
@@ -207,7 +209,7 @@ class LanProfile(models.Model):
     def get_payment_url(self):
         attrs = {
             'price': self.lan.price,
-            'phone': settings.PAYMENT_PHONE_NUMBER,
+            'phone': self.lan.payphone,
             'comment': 'LAN|{}'.format(self.profile.user.username)
         }
         return 'mobilepay://send?amount={price}&phone={phone}&comment={comment}'.format(**attrs)

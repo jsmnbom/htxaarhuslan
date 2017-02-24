@@ -224,17 +224,12 @@ LANGUAGES = [
     ('da', 'Dansk'),
 ]
 
-PAYMENT_PHONE = '(+45) 29 10 84 47 (Jacob Bom)'
-PAYMENT_PHONE_NUMBER = '29108447'
-
 CHALLONGE_USER = env_var('CHALLONGE_USER')
 CHALLONGE_API_KEY = env_var('CHALLONGE_API_KEY')
 
 INTERNAL_IPS = ['127.0.0.1', 'localhost']
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissions',
     ],

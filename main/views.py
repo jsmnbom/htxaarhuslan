@@ -59,7 +59,7 @@ def tilmeld(request):
 
     open_time = (lan.open - now()).total_seconds()
     return render(request, 'tilmeld.html', {'current': current, 'seats': seats, 'form': form, 'lan': lan,
-                                            'opens_time': open_time, 'count': count, 'phone': settings.PAYMENT_PHONE})
+                                            'opens_time': open_time, 'count': count})
 
 
 def tilmeldlist(request):
