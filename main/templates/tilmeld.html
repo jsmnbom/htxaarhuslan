@@ -53,8 +53,9 @@
                     <h3>Prisen for LAN er denne gang {{ lan.price|floatformat:"-2" }}kr.</h3>
                     <p>Tilmelding er ikke bindende, bemærk dog at penge indbetalt efter LAN'et er startet ikke gives
                         retur.</p>
-                    <p>Det er muligt at betale med MobilePay på (+45) {{ lan.payphone }} eller kontant til selve LAN'et. Hvis du betaler
-                        via MobilePay, skal du skrive dit brugernavn i kommentarfeltet, så vi ved hvem betalingen kommer fra.</p>
+                    <p>Det er muligt at betale med MobilePay eller kontant. MobilePay gøres vha. QR kode som vises når
+                        du har tilmeldt dig. Hvis du vælger at betale kontant skal du betale ved et LanCrew medlem så
+                        snart du ankommer til LAN.</p>
                 {% endif %}
                 {% if current != 0 %}
                     {% if current != -1 %}
