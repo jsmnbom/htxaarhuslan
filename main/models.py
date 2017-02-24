@@ -208,7 +208,7 @@ class LanProfile(models.Model):
         attrs = {
             'price': self.lan.price,
             'phone': self.lan.payphone,
-            'comment': 'LAN|{}'.format(self.profile.user.username)
+            'comment': 'LAN|{}'.format(self.pk)
         }
         return 'mobilepay://send?amount={price}&phone={phone}&comment={comment}'.format(**attrs)
 

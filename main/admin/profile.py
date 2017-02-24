@@ -15,7 +15,8 @@ admin.site.unregister(User)
 @admin.register(LanProfile)
 class LanProfileAdmin(admin.ModelAdmin):
     list_filter = (LanFilter, 'paytype', 'paid', 'profile__grade', 'profile__user__groups')
-    list_display = ('profile', 'lan', 'seat', 'get_paytype', 'paid')
+    list_display = ('pk', 'profile', 'lan', 'seat', 'get_paytype', 'paid')
+    list_display_links = ('pk', 'profile')
     search_fields = ('profile__user__first_name', 'profile__user__username', 'seat')
     form = AdminLanProfileForm
 
