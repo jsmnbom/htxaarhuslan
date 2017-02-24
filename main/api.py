@@ -1,6 +1,12 @@
 from rest_framework import serializers, viewsets
 
-from main.models import FoodOrder
+from main.models import FoodOrder, LanProfile
+
+
+class PartialModelViewSet(viewsets.ModelViewSet):
+    def get_serializer(self, *args, **kwargs):
+        kwargs['partial'] = True
+        return super().get_serializer(*args, **kwargs)
 
 
 class FoodSerializer(serializers.HyperlinkedModelSerializer):
@@ -9,10 +15,17 @@ class FoodSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('pk', 'time', 'order', 'price', 'paid')
 
 
-class FoodViewSet(viewsets.ModelViewSet):
+class FoodViewSet(PartialModelViewSet):
     queryset = FoodOrder.objects.all().order_by('-time')
     serializer_class = FoodSerializer
 
-    def get_serializer(self, *args, **kwargs):
-        kwargs['partial'] = True
-        return super().get_serializer(*args, **kwargs)
+
+class LanProfileSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = LanProfile
+        fields = ('pk', 'paytype', 'paid')
+
+
+class LanProfileViewSet(PartialModelViewSet):
+    queryset = LanProfile.objects.all()
+    serializer_class = LanProfileSerializer

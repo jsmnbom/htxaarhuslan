@@ -18,10 +18,11 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from rest_framework import routers
 
-from main.api import FoodViewSet
+from main.api import FoodViewSet, LanProfileViewSet
 
 router = routers.DefaultRouter()
 router.register(r'food', FoodViewSet)
+router.register(r'lanprofile', LanProfileViewSet)
 
 urlpatterns = [
     url(r'^', include('main.urls')),
