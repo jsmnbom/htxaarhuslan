@@ -24,7 +24,7 @@ class LanAdmin(admin.ModelAdmin):
             'fields': ('seats',)
         }),
         ('Tekst', {
-            'fields': ('name', 'schedule', 'blurb')
+            'fields': ('name', 'blurb')
         }),
         ('Betaling', {
             'fields': ('paytypes', 'price', 'payphone')
