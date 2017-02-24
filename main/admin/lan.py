@@ -20,7 +20,7 @@ class LanAdmin(admin.ModelAdmin):
             'fields': ('name', 'schedule', 'blurb')
         }),
         ('Betaling', {
-            'fields': ('paytypes', 'price')
+            'fields': ('paytypes', 'price', 'payphone')
         }),
         ('Madbestilling', {
             'fields': ('food_open', 'food_phone')
