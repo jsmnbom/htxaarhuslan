@@ -146,7 +146,7 @@ class Lan(models.Model):
                                                   'Slå kun dette til hvis turneringer og andre events '
                                                   'efterhånden er ved at være klar.')
     food_open = models.BooleanField(default=False, verbose_name='Er madbestilling åben?')
-    food_phone = models.IntegerField(verbose_name='madbestillingstelefonnummer', null=True, blank=True)
+    food_phone = models.CharField(max_length=128, verbose_name='madbestillingstelefonnummer', null=True, blank=True)
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.start.strftime('%d. %b. %Y'))
