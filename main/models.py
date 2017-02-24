@@ -131,7 +131,6 @@ class Lan(models.Model):
     name = models.CharField(max_length=255, verbose_name='navn')
     profiles = models.ManyToManyField(Profile, through='LanProfile')
     seats = models.TextField(verbose_name='pladser')
-    schedule = models.TextField(verbose_name='tidsplan', null=True)
     blurb = RichTextUploadingField(verbose_name='blurb',
                                    help_text='Teksten, specifikt til dette lan, der bliver vist på forsiden.<br>'
                                              'Husk at wrappe tekst i &lt;p> tags!')

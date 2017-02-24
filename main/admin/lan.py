@@ -2,7 +2,14 @@ from django.contrib import admin
 from django.forms import model_to_dict
 from django.utils.timezone import now
 
-from main.models import Lan
+from main.models import Lan, Event
+
+
+class EventInline(admin.TabularInline):
+    model = Event
+    show_change_link = True
+
+    fields = ('name', 'url', 'start', 'end')
 
 
 @admin.register(Lan)
@@ -26,6 +33,10 @@ class LanAdmin(admin.ModelAdmin):
             'fields': ('food_open', 'food_phone')
         }),
     )
+
+    inlines = [
+        EventInline
+    ]
 
     def get_changeform_initial_data(self, request):
         try:
