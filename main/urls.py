@@ -1,3 +1,4 @@
+import challonge
 from django.conf import settings
 from django.conf.urls import url
 from django.conf.urls.static import static
@@ -5,8 +6,6 @@ from django.contrib.auth import views as auth_views
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
-
-import challonge
 
 from main.sitemaps import MainSitemap, TilmeldSitemap
 from main.views import ProfileAutocomplete
