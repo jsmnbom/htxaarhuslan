@@ -12,7 +12,6 @@ from django.db import models
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django.urls import reverse
-from django.utils.encoding import filepath_to_uri
 from django.utils.timezone import now
 from sorl.thumbnail import ImageField
 
