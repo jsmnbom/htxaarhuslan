@@ -1,6 +1,7 @@
 import json
 from collections import Counter
 from urllib.error import HTTPError
+import urllib.parse
 
 import challonge
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -206,21 +207,21 @@ class LanProfile(models.Model):
 
     def get_payment_url(self):
         attrs = {
-            'price': self.lan.price,
-            'phone': self.lan.payphone,
-            'comment': 'LAN|{}'.format(self.pk)
+            'amount': self.lan.price,
+            'phone': '0045' + self.lan.payphone,
+            'comment': 'LAN|{}'.format(self.pk),
+            'lock': '1'
         }
-        return 'mobilepay://send?amount={price}&phone={phone}&comment={comment}'.format(**attrs)
+        return 'mobilepay://send?' + urllib.parse.urlencode(attrs)
 
     def get_payment_qr_url(self):
         attrs = {
-            'size': '300',
-            'error': 'M',
-            'margin': '2',
-            'data': filepath_to_uri(self.get_payment_url())
+            'chs': '300x300',
+            'chld': 'M|2',
+            'chl': self.get_payment_url(),
+            'cht': 'qr'
         }
-        return ('https://chart.googleapis.com/'
-                'chart?cht=qr&chs={size}x{size}&chl={data}&chld={error}|{margin}').format(**attrs)
+        return 'https://chart.googleapis.com/chart?' + urllib.parse.urlencode(attrs)
 
 
 def get_next_lan():
@@ -395,18 +396,18 @@ class FoodOrder(models.Model):
 
     def get_payment_url(self):
         attrs = {
-            'price': self.price,
-            'phone': self.lanprofile.lan.food_phone,
-            'comment': 'LAN_MAD|{}'.format(self.pk)
+            'amount': self.price,
+            'phone': '0045' + self.lanprofile.lan.food_phone,
+            'comment': 'LAN_MAD|{}'.format(self.pk),
+            'lock': '1'
         }
-        return 'mobilepay://send?amount={price}&phone={phone}&comment={comment}'.format(**attrs)
+        return 'mobilepay://send?' + urllib.parse.urlencode(attrs)
 
     def get_payment_qr_url(self):
         attrs = {
-            'size': '300',
-            'error': 'M',
-            'margin': '2',
-            'data': filepath_to_uri(self.get_payment_url())
+            'chs': '300x300',
+            'chld': 'M|2',
+            'chl': self.get_payment_url(),
+            'cht': 'qr'
         }
-        return ('https://chart.googleapis.com/'
-                'chart?cht=qr&chs={size}x{size}&chl={data}&chld={error}|{margin}').format(**attrs)
+        return 'https://chart.googleapis.com/chart?' + urllib.parse.urlencode(attrs)
