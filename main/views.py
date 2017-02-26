@@ -224,7 +224,7 @@ def food(request):
                     FoodOrder.objects.create(time=now(), lanprofile=lp, order=text,
                                              price=int(request.POST.get('price')))
                     messages.add_message(request, messages.SUCCESS,
-                                         'Din bestilling er modtaget. Du kan du betale herover.')
+                                         'Din bestilling er modtaget. Du kan nu betale herover.')
                     return redirect(reverse('food'))
                 except KeyError:
                     pass

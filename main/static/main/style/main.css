@@ -742,6 +742,15 @@ table.food img {
     width: 100%;
 }
 
+.displaynone {
+    display: none;
+}
+
+.reverse {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+}
+
 /* Handle smaller screens */
 
 @media (max-width: 1150px) {

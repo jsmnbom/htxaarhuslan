@@ -93,7 +93,8 @@
                                                         <p>Du er tilmeldt LAN, men din MobilePay betaling er ikke
                                                             gennemført. Scan QR koden herunder med MobilePay for at
                                                             betale. Hvis det ikke virker kan du også logge ind på din
-                                                            mobil og tykke på QR koden eller <a href="{{ lp.get_payment_url }}">her</a>.
+                                                            mobil og tykke på QR koden eller <a
+                                                                    href="{{ lp.get_payment_url }}">her</a>.
                                                         </p>
                                                         <a href="{{ lp.get_payment_url }}">
                                                             <img src="{{ lp.get_payment_qr_url }}"
@@ -154,13 +155,17 @@
         <footer>
             <div class="footer">
                 <div class="container">
-                    <p class="left">Dette website er <a
-                            href="https://github.com/bomjacob/htxaarhuslan/blob/master/LICENSE" target="_blank">open-source</a>.
-                        Deltag i udviklingen
-                        på <a href="https://github.com/bomjacob/htxaarhuslan" target="_blank">github</a>!
+                    {# @formatter:off--> #}
+                    <p class="left">
+                        Dette website er <a href="https://github.com/bomjacob/htxaarhuslan/blob/master/LICENSE" target="_blank">open-source</a>.
+                        Deltag i udviklingen på <a href="https://github.com/bomjacob/htxaarhuslan" target="_blank">github</a>!
                         <br>
-                        Denne side er stadig under opbygning. Kontakt crew@htxaarhuslan.dk, hvis der opstår
-                        problemer.</p>
+                        Brug af dette website sker i henhold med vores <a href="{% url "policy" %}">Cookie- og privatlivspolitik</a>.
+                        <br>
+                        Denne side er stadig under opbygning. Kontakt <span class="reverse">kd.nalsuhraaxth<span class="displaynone">null</span>@<span class="displaynone">null</span>werc</span>,
+                        hvis der opstår problemer.
+                    </p>
+                    {# @formatter:on--> #}
                     <div class="do-logo-wrapper"><img src="{% static "main/img/do-logo.png" %}"
                                                       alt="Powered by DigitalOcean" class="right do-logo"></div>
                 </div>
