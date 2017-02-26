@@ -62,6 +62,10 @@ $(document).ready(function () {
     $(window).resize(function () {
         var spacer = $('.spacer');
         spacer.height($('.sidebar').height() - $('.page').height() + spacer.height() + $(window).height() * 0.05)
+        $('.footer').show();
+    });
+    $(window).on('orientationchange', function () {
+        $(window).resize();
     });
     setTimeout(function () {
         $(window).resize()
