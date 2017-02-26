@@ -739,7 +739,7 @@ table form input[type="submit"] {
 }
 
 table.food img {
-    width: 70%;
+    width: 100%;
 }
 
 /* Handle smaller screens */

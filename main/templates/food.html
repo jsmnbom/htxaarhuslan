@@ -17,11 +17,13 @@
 {% block content %}
     {% if request.user.is_authenticated %}
         <div class="box" id="mine">
-            <h2>Mine madbestillinger</h2>
-            <p>Herunder ses dine madbestillinger for dette lan samt hvorvidt de er registreret som betalt. Hvis de ikke
-                er betalt ses en QR kode som kan scannes med mobilepay for hurtigt og nemt at betale. Hvis du er på
-                mobil kan du også bare trykke på QR koden for at komme til mobilepay. Hvis QR koden ikke virker så tal
-                venligst med et lan crew medlem.</p>
+            <h2>Dine madbestillinger</h2>
+            <p>Herunder ses dine madbestillinger for dette LAN samt hvorvidt de er registreret som betalt. Hvis de
+                ikke er betalt ses en QR kode som kan scannes med mobilepay for hurtigt og nemt at betale.</p>
+            <p>Hvis QR koden ikke virker prøv da at logge ind på denne side på din mobil og klik på QR koden eller
+                backup linket over. Bemærk at backup linket ikke vil virke på PC.</p>
+            <p>Der kan gå op til et kvater før din betaling går igennem. Hvis der går længere, du oplever andre
+                problemer eller du ønsker at betale med kontanter, kontakt venligst et medlem af LanCrew.</p>
             {% if orders %}
                 <table class="wide food">
                     <thead>
@@ -29,7 +31,7 @@
                             <td>Tid</td>
                             <td>Ordre</td>
                             <td>Pris</td>
-                            <td>Betaling</td>
+                            <td style="width:35%">Betaling</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,8 +40,8 @@
                                 <td>{{ order.time|date:"l, G:i" }}</td>
                                 <td>{{ order.order }}</td>
                                 <td>{{ order.price|floatformat:"-2" }}kr.</td>
-                                <td>{% if order.paid %}Betalt :){% else %}Ikke betalt. Scan eller klik:<a
-                                        href="{{ order.get_payment_url }}"><img
+                                <td>{% if order.paid %}Betalt :){% else %}Ikke betalt. Scan eller <a
+                                        href="{{ order.get_payment_url }}">klik:<br><img
                                         src="{{ order.get_payment_qr_url }}"></a>{% endif %}</td>
                             </tr>
                         {% endfor %}
