@@ -58,7 +58,7 @@ PAYTYPES = (
 
 def profile_picture_path(instance, orig):
     ext = orig.split('.')[-1]
-    filename = 'profile/{}.{}'.format(instance.pk, ext)
+    filename = 'profile/{}-{}.{}'.format(instance.pk, int(now().timestamp()), ext)
     return filename
 
 
