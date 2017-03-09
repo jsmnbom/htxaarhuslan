@@ -29,6 +29,10 @@ $(document).ready(function () {
                 content += '<a href="' + url + '">' + name + '</a>' + '<br>';
                 content += '<span>' + username + '<span>&nbsp(' + grade + ')</span></span>';
 
+                if ($(this).hasClass('staff')) {
+                    content += '<br><span>LanCrew</span>';
+                }
+
                 $(this).qtip({
                     content: {
                         text: content

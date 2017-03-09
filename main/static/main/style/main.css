@@ -325,10 +325,14 @@ p.centered {
 
 .seats table td span.overlay {
     text-shadow:
-            -1px -1px 1px #000,
-            1px -1px 1px #000,
-            -1px 1px 1px #000,
-            1px 1px 1px #000;
+            -2px -2px 2px #000,
+            2px -2px 2px #000,
+            -2px 2px 2px #000,
+            2px 2px 2px #000;
+}
+
+.seats table td.staff span {
+    color: #2dff4c
 }
 
 .seats form input {
