@@ -9,20 +9,19 @@
             <div class="info">
                 <p>Navn: {{ profile.user.first_name }}</p>
                 <p>Klasse: {{ profile.get_grade_display }}</p>
-                <p>Bio:<br>{{ profile.bio|linebreaks }}</p>
+                {% if profile.user.is_staff %}<p>Denne bruger er en del af LanCrew.</p>{% endif %}
                 {% if lan %}
-                    <p>Næste LAN: denne bruger{% with profile.get_lanprofile_for_next_lan as lp %}
+                    {% with profile.get_lanprofile_for_next_lan as lp %}
                         {% if lp %}
                             {% if lp.seat %}
-                                har reserveret plads {{ lp.seat }}
+                                <p>Reserveret plads <a href="{% url 'tilmeld' %}">{{ lp.seat }}</a>.</p>
                             {% else %}
-                                er tilmeldt men har ikke reserveret plads
+                                <p>Ingen plads reseveret.</p>
                             {% endif %}
-                        {% else %}
-                            er ikke tilmeldt
                         {% endif %}
-                    {% endwith %}</p>
+                    {% endwith %}
                 {% endif %}
+                <p>Bio:<br>{{ profile.bio|linebreaks }}</p>
             </div>
             {% if profile.photo %}
                 {% thumbnail profile.photo "400" as im %}
