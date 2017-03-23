@@ -337,7 +337,10 @@ def calendar(request, feed_name):
             url = t.url
         except AttributeError:
             url = t.get_absolute_url()
-        if isinstance(t, Event):
+        if isinstance(t, Tournament):
+            if not (t.live or t.open):
+                continue
+        elif isinstance(t, Event):
             if t.text != '':
                 url = t.get_absolute_url()
         event = {
