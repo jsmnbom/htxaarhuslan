@@ -1,7 +1,7 @@
 import json
+import urllib.parse
 from collections import Counter
 from urllib.error import HTTPError
-import urllib.parse
 
 import challonge
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -325,6 +325,14 @@ def delete_challonge(sender, instance, **kwargs):
         pass
 
 
+class NamedProfile(models.Model):
+    class Meta:
+        verbose_name = 'anonym profil'
+        verbose_name_plural = 'anonyme profiler'
+
+    name = models.CharField(max_length=255, verbose_name='navn')
+
+
 class TournamentTeam(models.Model):
     class Meta:
         verbose_name = 'hold'
@@ -332,6 +340,7 @@ class TournamentTeam(models.Model):
         unique_together = (('name', 'tournament'),)
 
     profiles = models.ManyToManyField(Profile, verbose_name='medlemmer')
+    namedprofiles = models.ManyToManyField(NamedProfile, verbose_name='andre medlemmer')
     name = models.CharField(max_length=255, verbose_name='holdnavn')
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, null=True)
     challonge_id = models.IntegerField(verbose_name='Challonge id', help_text='Udfyldes selv, når du trykker gem.',

@@ -160,6 +160,14 @@ class EditProfileForm(forms.ModelForm):
     grade = forms.ChoiceField(sorted(GRADES, reverse=True), label='Klasse', widget=LabelSelect(label='Klasse'))
 
 
+class TournamentSelect2(autocomplete.ModelSelect2):
+    autocomplete_function = 'tournamentSelect2'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.Media.js += ('main/script/tournamentSelect2.js',)
+
+
 class TournamentTeamForm(forms.ModelForm):
     class Meta:
         model = TournamentTeam
@@ -192,7 +200,7 @@ class TournamentTeamForm(forms.ModelForm):
             forward = ['profile_{}'.format(j) for j in range(1, self.tournament.team_size) if j != i]
             self.fields['profile_{}'.format(i)] = forms.ModelChoiceField(
                 queryset=Profile.objects.filter(lanprofile__lan=lan),
-                widget=autocomplete.ModelSelect2(
+                widget=TournamentSelect2(
                     url='autocomplete-profile',
                     forward=forward,
                     attrs={'data-html': 'true', 'data-placeholder': 'Søg efter brugere som er tilmeldt LAN'},

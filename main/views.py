@@ -2,7 +2,6 @@ from collections import defaultdict
 from datetime import datetime
 
 from dal import autocomplete
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
@@ -295,8 +294,11 @@ class ProfileAutocomplete(autocomplete.Select2QuerySetView):
         lan = get_next_lan()
         qs = Profile.objects.filter(lanprofile__lan=lan)
 
-        exclude = [int(x) for x in self.forwarded.values() if x] + [self.request.user.profile.id, ]
-        qs = qs.exclude(pk__in=exclude)
+        try:
+            exclude = [int(x) for x in self.forwarded.values() if x] + [self.request.user.profile.id, ]
+            qs = qs.exclude(pk__in=exclude)
+        except ValueError:  # It's a non lan user (therefore a str not int)
+            pass
 
         if self.q:
             qs = qs.filter(Q(user__username__icontains=self.q) |
