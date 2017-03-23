@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="box" id="event">
+        <h2>{% block title %}{{ event.name }} - {{ event.lan.name }}{% endblock %}</h2>
+        <h4>Forventet start: <strong>{{ event.start|date:"l, j. F Y G:i" }}</strong></h4>
+        {% if event.end %}
+            <h4>Forventet slut: <strong>{{ event.end|date:"l, j. F Y G:i" }}</strong></h4>
+        {% endif %}
+        <p>{{ event.text|safe }}</p>
+    </div>
+{% endblock %}
