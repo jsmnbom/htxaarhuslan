@@ -44,6 +44,16 @@
             };
         }
 
+        var createTag;
+        if ($(this).attr('data-allow-external')) {
+            createTag = function (data) {
+                return {
+                    id: data.term,
+                    text: data.term + " (ikke LAN bruger)"
+                };
+            }
+        }
+
         $(this).select2({
             tokenSeparators: element.attr('data-tags') ? [','] : null,
             debug: true,
@@ -54,13 +64,8 @@
             templateSelection: template,
             ajax: ajax,
             selectOnBlur: true,
-            createTag: function (data) {
-                return {
-                    id: data.term,
-                    text: data.term + " (ikke LAN bruger)"
-                };
-            },
-            tags: true
+            createTag: createTag,
+            tags: $(this).attr('data-allow-external')
         });
 
     });

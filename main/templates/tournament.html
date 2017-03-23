@@ -53,6 +53,10 @@
         {% include 'messages.html' %}
         {% if form and tournament.open %}
             <p>Indtast ønsket holdnavn samt holdmedlemmer herunder, og tryk på tilmeld knappen.</p>
+            {% if tournament.allow_external %}
+                <p>Hvis du ønsker at tilføje en person som ikke er tilmeldt LAN, skal du skrive deres fulde navn og
+                    vælge "[Personens navn] (ikke LAN bruger)".</p>
+            {% endif %}
             <form action="{{ get_full_path }}" method="post">
                 {% csrf_token %}
                 {{ form.as_p }}

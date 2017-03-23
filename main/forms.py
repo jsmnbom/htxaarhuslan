@@ -185,11 +185,15 @@ class TournamentSelect2(ModelSelect2):
 class TournamentModelChoiceField(forms.ModelChoiceField):
     """ModelChoiceField with less validation"""
 
+    def __init__(self, *args, allow_external=False, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.allow_external = allow_external
+
     def to_python(self, value):
         try:
             return super().to_python(value)
         except ValidationError as e:
-            if isinstance(value, str):
+            if isinstance(value, str) and self.allow_external:
                 # What could possibly go wrong :/
                 return value
             else:
@@ -228,14 +232,18 @@ class TournamentTeamForm(forms.ModelForm):
 
         for i in range(1, self.tournament.team_size):
             forward = ['profile_{}'.format(j) for j in range(1, self.tournament.team_size) if j != i]
+            attrs = {'data-html': 'true', 'data-placeholder': 'Søg efter brugere som er tilmeldt LAN'}
+            if self.tournament.allow_external:
+                attrs['data-allow-external'] = 'true'
             self.fields['profile_{}'.format(i)] = TournamentModelChoiceField(
                 queryset=Profile.objects.filter(lanprofile__lan=lan),
                 widget=TournamentSelect2(
                     url='autocomplete-profile',
                     forward=forward,
-                    attrs={'data-html': 'true', 'data-placeholder': 'Søg efter brugere som er tilmeldt LAN'},
+                    attrs=attrs,
                 ),
                 label='Medlem {}'.format(i + 1),
+                allow_external=self.tournament.allow_external
             )
 
         self.initial['profile_0'] = self.profile.user.first_name

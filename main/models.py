@@ -265,6 +265,9 @@ class Tournament(models.Model):
                                          'Bemærk at LanCrew medlemmer dog altid kan tilmelde sig.')
     start = models.DateTimeField(verbose_name='Start', null=True)
     end = models.DateTimeField(verbose_name='Slut', null=True, blank=True)
+    allow_external = models.BooleanField(verbose_name='Tillad ikke LAN brugere',
+                                         help_text='Hvis ja, kan der tilføjes personer'
+                                                   'som ikke er tilmeldt LAN til ens hold.')
 
     def __str__(self):
         return self.name
