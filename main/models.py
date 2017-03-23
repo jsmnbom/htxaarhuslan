@@ -349,6 +349,9 @@ class TournamentTeam(models.Model):
     def __str__(self):
         return self.name
 
+    def get_all(self):
+        return list(self.profiles.all()) + list(self.namedprofiles.all())
+
 
 @receiver(post_save, sender=TournamentTeam, dispatch_uid='create_challonge_team')
 def create_challonge_team(sender, instance, **kwargs):

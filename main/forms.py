@@ -1,4 +1,4 @@
-from dal import autocomplete
+from dal_select2.widgets import ModelSelect2
 from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UsernameField
@@ -11,7 +11,7 @@ from django.utils.safestring import mark_safe
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 
-from .models import GRADES, Profile, LanProfile, PAYTYPES, TournamentTeam, get_next_lan, Tournament
+from .models import GRADES, Profile, LanProfile, PAYTYPES, TournamentTeam, get_next_lan, Tournament, NamedProfile
 
 
 class UserRegForm(forms.ModelForm):
@@ -160,18 +160,46 @@ class EditProfileForm(forms.ModelForm):
     grade = forms.ChoiceField(sorted(GRADES, reverse=True), label='Klasse', widget=LabelSelect(label='Klasse'))
 
 
-class TournamentSelect2(autocomplete.ModelSelect2):
+class TournamentSelect2(ModelSelect2):
     autocomplete_function = 'tournamentSelect2'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.Media.js += ('main/script/tournamentSelect2.js',)
 
+    def filter_choices_to_render(self, selected_choices):
+        """Filter out un-selected choices if choices is a QuerySet."""
+        # Filter out named profiles
+        pre_filter_choices = []
+        for choice in pre_filter_choices:
+            try:
+                int(choice)
+                pre_filter_choices.append(choice)
+            except ValueError:
+                pass
+        self.choices.queryset = self.choices.queryset.filter(
+            pk__in=[c for c in pre_filter_choices if c]
+        )
+
+
+class TournamentModelChoiceField(forms.ModelChoiceField):
+    """ModelChoiceField with less validation"""
+
+    def to_python(self, value):
+        try:
+            return super().to_python(value)
+        except ValidationError as e:
+            if isinstance(value, str):
+                # What could possibly go wrong :/
+                return value
+            else:
+                raise e
+
 
 class TournamentTeamForm(forms.ModelForm):
     class Meta:
         model = TournamentTeam
-        fields = ('name', 'profiles', 'tournament')
+        fields = ('name', 'profiles', 'namedprofiles', 'tournament')
         error_messages = {
             NON_FIELD_ERRORS: {
                 'unique_together': "Et hold med dette navn existerer allerede!",
@@ -189,6 +217,8 @@ class TournamentTeamForm(forms.ModelForm):
         lan = get_next_lan()
 
         del self.fields['profiles']
+        del self.fields['namedprofiles']
+
         self.fields['tournament'] = forms.ModelChoiceField(queryset=Tournament.objects.all(),
                                                            widget=forms.HiddenInput())
         self.initial['tournament'] = self.tournament
@@ -198,7 +228,7 @@ class TournamentTeamForm(forms.ModelForm):
 
         for i in range(1, self.tournament.team_size):
             forward = ['profile_{}'.format(j) for j in range(1, self.tournament.team_size) if j != i]
-            self.fields['profile_{}'.format(i)] = forms.ModelChoiceField(
+            self.fields['profile_{}'.format(i)] = TournamentModelChoiceField(
                 queryset=Profile.objects.filter(lanprofile__lan=lan),
                 widget=TournamentSelect2(
                     url='autocomplete-profile',
@@ -214,20 +244,25 @@ class TournamentTeamForm(forms.ModelForm):
 
     def clean(self):
         self.cleaned_data['profiles'] = []
-        for name in list(self.cleaned_data.keys()):
-            if name.startswith('profile_'):
-                if name != 'profile_0':
-                    self.cleaned_data['profiles'].append(self.cleaned_data[name])
-                    try:
-                        LanProfile.objects.get(profile=self.cleaned_data[name], lan=get_next_lan())
-                    except LanProfile.DoesNotExist:
-                        raise ValidationError(
-                            '%(profile)s er ikke tilmeldt LAN og kan derfor ikke være med på dit hold.',
-                            params={'profile': self.cleaned_data[name].user.first_name},
-                            code='missingtilmelding'
-                        )
+        self.cleaned_data['namedprofiles'] = []
+        for key, val in list(self.cleaned_data.items()):
+            if key.startswith('profile_'):
+                if key != 'profile_0':
+                    if isinstance(val, str):
+                        np = NamedProfile.objects.create(name=val)
+                        self.cleaned_data['namedprofiles'].append(np)
+                    else:
+                        self.cleaned_data['profiles'].append(val)
+                        try:
+                            LanProfile.objects.get(profile=val, lan=get_next_lan())
+                        except LanProfile.DoesNotExist:
+                            raise ValidationError(
+                                '%(profile)s er ikke tilmeldt LAN og kan derfor ikke være med på dit hold.',
+                                params={'profile': val.user.first_name},
+                                code='missingtilmelding'
+                            )
                 else:
                     self.cleaned_data['profiles'].append(self.profile)
-                del self.cleaned_data[name]
+                del self.cleaned_data[key]
         self.cleaned_data['tournament'] = self.tournament
         super().clean()

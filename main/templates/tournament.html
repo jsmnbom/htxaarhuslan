@@ -40,7 +40,7 @@
                     {% for team in teams %}
                         <tr>
                             <td>{{ team.name }}</td>
-                            <td>{% for profile in team.profiles.all %}<a href="{% url 'profile' username=profile.user.username %}">{{ profile.user.first_name }}</a>{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} og {% else %},{% endifequal %}{% else %}{% endif %} {% endfor %}</td>
+                            <td>{% for profile in team.get_all %}{% if profile.user %}<a href="{% url 'profile' username=profile.user.username %}">{{ profile.user.first_name }}</a>{% else %}{{ profile.name }}{% endif %}{% if not forloop.last %}{% ifequal forloop.revcounter 2 %} og {% else %},{% endifequal %}{% else %}{% endif %} {% endfor %}</td>
                         </tr>
                     {% endfor %}
                     {# @formatter:on--> #}

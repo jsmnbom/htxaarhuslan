@@ -57,7 +57,7 @@
             createTag: function (data) {
                 return {
                     id: data.term,
-                    text: data.term + " (person der ikke er tilmeldt LAN)"
+                    text: data.term + " (ikke LAN bruger)"
                 };
             },
             tags: true
