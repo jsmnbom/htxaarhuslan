@@ -265,6 +265,7 @@ class Tournament(models.Model):
                                          'Bemærk at LanCrew medlemmer dog altid kan tilmelde sig.')
     start = models.DateTimeField(verbose_name='Start', null=True)
     end = models.DateTimeField(verbose_name='Slut', null=True, blank=True)
+    owner = models.ForeignKey(Profile, on_delete=models.DO_NOTHING, null=True, verbose_name='Ansvarlig')
 
     def __str__(self):
         return self.name
