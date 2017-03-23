@@ -335,6 +335,9 @@ class NamedProfile(models.Model):
 
     name = models.CharField(max_length=255, verbose_name='navn')
 
+    def __str__(self):
+        return self.name
+
 
 class TournamentTeam(models.Model):
     class Meta:

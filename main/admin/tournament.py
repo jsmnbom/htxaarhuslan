@@ -37,7 +37,7 @@ class TournamentAdmin(admin.ModelAdmin):
 class TournamentTeamAdmin(admin.ModelAdmin):
     list_filter = (LanFilter, 'tournament__game', 'tournament')
     list_display = ('name', 'get_game', 'tournament', 'get_lan')
-    search_fields = ('name', 'profiles')
+    search_fields = ('name', 'profiles', 'namedprofiles')
 
     def get_game(self, team):
         return team.tournament.game
