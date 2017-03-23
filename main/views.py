@@ -235,6 +235,10 @@ def food(request):
     return render(request, 'food.html', {'lan': lan, 'show': show, 'orders': orders})
 
 
+def event(request, event_id):
+    return render(request, 'event.html', {'event': Event.objects.get(id=event_id)})
+
+
 # Meta pages
 
 def login_view(request):
@@ -324,7 +328,7 @@ def calendar(request, feed_name):
     events = []
     if feed_name == 'tournament':
         ts = Tournament.objects.filter(lan=lan, start__isnull=False)
-    elif feed_name:
+    elif feed_name == 'misc':
         ts = Event.objects.filter(lan=lan, start__isnull=False)
     else:
         raise Http404
@@ -333,6 +337,9 @@ def calendar(request, feed_name):
             url = t.url
         except AttributeError:
             url = t.get_absolute_url()
+        if isinstance(t, Event):
+            if t.text != '':
+                url = t.get_absolute_url()
         event = {
             'title': '{}'.format(t.name),
             'start': t.start.isoformat(),

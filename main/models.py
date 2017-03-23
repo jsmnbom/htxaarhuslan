@@ -268,6 +268,7 @@ class Tournament(models.Model):
     allow_external = models.BooleanField(verbose_name='Tillad ikke LAN brugere',
                                          help_text='Hvis ja, kan der tilføjes personer'
                                                    'som ikke er tilmeldt LAN til ens hold.')
+    owner = models.ForeignKey(Profile, on_delete=models.DO_NOTHING, null=True, verbose_name='Ansvarlig')
 
     def __str__(self):
         return self.name
@@ -390,11 +391,16 @@ class Event(models.Model):
     name = models.CharField(max_length=255, verbose_name='navn')
     url = models.URLField(max_length=255, verbose_name='link', help_text='Valgfri. Link som kan klikkes på kalenderen.',
                           null=True, blank=True)
+    text = RichTextUploadingField(verbose_name='tekst til eventside', help_text='Advarsel: Dette felt overskriver url!',
+                                  null=True, blank=True)
     start = models.DateTimeField(verbose_name='Start', null=True)
     end = models.DateTimeField(verbose_name='Slut', null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('event', kwargs={'event_id': self.id})
 
 
 class FoodOrder(models.Model):

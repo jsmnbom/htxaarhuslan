@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^privatliv$', views.policy, name='policy'),
     url(r'^calendar/(?P<feed_name>.+).json$', views.calendar, name='calendar'),
     url(r'^mad$', views.food, name='food'),
+    url(r'^event/(?P<event_id>.+)$', views.event, name='event'),
 
     # Autocompletes
     url(r'^autocomplete/profile/$',

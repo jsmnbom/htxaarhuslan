@@ -13,8 +13,8 @@ class TournamentTeamInline(admin.TabularInline):
 
 @admin.register(Tournament)
 class TournamentAdmin(admin.ModelAdmin):
-    list_filter = (LanFilter, 'game')
-    list_display = ('name', 'game', 'lan', 'challonge_link', 'get_teams_count', 'live', 'open')
+    list_filter = (LanFilter, 'game', 'owner')
+    list_display = ('name', 'game', 'lan', 'challonge_link', 'get_teams_count', 'live', 'open', 'owner')
     search_fields = ('name', 'game', 'lan')
 
     inlines = [
