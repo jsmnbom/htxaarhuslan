@@ -389,9 +389,12 @@ class Event(models.Model):
 
     lan = models.ForeignKey(Lan, on_delete=models.CASCADE, verbose_name='lan')
     name = models.CharField(max_length=255, verbose_name='navn')
-    url = models.URLField(max_length=255, verbose_name='link', help_text='Valgfri. Link som kan klikkes på kalenderen.',
+    url = models.URLField(max_length=255, verbose_name='link',
+                          help_text='Valgfri. Link som kan klikkes på kalenderen.'
+                                    'Denne felt har større prioritet end tekst.',
                           null=True, blank=True)
-    text = RichTextUploadingField(verbose_name='tekst til eventside', help_text='Advarsel: Dette felt overskriver url!',
+    text = RichTextUploadingField(verbose_name='tekst til eventside',
+                                  help_text='Advarsel: Dette felt overskrives af url!',
                                   null=True, blank=True)
     start = models.DateTimeField(verbose_name='Start', null=True)
     end = models.DateTimeField(verbose_name='Slut', null=True, blank=True)
