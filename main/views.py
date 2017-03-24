@@ -341,7 +341,7 @@ def calendar(request, feed_name):
             if not (t.live or t.open):
                 continue
         elif isinstance(t, Event):
-            if t.text != '':
+            if t.url == '':
                 url = t.get_absolute_url()
         event = {
             'title': '{}'.format(t.name),
