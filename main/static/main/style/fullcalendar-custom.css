@@ -18,3 +18,7 @@
 .fc-list-empty {
     font-size: 1.25em;
 }
+
+.fc-list-item.fc-has-url:hover td.fc-list-item-title a[href] {
+    text-decoration: underline;
+}

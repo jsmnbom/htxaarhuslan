@@ -333,23 +333,23 @@ def calendar(request, feed_name):
     else:
         raise Http404
     for t in ts:
-        try:
-            url = t.url
-        except AttributeError:
-            url = t.get_absolute_url()
+        url = ''
         if isinstance(t, Tournament):
             if not (t.live or t.open):
                 continue
+            url = t.get_absolute_url()
         elif isinstance(t, Event):
-            if t.url == '':
+            url = t.url
+            if (url == '' or url is None) and (t.text != '' and t.text is not None):
                 url = t.get_absolute_url()
-        event = {
+        evt = {
             'title': '{}'.format(t.name),
             'start': t.start.isoformat(),
             'id': t.pk,
-            'url': url
         }
+        if url:
+            evt['url'] = url
         if t.end:
-            event['end'] = t.end.isoformat()
-        events.append(event)
+            evt['end'] = t.end.isoformat()
+        events.append(evt)
     return JsonResponse(events, safe=False)
