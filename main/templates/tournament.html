@@ -10,9 +10,11 @@
             <h4>Forventet slut: <strong>{{ tournament.end|date:"l, j. F Y G:i" }}</strong></h4>
         {% endif %}
         <p>{{ tournament.description|safe }}</p>
-        <p>Turneringsansvarlig: <a
-                href="{% url 'profile' username=tournament.owner.user.username %}">{{ tournament.owner.user.first_name }}
-            ({{ tournament.owner.user.username }})</a></p>
+        {% if tournament.owner %}
+            <p>Turneringsansvarlig: <a
+                    href="{% url 'profile' username=tournament.owner.user.username %}">{{ tournament.owner.user.first_name }}
+                ({{ tournament.owner.user.username }})</a></p>
+        {% endif %}
         {% if not teams %}
             <p>Ingen hold er tilmeldt denne turnering endnu.</p>
         {% endif %}
