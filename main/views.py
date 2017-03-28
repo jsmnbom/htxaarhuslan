@@ -168,7 +168,7 @@ def tournament(request, game, lan_id, name):
                 team = form.save()
                 messages.add_message(request, messages.SUCCESS, 'Hold tilmeldt successfuldt!')
                 send_tournament_mails(request, team)
-                return redirect(reverse('tournament'))
+                return redirect(reverse('tournament', kwargs={'game': game, 'lan_id': lan_id, 'name': name}))
         else:
             form = TournamentTeamForm(tournament=t, profile=request.user.profile)
     else:
