@@ -29,8 +29,10 @@
                 {% else %}
                     {% if current %}
                         <h4 id="current" data-seat="{{ current }}">Valgt plads: <span>{{ current }}</span></h4>
+                        <p class="centered">Klik på en ny plads, for at skifte den.</p>
                     {% else %}
                         <h4 id="current" data-seat="">Du er tilmeldt LAN, men ingen plads er reseveret</h4>
+                        <p class="centered">Klik på en plads, hvis du vil reservere den.</p>
                     {% endif %}
                 {% endif %}
                 <br>
