@@ -25,7 +25,7 @@ body {
     font-weight: 300;
 }
 
-h2, strong {
+h2, strong, b {
     font-weight: 500;
 }
 
