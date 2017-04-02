@@ -272,6 +272,10 @@ p.centered {
     text-align: center;
 }
 
+.seats #current {
+    margin-bottom: 0px;
+}
+
 .seats table {
     width: 100%;
     border-collapse: collapse;
