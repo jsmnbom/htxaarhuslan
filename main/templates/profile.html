@@ -21,7 +21,7 @@
                         {% endif %}
                     {% endwith %}
                 {% endif %}
-                <p><b>Bio:</b>{{ profile.bio|linebreaks }}</p>
+                <p style="margin-bottom: -18.500px;"><b>Bio:</b>{{ profile.bio|linebreaks }}</p>
             </div>
             {% if profile.photo %}
                 {% thumbnail profile.photo "400" as im %}
