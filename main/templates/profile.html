@@ -7,21 +7,21 @@
         {% include 'messages.html' %}
         <div id="show" {% if start_edit %}class="hide"{% endif %}>
             <div class="info">
-                <p>Navn: {{ profile.user.first_name }}</p>
-                <p>Klasse: {{ profile.get_grade_display }}</p>
-                {% if profile.user.is_staff %}<p>Denne bruger er en del af LanCrew.</p>{% endif %}
+                <p><b>Navn:</b> {{ profile.user.first_name }}</p>
+                <p><b>Klasse:</b> {{ profile.get_grade_display }}</p>
+                {% if profile.user.is_staff %}<p><i>Denne bruger er en del af LanCrew.</i></p>{% endif %}
                 {% if lan %}
                     {% with profile.get_lanprofile_for_next_lan as lp %}
                         {% if lp %}
                             {% if lp.seat %}
-                                <p>Reserveret plads <a href="{% url 'tilmeld' %}">{{ lp.seat }}</a>.</p>
+                                <p><b>Reserveret plads:</b> <a href="{% url 'tilmeld' %}">{{ lp.seat }}</a></p>
                             {% else %}
-                                <p>Ingen plads reseveret.</p>
+                                <p><i>Ingen plads reseveret.</i></p>
                             {% endif %}
                         {% endif %}
                     {% endwith %}
                 {% endif %}
-                <p>Bio:<br>{{ profile.bio|linebreaks }}</p>
+                <p><b>Bio:</b>{{ profile.bio|linebreaks }}</p>
             </div>
             {% if profile.photo %}
                 {% thumbnail profile.photo "400" as im %}
