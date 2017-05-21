@@ -24,7 +24,7 @@
     `cp .env.base .env`
 8. Fill out configuration in the newly created `.env` file
 
-    You can get a recaptcha key from google. Or just give it a empty string, but then you can't create users via the form on site (do it via the admin site instead).
+    You can get a recaptcha key from Google, or just give it an empty string, but then you can't create users via the form on site (do it via the admin site instead).
 9. Run database migrations (also always do this if you've pulled new changes from the repository)
 
     `python manage.py migrate`
