@@ -1,0 +1,19 @@
+-e git+http://github.com/russ-/pychallonge#egg=pychallonge
+django
+django-autocomplete-light
+django-ckeditor
+django-dotenv
+django-jet
+django-recaptcha2
+djangorestframework
+django-dotenv
+django-debug-toolbar
+certifi
+feedparser
+pillow
+psycopg2
+reportlab
+sendgrid-django
+sorl-thumbnail
+iso8601
+
