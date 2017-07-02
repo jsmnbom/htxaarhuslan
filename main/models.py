@@ -67,13 +67,11 @@ class Profile(models.Model):
         verbose_name = 'profil'
         verbose_name_plural = 'profiler'
 
-    GRADES = GRADES + (('none', 'Ukendt'),)
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     photo = ImageField(upload_to=profile_picture_path, storage=OverwriteStorage(), blank=True,
                        verbose_name='billede')
     bio = models.TextField(blank=True)
-    grade = models.CharField(verbose_name='klasse', max_length=32, choices=GRADES, default='none')
+    grade = models.CharField(verbose_name='klasse', max_length=32, default='none')
 
     def __str__(self):
         return '{} ({})'.format(self.user.username, self.user.first_name)

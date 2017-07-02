@@ -19,4 +19,4 @@ class AdminProfileForm(forms.ModelForm):
 
         instance = kwargs.get('instance', None)
         if instance:
-            self.fields['grade'].choices += ((instance.grade, instance.grade),)
+            self.fields['grade'].choices += ((instance.grade, instance.grade), ('none', 'Ukendt'))
