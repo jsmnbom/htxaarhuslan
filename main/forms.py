@@ -120,27 +120,11 @@ class EditUserForm(forms.ModelForm):
     email = forms.EmailField(label='Email')
 
 
-# Not proud of this, but it works :/
 class PhotoInput(forms.ClearableFileInput):
     clear_checkbox_label = 'Fjern'
-    template_with_initial = (
-        '<img src="%(initial_url)s" alt="%(initial_text)s (%(initial)s)"/>'
-        '<br><div class="file"><label for="id_photo" class="choose" title="Upload nyt profilbillede">'
-        'Upload nyt profilbillede</label>%(clear_template)s<br>%(input)s</div>'
-    )
-
-    template_with_clear = ('<div class="check">%(clear)s <label for="%(clear_checkbox_id)s">'
-                           '%(clear_checkbox_label)s</label></div>')
-
-    template = ('<br><div class="file big"><label for="id_photo" class="choose" title="Upload profilbillede">'
-                'Upload profilbillede</label>%(input)s</div>')
-
-    def render(self, name, value, attrs=None):
-        if self.is_initial(value):
-            return super().render(name, value, attrs)
-        else:
-            substitutions = {'input': super().render(name, value, attrs)}
-            return mark_safe(self.template % substitutions)
+    initial_text = 'Aktuelt'
+    input_text = 'Upload nyt profilbillede'
+    template_name = 'profile_photo_input.html'
 
 
 class EditProfileForm(forms.ModelForm):

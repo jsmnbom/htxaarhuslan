@@ -1,0 +1,21 @@
+{% if is_initial %}
+    <img src="{{ widget.value.url }}" alt="{{ initial_text }} ({{ widget.value }})"/>
+    <br>
+    <div class="file">
+        <label for="id_photo" class="choose" title="Upload nyt profilbillede">Upload nyt profilbillede</label>
+        {% if not widget.required %}
+            <div class="check">
+                <label for="{{ checkbox_id }}">{{ clear_checkbox_label }}</label>
+                <input type="checkbox" name="{{ checkbox_name }}" id="{{ checkbox_id }}"/>
+            </div>
+        {% endif %}
+        <input type="{{ widget.type }}" name="{{ widget.name }}"{% for name, value in widget.attrs.items %}{% if value is not False %}{{ name }}{% if value is not True %}="{{ value }}"{% endif %}{% endif %}{% endfor %} />
+    </div>
+{% else %}
+    <br>
+    <div class="file big">
+        <label for="id_photo" class="choose" title="Upload profilbillede">Upload profilbillede</label>
+        <input type="{{ widget.type }}" name="{{ widget.name }}"{% for name, value in widget.attrs.items %}{% if value is not False %}{{ name }}{% if value is not True %}="{{ value }}"{% endif %}{% endif %}{% endfor %} />
+    </div>
+{% endif %}
+
