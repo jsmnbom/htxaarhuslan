@@ -159,6 +159,13 @@ class EditProfileForm(forms.ModelForm):
 
     grade = forms.ChoiceField(sorted(GRADES, reverse=True), label='Klasse', widget=LabelSelect(label='Klasse'))
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        instance = kwargs.get('instance', None)
+        if instance:
+            self.fields['grade'].choices += ((instance.grade, instance.grade), ('none', 'Ukendt'))
+
 
 class TournamentSelect2(ModelSelect2):
     autocomplete_function = 'tournamentSelect2'
