@@ -83,6 +83,11 @@ class Profile(models.Model):
         except LanProfile.DoesNotExist:
             return None
 
+    def get_grade_display(self):
+        for k, v in GRADES:
+            if k == self.grade:
+                return v
+
 
 class StrippedMultipleChoiceFieldField(forms.MultipleChoiceField):
     def __init__(self, *args, **kwargs):
@@ -137,6 +142,9 @@ class Lan(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='pris', null=True, blank=True)
     payphone = models.CharField(max_length=128, verbose_name='Betalingstelefonnummer', null=True, blank=True,
                                 help_text='Skriv kun tal. (+45) skrives automatisk foran.')
+    payment_manager_id = models.CharField(max_length=128, verbose_name="Payment Manager id", null=True, blank=True,
+                                          help_text='Unik token som indentificerer hvor'
+                                                    'betalingsforespørgelser skal sendes.')
     show_calendar = models.BooleanField(default=False, verbose_name='Vis kalender',
                                         help_text='Hvorvidt en kalender skal vises på forsiden. '
                                                   'Slå kun dette til hvis turneringer og andre events '
@@ -201,24 +209,6 @@ class LanProfile(models.Model):
         if not self.seat:
             self.seat = None
         super().save(*args, **kwargs)
-
-    def get_payment_url(self):
-        attrs = {
-            'amount': self.lan.price,
-            'phone': '0045' + self.lan.payphone,
-            'comment': 'LAN|{}'.format(self.pk),
-            'lock': '1'
-        }
-        return 'mobilepay://send?' + urllib.parse.urlencode(attrs)
-
-    def get_payment_qr_url(self):
-        attrs = {
-            'chs': '300x300',
-            'chld': 'M|2',
-            'chl': self.get_payment_url(),
-            'cht': 'qr'
-        }
-        return 'https://chart.googleapis.com/chart?' + urllib.parse.urlencode(attrs)
 
 
 def get_next_lan():
@@ -417,21 +407,3 @@ class FoodOrder(models.Model):
 
     def __str__(self):
         return self.order
-
-    def get_payment_url(self):
-        attrs = {
-            'amount': self.price,
-            'phone': '0045' + self.lanprofile.lan.food_phone,
-            'comment': 'LAN_MAD|{}'.format(self.pk),
-            'lock': '1'
-        }
-        return 'mobilepay://send?' + urllib.parse.urlencode(attrs)
-
-    def get_payment_qr_url(self):
-        attrs = {
-            'chs': '300x300',
-            'chld': 'M|2',
-            'chl': self.get_payment_url(),
-            'cht': 'qr'
-        }
-        return 'https://chart.googleapis.com/chart?' + urllib.parse.urlencode(attrs)

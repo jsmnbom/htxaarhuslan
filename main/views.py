@@ -353,3 +353,7 @@ def calendar(request, feed_name):
             evt['end'] = t.end.isoformat()
         events.append(evt)
     return JsonResponse(events, safe=False)
+
+
+def send_payment_request(request):
+    pass

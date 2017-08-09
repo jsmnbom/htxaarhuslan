@@ -27,7 +27,7 @@ class LanAdmin(admin.ModelAdmin):
             'fields': ('name', 'blurb')
         }),
         ('Betaling', {
-            'fields': ('paytypes', 'price', 'payphone')
+            'fields': ('paytypes', 'price', 'payphone', 'payment_manager_id')
         }),
         ('Madbestilling', {
             'fields': ('food_open', 'food_phone')
