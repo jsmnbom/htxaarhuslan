@@ -136,7 +136,8 @@ def tournaments(request):
     tournaments = Tournament.objects.filter(lan=lan).select_related('game')
     games = defaultdict(list)
     for t in tournaments:
-        games[t.game].append(t)
+        if t.open or t.live or request.user.is_staff:
+            games[t.game].append(t)
 
     if request.user.is_authenticated:
         if request.method == 'POST':
