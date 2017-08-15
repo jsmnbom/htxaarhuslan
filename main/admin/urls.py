@@ -7,7 +7,7 @@ from main.admin.pdf import table_pdf
 def get_admin_urls(urls):
     def get_urls():
         my_urls = [
-            url(r'^pdf/bordkort.pdf/$', admin.site.admin_view(table_pdf))
+            url(r'^pdf/bordkort/(?P<lan_id>.+)$', admin.site.admin_view(table_pdf), name='bordkort')
         ]
         return my_urls + urls
 

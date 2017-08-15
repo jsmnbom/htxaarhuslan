@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.forms import model_to_dict
+from django.urls import reverse
 from django.utils.timezone import now
 
 from main.models import Lan, Event
@@ -14,7 +15,7 @@ class EventInline(admin.TabularInline):
 
 @admin.register(Lan)
 class LanAdmin(admin.ModelAdmin):
-    list_display = ('name', 'start', 'seats_count', 'is_open')
+    list_display = ('name', 'start', 'seats_count', 'is_open', 'bordkort')
 
     fieldsets = (
         ('Tider', {
@@ -44,3 +45,9 @@ class LanAdmin(admin.ModelAdmin):
             return model_to_dict(prev_lan, ['blurb', 'seats', 'schedule'])
         except (Lan.DoesNotExist, AttributeError, IndexError):
             return {}
+
+    def bordkort(self, lan):
+        return '<a href="{}">Download bordkort</a>'.format(reverse('admin:bordkort', kwargs={'lan_id': lan.id}))
+
+    bordkort.allow_tags = True
+    bordkort.short_description = 'Bordkort'

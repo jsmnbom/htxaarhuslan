@@ -1,24 +1,28 @@
 from collections import Counter
 from pathlib import Path
 
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 
-from main.models import get_next_lan
+from main.models import Lan
+
+H, W = A4  # Landscape
 
 
-def table_pdf(request):
+def table_pdf(request, lan_id):
+    try:
+        lan = Lan.objects.get(id=lan_id)
+    except Lan.DoesNotExist:
+        raise Http404
+
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="borde.pdf"'
+    response['Content-Disposition'] = 'attachment; filename="Bordkort {}.pdf"'.format(lan.name)
 
-    width, height = A4[1], A4[0]
-
-    c = canvas.Canvas(response, pagesize=(width, height))
+    c = canvas.Canvas(response, pagesize=(W, H))
     c.setCreator('HTXAarhusLAN.dk')
 
-    tables = get_next_lan().parse_seats()[0]
-
+    tables = lan.parse_seats()[0]
     origins = {}
     lengths = Counter(), Counter()
 
@@ -47,31 +51,34 @@ def table_pdf(request):
     def string(c, x, y, size, text):
         c.setFontSize(size)
         for i in range(len(text)):
-            if c.stringWidth(text[:i]) > width * 0.8:
+            if c.stringWidth(text[:i]) > W * 0.8:
                 text = text[:i] + '...'
                 break
         c.drawCentredString(x, y, text)
 
     for seat, lp in pages:
-        string(c, width / 2, height * 0.6, 250, seat)
+        string(c, W / 2, H * 0.6, 250, seat)
         if lp is None:
             line1 = 'Denne plads er ikke reserveret.'
             line2 = 'Du kan derfor godt sætte dig her.'
         else:
             line1 = lp.profile.user.first_name
             line2 = '{}({})'.format(lp.profile.user.username, lp.profile.grade)
-        string(c, width / 2, height * 0.48, 45, line1)
-        string(c, width / 2, height * 0.36, 35, line2)
+        string(c, W / 2, H * 0.48, 45, line1)
+        string(c, W / 2, H * 0.36, 35, line2)
 
         c.setFontSize(12)
-        c.drawString(width * 0.05, height * 0.12,
-                     'Der kan være sket ændringer siden denne seddel blev printet.')
-        c.drawString(width * 0.05, height * 0.1,
-                     'Hvis du er i tvivl spørg et crew member eller check på htxaarhuslan.dk/tilmeld.')
-        c.drawString(width * 0.05, height * 0.08,
-                     'Ved ophold til lan skal du følge reglerne på htxaarhuslan.dk/info#regler.')
+        lines = [
+            'Husk at tilmelde dig vores discord server på linket: https://discord.gg/3DJaNFY',
+            'Det er her der vil komme løbende updateringer under LANet.',
+            'Der kan være sket ændringer siden denne seddel blev printet.',
+            'Hvis du er i tvivl spørg et crew member eller check på htxaarhuslan.dk/tilmeld.',
+            'Ved ophold til lan skal du følge reglerne på htxaarhuslan.dk/info#regler.'
+        ]
+        for i, line in enumerate(lines):
+            c.drawString(W * 0.05, H * (0.06 + 0.02 * (len(lines) - i)), line)
 
-        c.drawImage(str(Path('main/static/main/img/logo.png')), width * 0.6, height * 0.07, width=width * 0.35,
+        c.drawImage(str(Path('main/static/main/img/logo.png')), W * 0.75, H * 0.07, width=W * 0.2,
                     preserveAspectRatio=True, anchor='sw', mask='auto')
 
         c.showPage()
