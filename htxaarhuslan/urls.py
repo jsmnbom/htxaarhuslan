@@ -34,8 +34,8 @@ urlpatterns = [
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]
 
-admin.site.site_header = 'HTX Aarhus LAN administation'
-admin.site.site_title = admin.site.site_header
+admin.site.site_header = 'HAL administation'
+admin.site.site_title = 'HTX Aarhus LAN administation'
 
 if settings.DEBUG:
     import debug_toolbar
