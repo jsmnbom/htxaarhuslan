@@ -63,7 +63,7 @@ def tilmeld(request):
 
 def tilmeldlist(request):
     lan = get_next_lan()
-    profiles = LanProfile.objects.filter(lan=lan)
+    profiles = LanProfile.objects.filter(lan=lan).select_related('profile').select_related('profile__user')
     return render(request, 'tilmeldlist.html', {'profiles': profiles})
 
 
@@ -133,7 +133,7 @@ def profile(request, username=None):
 
 def tournaments(request):
     lan = get_next_lan()
-    tournaments = Tournament.objects.filter(lan=lan).select_related('game')
+    tournaments = Tournament.objects.filter(lan=lan).select_related('game').select_related('lan')
     games = defaultdict(list)
     for t in tournaments:
         if t.open or t.live or request.user.is_staff:
@@ -153,7 +153,10 @@ def tournaments(request):
                                          'Der opstod en fejl. Prøv igen senere, eller kontakt LanCrew.')
                 return redirect(reverse('tournaments'))
 
-        teams = TournamentTeam.objects.filter(tournament__lan=lan, profiles__in=[request.user.profile])
+        teams = (TournamentTeam.objects.filter(tournament__lan=lan, profiles__in=[request.user.profile])
+                 .prefetch_related('profiles__user')
+                 .select_related('tournament')
+                 .select_related('tournament__game'))
     else:
         teams = None
     return render(request, 'tournaments.html', {'games': dict(games), 'teams': teams})
@@ -161,7 +164,7 @@ def tournaments(request):
 
 def tournament(request, game, lan_id, name):
     t = Tournament.objects.get(game__name=game, lan__id=lan_id, name=name)
-    teams = TournamentTeam.objects.filter(tournament=t)
+    teams = TournamentTeam.objects.filter(tournament=t).prefetch_related('profiles__user')
     if request.user.is_authenticated:
         if request.method == 'POST':
             form = TournamentTeamForm(request.POST, tournament=t, profile=request.user.profile)
