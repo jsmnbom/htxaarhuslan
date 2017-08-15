@@ -13,8 +13,8 @@
                     <div class="hidden">
                         <p>{{ game.description|safe }}</p>
                         <p>Der er {{ tournaments|length }} turnering{{ tournaments|length|pluralize:"er" }} planlagt
-                            for {{ game.name }}. Klik på en af dem herunder for at se hvilke hold der er tilmeldt samt
-                            tilmelde dit eget.</p>
+                            for {{ game.name }}. Klik på {% if tournaments|length == 1 %}den{% else %}en af dem{% endif %}
+                            herunder for at se hvilke hold der er tilmeldt samt tilmelde dit eget.</p>
                         {% for t in tournaments %}
                             <h4><a href="{{ t.get_absolute_url }}">{{ t.name }}</a></h4>
                         {% endfor %}
