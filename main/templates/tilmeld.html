@@ -29,10 +29,10 @@
                 {% else %}
                     {% if current %}
                         <h4 id="current" data-seat="{{ current }}">Valgt plads: <span>{{ current }}</span></h4>
-                        <p class="centered">Klik på en ny plads, for at skifte den.</p>
+                        <p class="centered">Klik på en ny plads, for at skifte dertil.</p>
                     {% else %}
                         <h4 id="current" data-seat="">Du er tilmeldt LAN, men ingen plads er reseveret</h4>
-                        <p class="centered">Klik på en plads, hvis du vil reservere den.</p>
+                        <p class="centered">Klik på en plads, for at reservere den.</p>
                     {% endif %}
                 {% endif %}
                 <br>
@@ -53,7 +53,7 @@
                 {% endif %}
                 {% if lan.paytypes %}
                     <h3>Prisen for LAN er denne gang {{ lan.price|floatformat:"-2" }}kr.</h3>
-                    <p>Tilmelding er ikke bindende, bemærk dog at penge indbetalt efter LAN'et er startet ikke gives
+                    <p>Tilmelding er ikke bindende. Bemærk dog at penge indbetalt efter LAN er startet ikke gives
                         retur.</p>
                     <p>Det er muligt at betale med MobilePay eller kontant. MobilePay gøres vha. QR kode som vises når
                         du har tilmeldt dig. Hvis du vælger at betale kontant skal du betale ved et LanCrew medlem så
@@ -62,7 +62,7 @@
                 {% if current != 0 %}
                     {% if current != -1 %}
                         <p>Du kan framelde dig LAN ved at trykke herunder. Bemærk at din plads herefter vil blive
-                            frigivet til andre. Hvis du kun ønsker at skifte plads, skal du vælge en på bordene
+                            frigivet til andre. Hvis du kun ønsker at skifte plads, skal du vælge en ny på bordene
                             herover.</p>
                         <form action="{% url 'frameld' %}" method="POST" id="frameld">
                             {% csrf_token %}

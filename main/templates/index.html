@@ -18,11 +18,11 @@
             <h4>Dato: <strong>{{ next_lan.start }}</strong></h4>
             {{ next_lan.blurb|safe }}
             {% if not next_lan.show_calendar %}
-                <p>Tidsplan er endnu ikke helt færdiggjort, men vil blive vist herunder snarrest.</p>
+                <p>Tidsplanen for næste LAN er ikke klar endnu, men vil blive vist herunder så snart alt er planlagt.</p>
             {% endif %}
         {% else %}
             <h2>Ingen LAN planlagt</h2>
-            <p>Der er ingen lan planlagt på nuværende tidspunkt.</p>
+            <p>Der er ingen LAN planlagt på nuværende tidspunkt.</p>
         {% endif %}
     </div>
     {% if next_lan and next_lan.show_calendar %}
@@ -36,17 +36,15 @@
     <div class="box" id="hvaderhal">
         <h2>Hvad er HAL?</h2>
         <p>HAL <span class="acronym">(<span>H</span>TX<span>A</span>arhus<span>L</span>AN)</span> er navnet på det LAN
-            der bliver holdt
-            på Aarhus Gymnasium af elever for elever. Et LAN bliver holdt over en weekend fra fredag til søndag morgen,
-            så man kan nå hjem og hvile ud til mandag.</p>
+            vi holder på Aarhus Gymnasium, af elever, for elever. LAN bliver som regel holdt over en weekend, fra fredag
+            aften til søndag middag, men det er tilladt at komme og gå som man vil, så længe man er tilmeldt.</p>
 
-        <p>Under <a href="{% url "info" %}">Information</a>, kan du læse om yderlige informationer til LAN, som hvor og
-            hvornår det er, hvad der er en god ide at medbringe, hvad der gøres med mad, og selvfølgelig de obligatorisk
-            skrevne regler.</p>
-        <p>Under <a href="{% url "tilmeld" %}">Tilmelding</a>, kan du tilmelde dig til næste LAN. Hvis du ikke gør
-            dette, kan du ikke komme ind!</p>
-        <p>Under <a href="{% url "tournaments" %}">Turnering</a>, kan du melde dig til turneringerne ved næste LAN, og
-            det er
-            også her der kommer live opdateringer på turneringerne under LAN'et! </p>
+        <p>Under <a href="{% url "info" %}">Information</a> kan du finde alle de informationer, du har brug for at vide, før du
+            tager til LAN. Dette inkluderer for eksempel tid og sted, pakkeliste, hvordan madbestilling foregår,
+            regler for opholdelse under LAN, og en FAQ.</p>
+        <p>Under <a href="{% url "tilmeld" %}">Tilmelding</a> kan du melde dig til næste LAN, og reservere plads.
+            Vi regner med at alle, der kommer, melder sig til.</p>
+        <p>Under <a href="{% url "tournaments" %}">Turnering</a> kan du melde dig til det kommende LAN's turneringer. Her kan
+            du også se holdenes placering under og efter turneringer, og hvilke præmier de forskellige turneringer har.</p>
     </div>
 {% endblock %}

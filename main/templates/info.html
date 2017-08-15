@@ -8,69 +8,97 @@
         <h3>Tid</h3>
         <h4>Start: <strong>{{ next_lan.start|date:"l, j. F Y G:i" }}</strong></h4>
         <h4>Slut: <strong>{{ next_lan.end|date:"l, j. F Y G:i" }}</strong></h4>
-        <p>Det er tilladt at møde og forlade stedet som man har lyst; man kan komme ind når som helst, dog hvis portene
-            er lukkede, skal man ringe på dette telefon nummer: <a href="tel:29721401">29 72 14 01</a>.</p>
+        <p>Det er tilladt at komme og gå som man har lyst, indenfor denne tidsperiode.
+            Hvis portene er lukkede, og du ikke kan komme ind, kan du ringe til os på enten
+            <a href="tel:22991518">22&nbsp;99&nbsp;15&nbsp;18</a> eller
+            <a href="tel:29108447">29&nbsp;10&nbsp;84&nbsp;47</a>.</p>
         <h3>Sted</h3>
-        <p><a href="https://goo.gl/maps/U3QLMv2Phfv" target="_blank">Univers, AARHUS TECH Aarhus Gymnasium<br>Dollerupvej
-            2, 8000, Aarhus C</a></p>
+        <p><a href="https://goo.gl/maps/U3QLMv2Phfv" target="_blank">Univers, AARHUS TECH Aarhus Gymnasium<br>
+            Dollerupvej 2, 8000, Aarhus C</a></p>
     </div>
-    <div class="box" id="pakke">
-        <h2>Pakkeliste</h2>
-        <ul>
-            <li>Studiekort (så vi kan være sikre på at du går på skolen)</li>
-            <li>Gamerudstyr
-                <ul>
-                    <li>Computer, PS, XBOX, skærm, div. tilbehør, hvad du nu har brug for.</li>
-                    <li>LAN-kabel - anbefalet længde: 10m. Hvis du ikke har et der er langt nok, kan du låne et.</li>
-                    <li>Stikdåse - hvis du har brug for mere end ét stik.</li>
-                </ul>
-            </li>
-            <li>Vi må som udgangspunkt ikke sove på skolens møbler, medbring derfor liggeunderlag el.lign.</li>
-            <li>Dyne/sovepose</li>
-            <li>Toiletgrej</li>
-            <li>Ekstra tøj (i hvert fald en t-shirt eller to)</li>
-        </ul>
-    </div>
-    <div class="box" id="mad">
-        <h2>Mad</h2>
-        <p>Det vil ikke være muligt at købe mad på skolen, men der ligger dog en Netto ca. 200m væk fra skolen.</p>
-        <p>Det er også muligt at få opbevaret mad/drikke på køl og at bruge diverse køkkenmaskiner (mikrobølgeovn,
-            elkedel og andet) - alt sammen gratis!</p>
+    <div class="box" id="faq">
+        <h2>FAQ</h2>
+        <p>Hvis du har et spørgsmål du ikke kan finde på listen, kan du spørge os på Discord eller Facebook.</p>
+        <h4 id="hsjtmtl"><b>Hvad skal jeg tage med til LAN?</b></h4>
+        <p>Du behøver reelt set ikke at tage noget med til LAN, andet end dit <em>studiekort</em>.</p>
+        <p>Hvis du gerne vil overnatte til LAN, vil vi dog gerne have at du tager <em>dyne eller sovepose og madras</em> med.
+            Bemærk at vi som hovedregel <em>ikke</em> må sove på skolens møbler.
+            Husk også <em>tandbørste og andre toiletsager</em>, samt <em>rent tøj</em>.</p>
+        <p>Ud over dette skal du selvfølgelig have det <em>computer-udstyr</em> med, som du skal bruge. Hvis du ikke har et LAN
+            kabel, er det muligt at låne. Hver person er kun garanteret <em>ét strømstik</em>. Hvis du skal bruge mere, så husk
+            at tage en <em>forlængerledning</em> med!</p>
+        
+        <h4 id="hsjmotl"><b>Hvornår skal jeg møde op til LAN?</b></h4>
+        <p>Du kan møde op, og gå, når du har lyst, så længe LAN er i gang. De første turneringer bliver tidligst afholdt
+            klokken 21 om fredagen. Husk at checke hvornår de turneringer, du har meldt dig til, bliver afholdt, så du kan
+            sikre dig at du er til stede på disse tidspunkter.</p>
+        <p>LAN Crew begynder at sætte op to timer før LAN begynder, så dem der gerne vil hjælpe til, er velkomne til at komme
+            tidligere. Hvis du ikke har tænkt dig at hjælpe med at sætte op, beder vi dig dog venligst om ikke at komme før
+            LAN starter.</p>
+            
+        <h4 id="edmtl"><b>Er der mad til LAN?</b></h4>
+        <p>Til hvert LAN har vi et småt udvalg af køkkenudstyr til frit brug. Dette vil sige en ovn, mikrobølgeovn,
+            køleskab og elkedel. Ud over dette ligger vi meget tæt på en Netto, som har åbent klokken 7-23.</p>
+        <p>Hver aften bestiller vi mad fra <em>Byens Burger</em>. Hvornår madbestilling åbner kan ses på tidsplanen på forsiden,
+            hvis den er oppe. Vi henter maden og transporterer den til skolen. Du kan forvente maden cirka 2 timer efter
+            madbestilling åbner. Madbestilling foregår via hjemmesiden.</p>
+        
+        <h4 id="hbjtl"><b>Hvordan betaler jeg til LAN?</b></h4>
+        <p>Dette gælder både for <em>madbetaling og entrébetaling</em> (hvis gældende).</p>
+        <p>Hos HAL er det både muligt at betale med <em>kontanter</em> og med <em>mobilepay</em>!</p>
+        <p>Hvis du gerne vil betale kontant, skal du give pengene til <a href="{% url 'profile' username='bomjacob' %}">Jacob Bom</a>.
+            Hvis du gerne vil betale med mobilepay, giver vi dig en anmodning om beløbet, som du bare kan betale.</p>
+        <p>Hvis du betaler kontant, skal vi manuelt markere dit beløb som betalt. Derfor kan der godt gå noget tid
+            mellem du har betalt, til der står på hjemmesiden at du har betalt.</p>
+            
+        <h4 id="hmbhj"><b>Hvor meget bordplads har jeg?</b></h4>
+        <p>Siden alle personer har et halvt bord, vil der være cirka 70 cm til rådighed per person. Vi ved godt, at dette ikke
+            er meget, men det er ikke muligt for os at skaffe større borde. Som hovedregel kan hver person kun reservere én plads
+             - hvis vi ser, at antallet af tilmeldte er særligt lavt, er det dog muligt at vi åbner op for at folk kan reservere
+            en ekstra plads.</p>
+        
+        <h4 id="htjmils"><b>Hvordan tilføjer jeg musik til LAN-spillelisten?</b></h4>
+        <p>Vi bruger hjemmesiden <a href="https://www.dubtrack.fm/join/htxaarhuslan_148674940393044" target="_blank">Dubtrack</a>
+            til at spille musik til LAN. Her kan du logge ind (eller lave en profil) og derefter tilføje musik til den fælles kø
+            via youtube. LAN Crew vil moderere musikken, så hvis en sang er forfærdelig at høre på (eller en troll) kan du kontakte
+            LAN Crew om det, og dem der satte musikken på vil blive blokeret fra at tilføje sange.</p>
+            
+        <h4 id="kiletis"><b>Kan i lave en turnering i &lt;spil&gt;?</b></h4>
+        <p>Vi lytter altid på hvad dem, der kommer til LAN, har at sige - særligt når det kommer til dette. Det er dog ikke altid
+            der er plads i tidsplanen til alle de spil der bliver foreslået, så hver gang før et LAN, åbner vi en poll angående
+            hvilke spil der ønskes turneringer i. Hvis du gerne vil være med til at bestemme hvilke turneringer vi afholder,
+            skal du melde dig ind i vores Discord og/eller Facebook gruppe, hvor disse polls vil blive lagt ud. Bemærk dog at
+            vi kun holder den åben i et døgn.</p>
+        <p>Hvis du gerne vil foreslå et spil, som ikke er på vores liste, kan du skrive en besked til os på Discord eller Facebook.</p>
+            
+        <h4 id="hbjemalc"><b>Hvordan bliver jeg et medlem af LAN Crew?</b></h4>
+        <p>Vi leder altid efter nye entusiastiske medlemmer, der kan hjælpe med at udfylde hullerne, som de gamle 3.g'ere efterlod.
+            Hvis du gerne vil være en del af LAN Crew, kan du sende en privat besked til en af os på Discord. Vi vil dog helst have,
+            at man har været med til mindst ét LAN før. Det betyder også en del, hvis man hjælper med at sætte op og pakke sammen,
+            da det viser os, at du faktisk er seriøs om at hjælpe til.</p>
+        <p>Som LAN Crew medlem får du lov til at være med til at bestemme hvordan LAN skal foregå, og får gode relationer til
+            mange folk fra andre årgange og klasser, end din egen. Det eneste vi kræver af dig er at du er villig til at
+            hjælpe til.</p>
     </div>
     <div class="box" id="regler">
-        <h2>Reglement</h2>
-        <p>Vi vil gerne undgå at lave en lang regelliste, men vi bliver nødt til at opstille nogle regler, for at sikre
-            os, at alting forløber sikkert og flydende.</p>
+        <h2>Regler</h2>
+        <p>Vi har nogle få, men vigtige, regler, som vi gerne vil have at alle overholder af sikkerhedsmæssige årsager, og for at
+            alle kan få en god oplevelse til LAN.</p>
         <ul>
-            <li>Der må ikke stilles tasker, kasser, soveposer og andre "fyld"-ting rundt om bordene. Alle disse ting
-                skal istedet opbevares ovre ved tribunen. (Der bliver sat skilte op. Hvis vi ser andet bliver du bedt om
-                at fjerne dine ting.)
+            <li>Der må ikke stå tasker eller andet baggage ved bordene, da det spærrer brandvejene. Al baggage skal i stedet
+                stilles op på trappen, eller i andre afmarkerede baggageområder.
             </li>
-            <li>Der må IKKE stå drikke- eller fødevarer i nærheden af de store strøm-fordelere.</li>
-            <li>Du må ikke komme beruset, eller indtage alkohol til nogle af lanene.</li>
-            <li>For at undgå overbelastningen af strømmen, må du ikke sætte køkkenudstyr og lignende (alt andet end
-                gaming-udstyr) til strømstikket hvor du sidder. Vi har dedikerede borde, hvor du kan sætte dit andet
-                udstyr til.
+            <li>Der må ikke stå drikke- eller spisevarer i nærheden af El-tavlerne (de store strømfordelere).</li>
+            <li>Du må ikke komme beruset, eller indtage alkohol, til nogen af LANene.</li>
+            <li>For at undgå kortslutning, må du ikke sætte højspændigs køkkenudstyr (som køleskabe) til strømstikket hvor du sidder.
+                Vi har et dedikeret køkkenområde, der er sat op til at klare højere spænding.
             </li>
             <li>Der må ikke medbringes netværksudstyr som routere og access-points, og du må ikke hoste hotspots og
                 andet uden tilladelse. Når du ankommer skal du også sikre dig at din computer ikke er sat op til at dele
-                dit netværk igennem lankabel. Dette kan nemlig foresage problemer.
+                dit netværk igennem lan-kabel. Dette kan nemlig forårsage problemer.
             </li>
-            <li>Ingen højttaleranlæg uden tilladelse fra crew.</li>
-        </ul>
-
-        <p>Derudover har vi nogle anvisninger som du bør tage højde for:</p>
-        <ul>
-            <li>Du skal kunne have dit udstyr inden for din egen plads, ca. 90 cm.</li>
-            <li>Almindelig dansk lovgivning er gældende, og vi forventer også almindelig og god opførsel, så alle kan
-                være med.
-            </li>
-            <li>Der må kun soves i soveområderne (endnu ikke fastlagt endnu, spørg et medlem fra crew til lanet), der må
-                som hovedregel IKKE soves på skolens møbler.
-            </li>
-            <li>Hvis folk ikke kan finde ud af at rydde op på brugte glas, tomme flasker, pizzabakker og andet affald,
-                bliver der indført oprydningsrunder. Så sørg for at holde orden, især ved din egen plads
-            </li>
+            <li>Du må ikke medbringe højtaleranlæg uden tilladelse fra crew.</li>
+            <li>Husk at rydde op løbende under LAN, og smid dine pantflasker i de afmarkerede pantspande.</li>
         </ul>
     </div>
 {% endblock %}
