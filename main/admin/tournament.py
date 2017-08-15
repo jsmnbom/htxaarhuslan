@@ -14,7 +14,7 @@ class TournamentTeamInline(admin.TabularInline):
 @admin.register(Tournament)
 class TournamentAdmin(admin.ModelAdmin):
     list_filter = (LanFilter, 'game', 'owner')
-    list_display = ('name', 'game', 'lan', 'challonge_link', 'get_teams_count', 'live', 'open', 'owner')
+    list_display = ('name', 'game', 'lan', 'start', 'challonge_link', 'get_teams_count', 'live', 'open', 'owner')
     search_fields = ('name', 'game', 'lan')
 
     def get_queryset(self, request):
