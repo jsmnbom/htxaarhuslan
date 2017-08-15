@@ -17,6 +17,9 @@ class TournamentAdmin(admin.ModelAdmin):
     list_display = ('name', 'game', 'lan', 'challonge_link', 'get_teams_count', 'live', 'open', 'owner')
     search_fields = ('name', 'game', 'lan')
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('owner__user')
+
     inlines = [
         TournamentTeamInline
     ]
@@ -39,12 +42,17 @@ class TournamentTeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'get_game', 'tournament', 'get_lan')
     search_fields = ('name', 'profiles', 'namedprofiles')
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('tournament').select_related('tournament__game')
+
     def get_game(self, team):
         return team.tournament.game
 
     get_game.short_description = 'spil'
+    get_game.admin_order_field = 'tournament__game'
 
     def get_lan(self, team):
         return team.tournament.lan
 
     get_lan.short_description = 'lan'
+    get_lan.admin_order_field = 'tournament__lan'

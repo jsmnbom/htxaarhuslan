@@ -15,7 +15,7 @@ class EventInline(admin.TabularInline):
 
 @admin.register(Lan)
 class LanAdmin(admin.ModelAdmin):
-    list_display = ('name', 'start', 'seats_count', 'is_open', 'bordkort')
+    list_display = ('name', 'start', 'get_seat_counts', 'is_open', 'bordkort')
 
     fieldsets = (
         ('Tider', {
@@ -42,7 +42,7 @@ class LanAdmin(admin.ModelAdmin):
     def get_changeform_initial_data(self, request):
         try:
             prev_lan = Lan.objects.filter(start__lt=now()).order_by("-start")[0]
-            return model_to_dict(prev_lan, ['blurb', 'seats', 'schedule'])
+            return model_to_dict(prev_lan, ['blurb', 'seats'])
         except (Lan.DoesNotExist, AttributeError, IndexError):
             return {}
 
@@ -51,3 +51,8 @@ class LanAdmin(admin.ModelAdmin):
 
     bordkort.allow_tags = True
     bordkort.short_description = 'Bordkort'
+
+    def get_seat_counts(self, lan):
+        return '{0[0]}/{0[1]}'.format(lan.seats_count())
+
+    get_seat_counts.short_description = 'Antal pladser'

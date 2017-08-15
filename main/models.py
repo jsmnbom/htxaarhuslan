@@ -1,5 +1,4 @@
 import json
-import urllib.parse
 from collections import Counter
 from urllib.error import HTTPError
 
@@ -160,11 +159,9 @@ class Lan(models.Model):
 
     is_open.short_description = 'Tilmelding åben?'
 
-    def parse_seats(self):
+    def _parse_seats(self, lps):
         parsed = []
         tables = Counter()
-        lps = {lp.seat: lp for lp in
-               LanProfile.objects.filter(lan=self).select_related('profile', 'profile__user').all()}
         for row in self.seats.splitlines():
             parsed.append([])
             for s in row:
@@ -177,17 +174,16 @@ class Lan(models.Model):
                         parsed[-1].append((seat, None))
                 else:
                     parsed[-1].append((None, None))
+        return parsed, tables
+
+    def parse_seats(self):
+        lps = {lp.seat: lp for lp in
+               LanProfile.objects.filter(lan=self).select_related('profile', 'profile__user').all()}
+        parsed, tables = self._parse_seats(lps)
         return parsed, (len(lps), sum(tables.values()))
 
     def seats_count(self):
-        return self.parse_seats()[1][1]
-
-    seats_count.short_description = 'Antal pladser'
-
-    def is_ongoing(self):
-        return self.start <= now() <= self.end
-
-    is_ongoing.short_description = 'Er i gang?'
+        return LanProfile.objects.filter(lan=self).count(), sum(self._parse_seats({})[1].values())
 
 
 class LanProfile(models.Model):
@@ -212,10 +208,9 @@ class LanProfile(models.Model):
 
 
 def get_next_lan():
-    lans = Lan.objects.filter(end__gte=now()).order_by('end')
-    if len(lans) > 0:
-        return lans[0]
-    else:
+    try:
+        return Lan.objects.filter(end__isnull=False).latest('end')
+    except Lan.DoesNotExist:
         return None
 
 

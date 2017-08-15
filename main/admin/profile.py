@@ -20,10 +20,14 @@ class LanProfileAdmin(admin.ModelAdmin):
     search_fields = ('profile__user__first_name', 'profile__user__username', 'seat')
     form = AdminLanProfileForm
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('profile').select_related('profile__user')
+
     def get_paytype(self, obj):
         return obj.get_paytype_display()
 
     get_paytype.short_description = LanProfile._meta.get_field('paytype').verbose_name
+    get_paytype.admin_sort_field = 'paytype'
 
     actions = ['paid', 'not_paid']
 
@@ -35,7 +39,7 @@ class LanProfileAdmin(admin.ModelAdmin):
     def not_paid(self, request, queryset):
         queryset.update(paid=False)
 
-    not_paid.short_description = mark_safe(mark_safe("Markér som ikke betalt."))
+    not_paid.short_description = "Markér som ikke betalt."
 
 
 class ProfileInline(AdminImageMixin, admin.StackedInline):
@@ -45,18 +49,22 @@ class ProfileInline(AdminImageMixin, admin.StackedInline):
 
 @admin.register(User)
 class MyUserAdmin(UserAdmin):
+    list_display = ('username', 'email', 'first_name', 'get_grade', 'is_staff')
+
     def get_readonly_fields(self, request, obj=None):
         if request.user.is_superuser:
             return self.readonly_fields
         return self.readonly_fields + ('is_staff', 'is_superuser',
                                        'groups', 'user_permissions')
 
-    list_display = ('username', 'email', 'first_name', 'get_grade', 'is_staff')
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('profile')
 
     def get_grade(self, user):
         return user.profile.grade
 
     get_grade.short_description = 'Klasse'
+    get_grade.admin_order_field = 'profile__grade'
 
     inlines = [
         ProfileInline

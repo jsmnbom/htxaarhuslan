@@ -8,6 +8,8 @@ class LanFilter(SimpleListFilter):
     title = 'lan'
     parameter_name = 'lan'
 
+    lan = None
+
     def lookups(self, request, model_admin):
         return [(str(lan.pk), str(lan)) for lan in Lan.objects.all().order_by('-end')] + [('all', 'Vis alle')]
 
@@ -24,9 +26,10 @@ class LanFilter(SimpleListFilter):
         # What would the value have been?
         value = super().value()
         if value is None:
-            lan = get_next_lan()
-            if lan:
-                value = lan.pk
+            if self.lan is None:
+                self.lan = get_next_lan()
+            if self.lan:
+                value = self.lan.pk
             else:
                 return None
         return str(value)
