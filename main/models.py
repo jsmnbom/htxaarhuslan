@@ -177,13 +177,15 @@ class Lan(models.Model):
         return parsed, tables
 
     def parse_seats(self):
-        lps = {lp.seat: lp for lp in
-               LanProfile.objects.filter(lan=self).select_related('profile', 'profile__user').all()}
-        parsed, tables = self._parse_seats(lps)
-        return parsed, (len(lps), sum(tables.values()))
+        lps = LanProfile.objects.filter(lan=self).select_related('profile', 'profile__user').all()
+        lps_with_seat = lps.filter(seat__isnull=False)
+        parsed, tables = self._parse_seats({lp.seat: lp for lp in lps_with_seat})
+        return parsed, (len(lps), len(lps_with_seat), sum(tables.values()), len(lps.filter(seat__isnull=True)))
 
     def seats_count(self):
-        return LanProfile.objects.filter(lan=self).count(), sum(self._parse_seats({})[1].values())
+        lps = LanProfile.objects.filter(lan=self)
+        parsed, tables = self._parse_seats({})
+        return len(lps), len(lps.filter(seat__isnull=False)), sum(tables.values()), len(lps.filter(seat__isnull=True))
 
 
 class LanProfile(models.Model):

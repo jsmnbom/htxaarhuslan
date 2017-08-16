@@ -35,6 +35,7 @@ def tilmeld(request):
         return redirect(reverse('index'))
 
     seats, count = lan.parse_seats()
+    count += (count[0] + count[1],)
 
     try:
         current = LanProfile.objects.get(lan=lan, profile=request.user.profile).seat
@@ -45,13 +46,15 @@ def tilmeld(request):
 
     if request.method == 'POST':
         form = TilmeldForm(request.POST, seats=seats, lan=lan, profile=request.user.profile)
-        if form.is_valid() and lan.is_open() and count[0] < count[1]:
-            created = form.save(profile=request.user.profile, lan=lan)
-            if created:
-                messages.add_message(request, messages.SUCCESS, "Du er nu tilmeldt LAN!")
-            else:
-                messages.add_message(request, messages.SUCCESS, "Tilmelding ændret!")
-            return redirect(reverse("tilmeld"))
+        if form.is_valid() and lan.is_open():
+            if count[1] < count[2] or form.cleaned_data['seat'] == '':
+                created = form.save(profile=request.user.profile, lan=lan)
+                if created:
+                    messages.add_message(request, messages.SUCCESS, "Du er nu tilmeldt LAN!")
+                else:
+                    messages.add_message(request, messages.SUCCESS, "Tilmelding ændret!")
+                return redirect(reverse("tilmeld"))
+        messages.add_message(request, messages.ERROR, "Tilmelding ikke mulig!")
     else:
         form = TilmeldForm(seats=seats, lan=lan,
                            profile=request.user.profile if request.user.is_authenticated else None)
