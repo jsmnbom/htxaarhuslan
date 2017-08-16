@@ -16,4 +16,5 @@ reportlab
 sendgrid-django
 sorl-thumbnail
 iso8601
+bcrypt
 
