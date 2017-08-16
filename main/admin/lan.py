@@ -53,6 +53,6 @@ class LanAdmin(admin.ModelAdmin):
     bordkort.short_description = 'Bordkort'
 
     def get_seat_counts(self, lan):
-        return '{0[0]}/{0[2]}+{0[3]}'.format(lan.seats_count())
+        return '{0[1]}/{0[2]} (+{0[3]})'.format(lan.seats_count())
 
     get_seat_counts.short_description = 'Antal pladser'
