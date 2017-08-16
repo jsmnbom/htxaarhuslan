@@ -35,6 +35,18 @@ class TournamentAdmin(admin.ModelAdmin):
     challonge_link.allow_tags = True
     challonge_link.short_description = 'Challonge'
 
+    actions = ['open', 'close']
+
+    def open(self, request, queryset):
+        queryset.update(open=True)
+
+    open.short_description = "Åben for tilmelding."
+
+    def close(self, request, queryset):
+        queryset.update(open=False)
+
+    close.short_description = "Luk for tilmelding."
+
 
 @admin.register(TournamentTeam)
 class TournamentTeamAdmin(admin.ModelAdmin):
