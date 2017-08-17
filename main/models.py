@@ -255,7 +255,8 @@ class Tournament(models.Model):
     allow_external = models.BooleanField(verbose_name='Tillad ikke LAN brugere',
                                          help_text='Hvis ja, kan der tilføjes personer'
                                                    'som ikke er tilmeldt LAN til ens hold.')
-    owner = models.ForeignKey(Profile, on_delete=models.DO_NOTHING, null=True, verbose_name='Ansvarlig')
+    owner = models.ForeignKey(Profile, on_delete=models.DO_NOTHING, null=True, blank=True, verbose_name='Ansvarlig')
+    show_on_calendar = models.BooleanField(verbose_name='Vis på kalender', default=True)
 
     def __str__(self):
         return self.name

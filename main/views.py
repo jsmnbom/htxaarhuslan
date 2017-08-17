@@ -342,7 +342,7 @@ def calendar(request, feed_name):
     for t in ts:
         url = ''
         if isinstance(t, Tournament):
-            if not (t.live or t.open):
+            if not (t.live or t.open) or not t.show_on_calendar:
                 continue
             url = t.get_absolute_url()
         elif isinstance(t, Event):
