@@ -86,6 +86,8 @@ class Profile(models.Model):
         for k, v in GRADES:
             if k == self.grade:
                 return v
+        else:
+            return self.grade
 
 
 class StrippedMultipleChoiceFieldField(forms.MultipleChoiceField):
