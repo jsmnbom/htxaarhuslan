@@ -40,7 +40,7 @@
                             <td>Spil</td>
                             <td>Turnering</td>
                             <td>Medlemmer</td>
-                            <td>Frameld</td>
+                            <td></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,7 +58,7 @@
                                 <td>
                                     <form action="{{ get_full_path }}" method="POST">{% csrf_token %}
                                         <input type="hidden" name="frameld" value="{{ team.id }}">
-                                        <input type="submit" value="frameld">
+                                        <input type="submit" value=" Frameld ">
                                     </form>
                                 </td>
                             </tr>
