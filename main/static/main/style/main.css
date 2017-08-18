@@ -318,6 +318,11 @@ p.centered {
     background-color: #b44;
 }
 
+.seats table td.title {
+    font-size: 28px !important;
+    vertical-align: middle;
+}
+
 @keyframes pulse {
     0%, 100% {
         background-color: #cc0;

@@ -165,6 +165,9 @@ class Lan(models.Model):
         parsed = []
         tables = Counter()
         for row in self.seats.splitlines():
+            if row[0] == '#':
+                parsed.append(row[1:].strip())
+                continue
             parsed.append([])
             for s in row:
                 if s != '-':

@@ -2,7 +2,7 @@ $(document).ready(function () {
     var tabletd = $('.seats table td');
     $(window).resize(function () {
         var m = -1;
-        tabletd.each(function () {
+        tabletd.not('.title').each(function () {
             var h = $(this).width();
             if (h > m) {
                 m = h
@@ -13,19 +13,14 @@ $(document).ready(function () {
     }, 200).resize();
 
     tabletd.each(function () {
-        if ($(this).attr('role') == 'button') {
-            if ($(this).attr('data-name')) {
-                $(this).addClass('occupied');
-                var url = $(this).attr('data-url');
-                var name = $(this).attr('data-name');
-                var username = $(this).attr('data-username');
-                var grade = $(this).attr('data-grade');
-                var thumbnail = $(this).attr('data-thumbnail');
+        if ($(this).attr('role') === 'button') {
+            if ($(this).attr('name')) {
+                var url = $(this).attr('url');
+                var name = $(this).attr('name');
+                var username = $(this).attr('username');
+                var grade = $(this).attr('grade');
 
                 var content = '';
-                if (thumbnail) {
-                    content += '<img src="' + thumbnail + '" />'
-                }
                 content += '<a href="' + url + '">' + name + '</a>' + '<br>';
                 content += '<span>' + username + '<span>&nbsp(' + grade + ')</span></span>';
 
@@ -54,14 +49,34 @@ $(document).ready(function () {
                         }
                     }
                 });
-            } else {
-                $(this).addClass('available')
             }
+        } else if ($(this).attr('text')) {
+            $(this).qtip({
+                content: {
+                    text: '<span>' + $(this).attr('text') + '</span>'
+                },
+                position: {
+                    my: "bottom center",
+                    at: 'top center',
+                    viewport: true
+                },
+                style: {
+                    classes: "qtip-seat"
+                },
+                events: {
+                    visible: function (event, api) {
+                        $(event.originalEvent.target).addClass('open')
+                    },
+                    hide: function (event, api) {
+                        $(event.originalEvent.target).removeClass('open')
+                    }
+                }
+            });
         }
     });
 
     function showhideform() {
-        if ($('input[name="seat"]').val() != seat) {
+        if ($('input[name="seat"]').val() !== seat) {
             $('.seats form#tilmeld').slideDown()
         } else {
             $('.seats form#tilmeld').slideUp()
@@ -71,7 +86,7 @@ $(document).ready(function () {
 
     var seat = $('.seats h4#current').attr('data-seat');
 
-    if (seat != undefined) {
+    if (seat !== undefined) {
         $('input[name="seat"]').val(seat);
         $('.seats form#tilmeld').hide()
     }
@@ -88,13 +103,13 @@ $(document).ready(function () {
             $('.seats td').removeClass('selected');
             if ($(this).hasClass('available')) {
                 $(this).addClass('selected');
-                $('input[name="seat"]').val($(this).text())
+                $('input[name="seat"]').val($(this).attr('seat'))
             } else if ($(this).hasClass('current')) {
-                $('input[name="seat"]').val($(this).text())
+                $('input[name="seat"]').val($(this).attr('seat'))
             } else {
                 $('input[name="seat"]').val(seat);
                 if ($(this).hasClass('open')) {
-                    window.location.href = $(this).attr('data-url');
+                    window.location.href = $(this).attr('url');
                 }
             }
         }
