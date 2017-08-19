@@ -62,31 +62,7 @@
                 ordre er gyldig.</p>
             <form id="food" action="{{ get_full_path }}" method="post">
                 {% csrf_token %}
-                <select id="category" data-placeholder="Vælg kategori" title="Kategori" name="category">
-                    <option></option>
-                </select>
-                <select id="product" data-placeholder="Vælg produkt" title="Produkt" name="product">
-                    <option></option>
-                </select>
-                <select id="part1" data-placeholder="Vælg" title="Del 1" name="part1">
-                    <option></option>
-                </select>
-                <select id="part2" data-placeholder="Vælg" title="Del 2" name="part2">
-                    <option></option>
-                </select>
-                <select id="part3" data-placeholder="Vælg" title="Del 3" name="part3">
-                    <option></option>
-                </select>
-                <select id="acc1" data-placeholder="Vælg" title="Tilbehør 1" name="acc1">
-                    <option></option>
-                </select>
-                <select id="acc2" data-placeholder="Vælg" title="Tilbehør 2" name="acc2">
-                    <option></option>
-                </select>
-                <select id="acc3" data-placeholder="Vælg" title="Tilbehør 3" name="acc3">
-                    <option></option>
-                </select>
-                <input type="hidden" name="price" id="price" value="0">
+                {{ form }}
                 <p>Du får en QR kode du kan bruge til at betale på næste side når du har lavet din bestilling.</p>
                 <p>Hvis du ønsker at lave mere end en bestilling får du også mulighed for det på næste side.</p>
                 <h4 id="price">Pris: <span>0</span>kr.</h4>

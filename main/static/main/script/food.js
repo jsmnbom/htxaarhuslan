@@ -46,7 +46,7 @@ function changeOptions(select, options) {
 }
 
 function hideGreater(select) {
-    select.parent().find('select:gt(' + (select.index() - 1) + ')').next().hide();
+    select.closest('form').find('select:gt(' + (select.index() - 1) + ')').next().hide();
 }
 
 function checkPrice(menu) {
@@ -58,7 +58,7 @@ function checkPrice(menu) {
         }
     });
     $('h4#price span').text(price);
-    $('form#food input#price').val(price);
+    $('form#food input#id_price').val(price);
 }
 
 function toggleButton() {
@@ -76,16 +76,16 @@ function toggleButton() {
 
 $(function () {
     $('form#food select').select2();
-    hideGreater($('form select#category'));
+    hideGreater($('form select#id_category'));
     $.getJSON('https://gist.githubusercontent.com/bomjacob/bd82c4ead494bf7fe8ea8a93d53b9779/raw/1e3f84d722fdf922fd4375e07ffd45f81e3a01ee/byens_burger.json', function (data) {
         menu = data.Menu;
-        changeOptions($('form select#category'), menu.Categories);
+        changeOptions($('form select#id_category'), menu.Categories);
         toggleButton();
     });
     var form = $('form#food');
     form.on('change', 'select', function () {
         var select = $(this);
-        if (select.attr('id') === 'category') {
+        if (select.attr('id') === 'id_category') {
             hideGreater(select);
 
             var products = [];
@@ -95,11 +95,11 @@ $(function () {
             });
             changeOptions(select.nextAll('select').first(), products);
             choices = products;
-        } else if (select.attr('id') === 'product') {
+        } else if (select.attr('id') === 'id_product') {
             hideGreater(select);
 
             var product = find(choices, select.val());
-            var ids = {'Parts': 'part', 'Accs': 'acc'};
+            var ids = {'Parts': 'id_part', 'Accs': 'id_acc'};
             $.each(product, function (key, val) {
                 if (key in ids) {
                     $.each(val, function (index, item) {

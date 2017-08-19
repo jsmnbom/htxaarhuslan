@@ -6,12 +6,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import _password_validators_help_text_html as password_help
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.core.validators import MinLengthValidator
+from django.utils import timezone
 from django.utils.html import format_html
-from django.utils.safestring import mark_safe
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 
-from .models import GRADES, Profile, LanProfile, PAYTYPES, TournamentTeam, get_next_lan, Tournament, NamedProfile
+from .models import GRADES, Profile, LanProfile, PAYTYPES, TournamentTeam, get_next_lan, Tournament, NamedProfile, \
+    FoodOrder
 
 
 class UserRegForm(forms.ModelForm):
@@ -265,3 +266,51 @@ class TournamentTeamForm(forms.ModelForm):
                 del self.cleaned_data[key]
         self.cleaned_data['tournament'] = self.tournament
         super().clean()
+
+
+class FoodOrderForm(forms.ModelForm):
+    class Meta:
+        model = FoodOrder
+        fields = ('time', 'lanprofile', 'order', 'price')
+
+    FIELDS = (('category', 'kategori'),
+              ('product', 'produkt'),
+              ('part1', 'del'),
+              ('part2', 'del'),
+              ('part3', 'del'),
+              ('acc1', 'tilbehør'),
+              ('acc2', 'tilbehør'),
+              ('acc3', 'tilbehør'))
+
+    def __init__(self, *args, **kwargs):
+        self.profile = kwargs.pop('profile', None)
+        self.lp = kwargs.pop('lanprofile', None)
+
+        super().__init__(*args, **kwargs)
+
+        del self.fields['time']
+        del self.fields['lanprofile']
+        del self.fields['order']
+        self.fields['price'].widget = forms.HiddenInput(attrs={'value': 0})
+
+        for field in self.FIELDS:
+            widget = forms.Select(attrs={'data-placeholder': 'Vælg ' + field[1]},
+                                  choices=[(None, '')],)
+            self.fields[field[0]] = forms.CharField(widget=widget, label='', required=False)
+
+    def clean(self):
+        super().clean()
+        self.cleaned_data['time'] = timezone.now()
+        self.cleaned_data['lanprofile'] = self.lp
+        self.cleaned_data['order'] = ' - '.join([self.cleaned_data[x[0]]
+                                                 for x in self.FIELDS if self.cleaned_data[x[0]]])
+        for x in self.FIELDS:
+            del self.cleaned_data[x[0]]
+
+    def __str__(self):
+        return self._html_output(
+            normal_row='%(label)s %(field)s%(help_text)s',
+            error_row='%s',
+            row_ender='',
+            help_text_html=' <span class="helptext">%s</span>',
+            errors_on_separate_row=True)

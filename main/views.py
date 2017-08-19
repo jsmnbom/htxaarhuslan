@@ -12,8 +12,9 @@ from django.template.loader import render_to_string
 from django.utils.timezone import now, utc
 from sorl.thumbnail import get_thumbnail
 
-from main.models import get_next_lan, LanProfile, Profile, Tournament, TournamentTeam, Event, FoodOrder
-from .forms import UserRegForm, ProfileRegForm, TilmeldForm, EditUserForm, EditProfileForm, TournamentTeamForm
+from .models import get_next_lan, LanProfile, Profile, Tournament, TournamentTeam, Event, FoodOrder
+from .forms import (UserRegForm, ProfileRegForm, TilmeldForm, EditUserForm, EditProfileForm, TournamentTeamForm,
+                    FoodOrderForm)
 
 
 # Actual pages
@@ -215,31 +216,23 @@ def food(request):
     lan = get_next_lan()
     show = lan is not None and lan.is_open() and lan.food_open and request.user.is_authenticated()
     if request.user.is_authenticated():
+        prof = request.user.profile
         try:
-            lp = LanProfile.objects.get(lan=lan, profile=request.user.profile)
+            lp = LanProfile.objects.get(lan=lan, profile=prof)
 
             if request.method == 'POST':
-                try:
-                    keys = ['category', 'product', 'part1', 'part2', 'part3', 'acc1', 'acc2', 'acc3']
-                    values = []
-                    for key in keys:
-                        value = request.POST.get(key)
-                        if value:
-                            values.append(value)
-                    text = ' - '.join(values)
-                    FoodOrder.objects.create(time=now(), lanprofile=lp, order=text,
-                                             price=int(request.POST.get('price')))
+                form = FoodOrderForm(request.POST, lanprofile=lp, profile=prof)
+                if show and form.is_valid():
+                    form.save()
                     messages.add_message(request, messages.SUCCESS,
                                          'Din bestilling er modtaget. Du kan nu betale herover.')
-                    return redirect(reverse('food'))
-                except KeyError:
-                    pass
 
             orders = FoodOrder.objects.filter(lanprofile=lp)
 
         except LanProfile.DoesNotExist:
             show = False
-    return render(request, 'food.html', {'lan': lan, 'show': show, 'orders': orders})
+    form = FoodOrderForm()
+    return render(request, 'food.html', {'lan': lan, 'show': show, 'orders': orders, 'form': form})
 
 
 def event(request, event_id):
