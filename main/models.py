@@ -7,6 +7,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
+from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
@@ -71,6 +72,8 @@ class Profile(models.Model):
                        verbose_name='billede')
     bio = models.TextField(blank=True)
     grade = models.CharField(verbose_name='klasse', max_length=32, default='none')
+    phone = models.CharField(validators=[RegexValidator(r'^\d{8}$')], max_length=16, null=True, blank=True,
+                             verbose_name='telefonnummer', help_text='I dansk format f.eks. "12345678"')
 
     def __str__(self):
         return '{} ({})'.format(self.user.username, self.user.first_name)
