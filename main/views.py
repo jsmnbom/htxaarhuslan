@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import Http404, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.timezone import now, utc
 from sorl.thumbnail import get_thumbnail
@@ -166,7 +166,7 @@ def tournaments(request):
 
 
 def tournament(request, game, lan_id, name):
-    t = Tournament.objects.get(game__name=game, lan__id=lan_id, name=name)
+    t = get_object_or_404(Tournament, game__name=game, lan__id=lan_id, name=name)
     teams = TournamentTeam.objects.filter(tournament=t).prefetch_related('profiles__user')
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -243,7 +243,7 @@ def food(request):
 
 
 def event(request, event_id):
-    return render(request, 'event.html', {'event': Event.objects.get(id=event_id)})
+    return render(request, 'event.html', {'event': get_object_or_404(Event, id=event_id)})
 
 
 # Meta pages
