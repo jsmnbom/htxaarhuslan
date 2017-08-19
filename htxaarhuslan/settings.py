@@ -221,6 +221,26 @@ JET_THEMES = [
     }
 ]
 
+JET_SIDE_MENU_ITEMS = [
+    {'label': 'Godkendelse og autorisation', 'items': [
+        {'name': 'auth.user'},
+        {'name': 'auth.group'},
+        {'name': 'authtoken.token'}
+    ]},
+    {'label': 'Generalt', 'items': [
+        {'name': 'main.lan'},
+        {'name': 'main.event'},
+        {'name': 'main.lanprofile'},
+        {'name': 'main.foodorder'}
+    ]},
+    {'label': 'Turnering', 'items': [
+        {'name': 'main.tournament'},
+        {'name': 'main.game'},
+        {'name': 'main.tournamentteam'},
+        {'name': 'main.namedprofile'}
+    ]}
+]
+
 # All available languages
 LANGUAGES = [
     ('da', 'Dansk'),
