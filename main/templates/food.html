@@ -18,10 +18,10 @@
     {% if request.user.is_authenticated %}
         <div class="box" id="mine">
             <h2>Dine madbestillinger</h2>
-            <p>Herunder ses dine madbestillinger for dette LAN samt hvorvidt de er registreret som betalt. Hvis de
-                ikke er betalt ses en QR kode som kan scannes med mobilepay for hurtigt og nemt at betale.</p>
-            <p>Hvis QR koden ikke virker prøv da at logge ind på denne side på din mobil og klik på QR koden eller
-                backup linket over. Bemærk at backup linket ikke vil virke på PC.</p>
+            <p>Herunder ses dine madbestillinger for dette LAN samt hvorvidt de er registreret som betalt.</p>
+            <p>Hvis du valgte at betale med MobilePay så skulle du gerne havet modtaget en admodning om betalingen.
+                Hvis du ikke har modtaget nogen admodning tryk da på "Send MobilePay anmodning" for at sende en til det telefonnummer der er registreret på din profil.</p>
+            <p>Hvis du gerne vil betale med kontanter gøres det ved <a href="{% url 'profile' username='bomjacob' %}">Jacob Bom</a>.</p>
             <p>Der kan gå op til et kvater før din betaling går igennem. Hvis der går længere, du oplever andre
                 problemer eller du ønsker at betale med kontanter, kontakt venligst et medlem af LanCrew.</p>
             {% if orders %}
@@ -40,9 +40,11 @@
                                 <td>{{ order.time|date:"l, G:i" }}</td>
                                 <td>{{ order.order }}</td>
                                 <td>{{ order.price|floatformat:"-2" }}kr.</td>
-                                <td>{% if order.paid %}Betalt :){% else %}Ikke betalt. Scan eller <a
-                                        href="{{ order.get_payment_url }}">klik:<br><img
-                                        src="{{ order.get_payment_qr_url }}"></a>{% endif %}</td>
+                                <td>{% if order.paid %}
+                                    Betalt :)
+                                {% else %}
+                                    Ikke betalt. {% if profile.phone %}<a href="{% url '' %}">Send MobilePay admodning</a>{% endif %}
+                                {% endif %}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -63,7 +65,6 @@
             <form id="food" action="{{ get_full_path }}" method="post">
                 {% csrf_token %}
                 {{ form }}
-                <p>Du får en QR kode du kan bruge til at betale på næste side når du har lavet din bestilling.</p>
                 <p>Hvis du ønsker at lave mere end en bestilling får du også mulighed for det på næste side.</p>
                 <h4 id="price">Pris: <span>0</span>kr.</h4>
                 <input type="submit" value="Placér bestilling" name="submit"/>
