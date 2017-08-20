@@ -73,7 +73,7 @@ $(document).ready(function () {
 
     // Show input helptext only when input is focussed
     $('form span.helptext').each(function () {
-        var input = $(this).prev().prev();
+        var input = $(this).prevAll('input').slice(0,1);
         var helpText = $(this);
         input.focus(function () {
             helpText.slideDown()

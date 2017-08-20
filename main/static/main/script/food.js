@@ -46,7 +46,9 @@ function changeOptions(select, options) {
 }
 
 function hideGreater(select) {
-    select.closest('form').find('select:gt(' + (select.index() - 1) + ')').next().hide();
+    var selects = select.closest('form').children('select');
+    var index = selects.index(select);
+    selects.slice(index + 1).next().hide();
 }
 
 function checkPrice(menu) {
@@ -64,7 +66,7 @@ function checkPrice(menu) {
 function toggleButton() {
     var show = true;
     $('form#food .select2').each(function () {
-        if ($(this).css('display') !== 'none'){
+        if ($(this).css('display') !== 'none') {
             var select = $(this).prev();
             if (select.val() === "") {
                 show = false;
@@ -111,8 +113,8 @@ $(function () {
         checkPrice(menu);
         toggleButton();
     });
-    form.on('submit', function(e) {
-        $('select option:checked').each(function() {
+    form.on('submit', function (e) {
+        $('select option:checked').each(function () {
             $(this).val($(this).attr('name'));
         });
         return true;

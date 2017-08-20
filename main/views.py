@@ -221,17 +221,22 @@ def food(request):
             lp = LanProfile.objects.get(lan=lan, profile=prof)
 
             if request.method == 'POST':
+                print(request.POST)
                 form = FoodOrderForm(request.POST, lanprofile=lp, profile=prof)
                 if show and form.is_valid():
                     form.save()
                     messages.add_message(request, messages.SUCCESS,
                                          'Din bestilling er modtaget. Du kan nu betale herover.')
+            else:
+                form = FoodOrderForm(lanprofile=lp, profile=prof)
 
             orders = FoodOrder.objects.filter(lanprofile=lp)
 
         except LanProfile.DoesNotExist:
             show = False
-    form = FoodOrderForm()
+            form = None
+    else:
+        form = None
     return render(request, 'food.html', {'lan': lan, 'show': show, 'orders': orders, 'form': form})
 
 

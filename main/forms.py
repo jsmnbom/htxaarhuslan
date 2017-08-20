@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UsernameField
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import _password_validators_help_text_html as password_help
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, RegexValidator
 from django.utils import timezone
 from django.utils.html import format_html
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
@@ -13,6 +13,8 @@ from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 
 from .models import GRADES, Profile, LanProfile, PAYTYPES, TournamentTeam, get_next_lan, Tournament, NamedProfile, \
     FoodOrder
+
+PHONE_REGEX = r'^(\(?\+?(?:00)?[- ]?45\)?)?[- ]?((?:\d[ -]?){8})$'
 
 
 class UserRegForm(forms.ModelForm):
@@ -282,6 +284,16 @@ class FoodOrderForm(forms.ModelForm):
               ('acc2', 'tilbehør'),
               ('acc3', 'tilbehør'))
 
+    phone_regex = RegexValidator(PHONE_REGEX, message='Intast et gyldigt telefonnummer f.eks. 12345678')
+    phone = forms.CharField(validators=[phone_regex],
+                            widget=forms.TextInput(attrs={'type': 'tel',
+                                                          'patern': PHONE_REGEX,
+                                                          'placeholder': '(+45) 1234 5678'}),
+                            label='MobilePay telefonnummer',
+                            help_text='Hvis du ønsker at betale med kontanter, '
+                                      'efterlad dette felt tomt',
+                            required=False)
+
     def __init__(self, *args, **kwargs):
         self.profile = kwargs.pop('profile', None)
         self.lp = kwargs.pop('lanprofile', None)
@@ -292,11 +304,21 @@ class FoodOrderForm(forms.ModelForm):
         del self.fields['lanprofile']
         del self.fields['order']
         self.fields['price'].widget = forms.HiddenInput(attrs={'value': 0})
+        if self.profile:
+            self.fields['phone'].initial = self.profile.phone
 
-        for field in self.FIELDS:
+        for i, field in enumerate(self.FIELDS):
             widget = forms.Select(attrs={'data-placeholder': 'Vælg ' + field[1]},
-                                  choices=[(None, '')],)
-            self.fields[field[0]] = forms.CharField(widget=widget, label='', required=False)
+                                  choices=[(None, '')])
+            self.fields[field[0]] = forms.CharField(widget=widget,
+                                                    label='' if i != 0 else 'Ordre',
+                                                    required=False)
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        phone.replace(' ', '')
+        phone.replace('-', '')
+        return phone[-8:]
 
     def clean(self):
         super().clean()
@@ -306,6 +328,12 @@ class FoodOrderForm(forms.ModelForm):
                                                  for x in self.FIELDS if self.cleaned_data[x[0]]])
         for x in self.FIELDS:
             del self.cleaned_data[x[0]]
+
+    def save(self, **kwargs):
+        if self.cleaned_data['phone'] and self.cleaned_data['phone'] != self.profile.phone:
+            self.profile.phone = self.cleaned_data['phone']
+            self.profile.save()
+        super().save(**kwargs)
 
     def __str__(self):
         return self._html_output(
