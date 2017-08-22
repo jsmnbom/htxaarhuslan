@@ -108,7 +108,7 @@ $(document).ready(function () {
                 $('input[name="seat"]').val($(this).attr('seat'))
             } else {
                 $('input[name="seat"]').val(seat);
-                if ($(this).hasClass('open')) {
+                if ($(this).hasClass('open') && $(this).attr('url')) {
                     window.location.href = $(this).attr('url');
                 }
             }
