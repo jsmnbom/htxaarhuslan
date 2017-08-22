@@ -1,7 +1,12 @@
 from django.contrib import admin
 
 from main.admin import LanFilter
-from main.models import Tournament, TournamentTeam
+from main.models import Tournament, TournamentTeam, NamedProfile
+
+
+@admin.register(NamedProfile)
+class NamedProfileAdmin(admin.ModelAdmin):
+    pass
 
 
 class TournamentTeamInline(admin.TabularInline):
