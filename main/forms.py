@@ -290,8 +290,6 @@ class FoodOrderForm(forms.ModelForm):
                                                           'patern': PHONE_REGEX,
                                                           'placeholder': '(+45) 1234 5678'}),
                             label='MobilePay telefonnummer',
-                            help_text='Hvis du ønsker at betale med kontanter, '
-                                      'efterlad dette felt tomt',
                             required=False)
 
     def __init__(self, *args, **kwargs):

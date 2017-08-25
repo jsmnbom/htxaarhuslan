@@ -60,12 +60,13 @@
             {% include 'messages.html' %}
             <p>Vi bestiller mad fra Byens Burger. Menukortet kan ses <a href="http://www.byensburger.dk/menukort/"
                                                                         target="_blank">her</a>.</p>
-            <p>Vælg den mad du ønsker herunder og tryk derefter på knappen "Placér bestilling" som dukker op hvis din
+            <p>Vælg den mad du ønsker herunder og tryk derefter på knappen "Placér bestilling" som dukker op når din
                 ordre er gyldig.</p>
+            <p>Hvis du ønsker at betale med kontanter efterlader du bare telefonnummer feltet tomt.</p>
+            <p>Hvis du ønsker at lave mere end en bestilling får du også mulighed for det på næste side.</p>
             <form id="food" action="{{ get_full_path }}" method="post">
                 {% csrf_token %}
                 {{ form }}
-                <p>Hvis du ønsker at lave mere end en bestilling får du også mulighed for det på næste side.</p>
                 <h4 id="price">Pris: <span>0</span>kr.</h4>
                 <input type="submit" value="Placér bestilling" name="submit"/>
             </form>
