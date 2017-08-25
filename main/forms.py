@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.core.validators import MinLengthValidator, RegexValidator
 from django.utils import timezone
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 
@@ -334,9 +335,9 @@ class FoodOrderForm(forms.ModelForm):
         super().save(**kwargs)
 
     def __str__(self):
-        return self._html_output(
-            normal_row='%(label)s %(field)s%(help_text)s',
+        return mark_safe(self._html_output(
+            normal_row='%(label)s%(field)s%(help_text)s',
             error_row='%s',
             row_ender='',
-            help_text_html=' <span class="helptext">%s</span>',
-            errors_on_separate_row=True)
+            help_text_html='<span class="helptext">%s</span>',
+            errors_on_separate_row=True).replace('\n', ''))
