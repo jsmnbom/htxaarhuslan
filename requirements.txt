@@ -28,7 +28,7 @@ pycparser==2.18           # via cffi
 python-http-client==2.2.1  # via sendgrid
 pytz==2017.2              # via django
 reportlab==3.4.0
-requests==2.18.1          # via django-recaptcha2
+requests==2.18.1
 sendgrid-django==4.0.4
 sendgrid==3.6.5           # via sendgrid-django
 six==1.10.0               # via bcrypt
