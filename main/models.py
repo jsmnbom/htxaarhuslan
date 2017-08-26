@@ -146,7 +146,7 @@ class Lan(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='pris', null=True, blank=True)
     payphone = models.CharField(max_length=128, verbose_name='Betalingstelefonnummer', null=True, blank=True,
                                 help_text='Skriv kun tal. (+45) skrives automatisk foran.')
-    payment_manager_id = models.CharField(max_length=128, verbose_name="Payment Manager id", null=True, blank=True,
+    payment_manager_id = models.CharField(max_length=255, verbose_name="Payment Manager id", null=True, blank=True,
                                           help_text='Unik token som indentificerer hvor'
                                                     'betalingsforespørgelser skal sendes.')
     show_calendar = models.BooleanField(default=False, verbose_name='Vis kalender',
