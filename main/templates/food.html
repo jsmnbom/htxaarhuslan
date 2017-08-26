@@ -46,7 +46,7 @@
                                 <td>{% if order.paid %}
                                     Betalt :)
                                 {% else %}
-                                    Ikke betalt. {% if profile.phone %}<a href="{% url '' %}">Send MobilePay admodning</a>{% endif %}
+                                    Ikke betalt. {% if profile.phone %}<a href="{% url 'send_payment_request' service='mobilepay' type='mad' id=order.id %}?next={{ request.get_full_path }}">Send MobilePay admodning</a>{% endif %}
                                 {% endif %}</td>
                             </tr>
                         {% endfor %}
