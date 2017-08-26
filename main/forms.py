@@ -284,7 +284,8 @@ class FoodOrderForm(forms.ModelForm):
               ('part3', 'del'),
               ('acc1', 'tilbehør'),
               ('acc2', 'tilbehør'),
-              ('acc3', 'tilbehør'))
+              ('acc3', 'tilbehør'),
+              ('acc4', 'tilbehør'))
 
     phone_regex = RegexValidator(PHONE_REGEX, message='Intast et gyldigt telefonnummer f.eks. 12345678')
     phone = forms.CharField(validators=[phone_regex],

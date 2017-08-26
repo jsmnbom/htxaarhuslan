@@ -45,10 +45,15 @@ function changeOptions(select, options) {
     select.next().show();
 }
 
-function hideGreater(select) {
+function hideGreater(select, clear) {
     var selects = select.closest('form').children('select');
     var index = selects.index(select);
-    selects.slice(index + 1).next().hide();
+    $.each(selects.slice(index + 1), function () {
+        $(this).next().hide();
+        if (clear) {
+            $(this).val('').change();
+        }
+    });
 }
 
 function checkPrice(menu) {
@@ -78,7 +83,7 @@ function toggleButton() {
 
 $(function () {
     $('form#food select').select2();
-    hideGreater($('form select#id_category'));
+    hideGreater($('form select#id_category'), false);
     $.getJSON(foodJsonUrl, function (data) {
         menu = data.Menu;
         changeOptions($('form select#id_category'), menu.Categories);
@@ -88,7 +93,7 @@ $(function () {
     form.on('change', 'select', function () {
         var select = $(this);
         if (select.attr('id') === 'id_category') {
-            hideGreater(select);
+            hideGreater(select, false);
 
             var products = [];
             var items = find(menu.Categories, select.val());
@@ -98,7 +103,7 @@ $(function () {
             changeOptions(select.nextAll('select').first(), products);
             choices = products;
         } else if (select.attr('id') === 'id_product') {
-            hideGreater(select);
+            hideGreater(select, true);
 
             var product = find(choices, select.val());
             var ids = {'Parts': 'id_part', 'Accs': 'id_acc'};
