@@ -385,7 +385,8 @@ def payment(request, service, type, id):
                                            amount=amount,
                                            id=id)
                     messages.add_message(request, messages.INFO,
-                                         'En anmodning på {}kr. er blevet sendt til (+45)'.format(amount, prof.phone))
+                                         'En anmodning på {}kr. '
+                                         'er blevet sendt til (+45) {}'.format(amount, prof.phone))
                 else:
                     messages.add_message(request, messages.ERROR,
                                          'Fejl! Du har ikke skrevet noget telefonnummer på din profil!')
