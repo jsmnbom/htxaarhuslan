@@ -22,28 +22,27 @@
             <div class="seats">
                 <h3 id="count">Antal tilmeldte: {{ count.1 }}/{{ count.2 }}{% if count.3 %} (+{{ count.3 }}){% endif %}</h3>
                 <a href="{% url "tilmeldlist" %}"><p class="centered">Se liste over tilmeldte</p></a>
-                {% if current == 0 %}
+                {% if not profile %}
                     <h4 id="current">Du skal logge ind for at kunne tilmelde dig til LAN</h4>
-                {% elif current == -1 %}
+                {% elif current == 0 %}
                     <h4 id="current" data-not="true">Du er ikke tilmeldt LAN.</h4>
+                {% elif current == '' %}
+                    <h4 id="current" data-seat="">Du er tilmeldt LAN, men ingen plads er reseveret</h4>
+                    <p class="centered">Klik på en plads, for at reservere den.</p>
                 {% else %}
-                    {% if current %}
-                        <h4 id="current" data-seat="{{ current }}">Valgt plads: <span>{{ current }}</span></h4>
-                        <p class="centered">Klik på en ny plads, for at skifte dertil.</p>
-                    {% else %}
-                        <h4 id="current" data-seat="">Du er tilmeldt LAN, men ingen plads er reseveret</h4>
-                        <p class="centered">Klik på en plads, for at reservere den.</p>
-                    {% endif %}
+                    <h4 id="current" data-seat="{{ current }}">Valgt plads: <span>{{ current }}</span></h4>
+                    <p class="centered">Klik på en ny plads, for at skifte dertil.</p>
                 {% endif %}
                 <br>
                 {# @formatter:off--> #}
                 <table>
                     <tbody>
-                        {% for row in seats %}
-                            <tr>
-                                {% for seat in row %}{% if seat.0 %}<td class="{% if current == seat.0 %}current{% endif %} {% if seat.1.profile.user.is_staff %}staff{% endif %}" tabindex="0" role="button" {% if seat.1 %}{% thumbnail seat.1.profile.photo "60x60" crop="center" as im %}style="background-image: url({{ im.url }})" {% endthumbnail %}data-url="{% url "profile" username=seat.1.profile.user.username %}" data-name="{{ seat.1.profile.user.first_name }}" data-username="{{ seat.1.profile.user.username }}" data-grade="{{ seat.1.profile.get_grade_display }}"{% if request.user.is_authenticated and request.user.is_staff %} data-paid="{{ seat.1.paid }}"{% endif %}{% endif %}><span{% if seat.1.profile.photo %} class="overlay"{% endif %}>{{ seat.0 }}</span></td>{% else %}<td>&nbsp;</td>{% endif %}
-                                {% empty %} <td>&nbsp;</td>{% endfor %}
-                            </tr>
+                        {% for row in table %}
+                            {% if row.0 %}<tr><td class="title" colspan="{{ row_width }}" {% if row.1.title %}text="{{ row.1.text }}"{% endif %}>{{ row.1.title }}</td></tr>{% else %}
+                                <tr>{% for seat in row.1 %}
+                                    {% if seat %}<td {% for key, value in seat.items %}{{ key }}="{{ value }}" {% endfor %}tabindex="0" role="button"><span{% if seat.style %} class="overlay"{% endif %}>{{ seat.seat }}</span></td>{% else %}<td>&nbsp;</td>{% endif %}{% endfor %}
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>
@@ -59,8 +58,8 @@
                         du har tilmeldt dig. Hvis du vælger at betale kontant skal du betale ved et LanCrew medlem så
                         snart du ankommer til LAN.</p>
                 {% endif %}
-                {% if current != 0 %}
-                    {% if current != -1 %}
+                {% if profile %}
+                    {% if current != 0 %}
                         <p>Du kan framelde dig LAN ved at trykke herunder. Bemærk at din plads herefter vil blive
                             frigivet til andre. Hvis du kun ønsker at skifte plads, skal du vælge en ny på bordene
                             herover.</p>
@@ -81,15 +80,15 @@
                             </div>
                         {% endif %}
                         {{ form.seat }}
-                        {% if current == -1 %}
+                        {% if current == 0 %}
                             <p>Når du tilmelder dig LAN, accepterer du reglerne for tilmelding og ophold under LAN, som
                                 kan læses <a href="{% url 'info' %}#regler" target="_blank">her</a>.</p>
+                            {% if count.1 >= count.2 %}
+                                <p>Der er ikke flere pladser og du kan derfor kun tilmelde dig uden at reservere plads.
+                                    Klik på "Jeg ønsker ikke at vælge plads" herover for at gøre dette</p>
+                            {% endif %}
                         {% endif %}
-                        {% if count.1 >= count.2 and current == -1 %}
-                            <p>Der er ikke flere pladser og du kan derfor kun tilmelde dig uden at reservere plads.
-                                Klik på "Jeg ønsker ikke at vælge plads" herover for at gøre dette</p>
-                        {% endif %}
-                        <input type="submit" value="{% if current == -1 %}Tilmeld{% else %}Skift plads{% endif %}"
+                        <input type="submit" value="{% if current == 0 %}Tilmeld{% else %}Skift plads{% endif %}"
                            name="tilmeld">
                     </form>
                 {% endif %}

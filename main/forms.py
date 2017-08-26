@@ -80,6 +80,8 @@ class TilmeldForm(forms.ModelForm):
         ok_seats = [('', '')]
         lan = kwargs.pop('lan')
         for row in kwargs.pop('seats'):
+            if isinstance(row, str):
+                continue
             for seat in row:
                 if seat[0] is not None and seat[1] is None:
                     ok_seats.append((seat[0], seat[0]))

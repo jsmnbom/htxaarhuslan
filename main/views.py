@@ -30,6 +30,59 @@ def info(request):
     return render(request, 'info.html', {'next_lan': get_next_lan()})
 
 
+def _table(seats, current, is_staff):
+    row_width = 0
+
+    # Consists of bool, (str, None or dict) tuples
+    # bool is weather it's a header
+    table = []
+    for row in seats:
+        if isinstance(row, str):
+            line = row.split('|')
+            data = {'title': line[0].strip()}
+            if len(line) > 1:
+                data['text'] = line[1].strip()
+            table.append((True, data))
+            continue
+        table_row = []
+
+        for seat, lp in row:
+            if seat is None:
+                table_row.append(None)
+            else:
+                attrs = {'seat': seat}
+                classes = []
+                if lp:
+                    prof = lp.profile
+                    classes.append('occupied')
+                    if prof.user.is_staff:
+                        classes.append('staff')
+                    if seat == current:
+                        classes.append('current')
+
+                    im = get_thumbnail(prof.photo, '60x60', crop='center')
+                    if im:
+                        attrs['style'] = 'background-image: url({})'.format(im.url)
+
+                    attrs['url'] = reverse('profile', kwargs={'username': prof.user.username})
+                    attrs['name'] = prof.user.first_name
+                    attrs['username'] = prof.user.username
+                    attrs['grade'] = prof.get_grade_display()
+
+                    if prof and is_staff and lp.paid:
+                        attrs['paid'] = 'True'
+                else:
+                    classes.append('available')
+
+                attrs['class'] = ' '.join(classes)
+                table_row.append(attrs)
+
+        if len(table_row) > row_width:
+            row_width = len(table_row)
+        table.append((False, table_row or [None]))
+    return table, row_width
+
+
 def tilmeld(request):
     """Tilmeldings page"""
     lan = get_next_lan()
@@ -37,20 +90,21 @@ def tilmeld(request):
         return redirect(reverse('index'))
 
     seats, count = lan.parse_seats()
-    count += (count[0] + count[1],)
+
+    prof = request.user.profile if request.user.is_authenticated else None
 
     try:
-        current = LanProfile.objects.get(lan=lan, profile=request.user.profile).seat
-    except LanProfile.DoesNotExist:
-        current = -1
-    except AttributeError:
+        current = LanProfile.objects.get(lan=lan, profile=prof).seat
+    except (LanProfile.DoesNotExist, AttributeError):
         current = 0
 
+    table, row_width = _table(seats, current, request.user.is_staff)
+
     if request.method == 'POST':
-        form = TilmeldForm(request.POST, seats=seats, lan=lan, profile=request.user.profile)
+        form = TilmeldForm(request.POST, seats=seats, lan=lan, profile=prof)
         if form.is_valid() and lan.is_open():
             if count[1] < count[2] or form.cleaned_data['seat'] == '':
-                created = form.save(profile=request.user.profile, lan=lan)
+                created = form.save(profile=prof, lan=lan)
                 if created:
                     messages.add_message(request, messages.SUCCESS, "Du er nu tilmeldt LAN!")
                 else:
@@ -58,12 +112,19 @@ def tilmeld(request):
                 return redirect(reverse("tilmeld"))
         messages.add_message(request, messages.ERROR, "Tilmelding ikke mulig!")
     else:
-        form = TilmeldForm(seats=seats, lan=lan,
-                           profile=request.user.profile if request.user.is_authenticated else None)
+        form = TilmeldForm(seats=seats, lan=lan, profile=prof)
 
     open_time = (lan.open - now()).total_seconds()
-    return render(request, 'tilmeld.html', {'current': current, 'seats': seats, 'form': form, 'lan': lan,
-                                            'opens_time': open_time, 'count': count})
+    return render(request, 'tilmeld.html', {
+        'profile': prof,
+        'current': current,
+        'table': table,
+        'row_width': row_width,
+        'form': form,
+        'lan': lan,
+        'opens_time': open_time,
+        'count': count
+    })
 
 
 def tilmeldlist(request):
