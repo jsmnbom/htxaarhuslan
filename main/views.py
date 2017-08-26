@@ -227,6 +227,7 @@ def food(request):
                     form.save()
                     messages.add_message(request, messages.SUCCESS,
                                          'Din bestilling er modtaget. Du kan nu betale.')
+                    return redirect(reverse('food'))
             else:
                 form = FoodOrderForm(lanprofile=lp, profile=prof)
 
