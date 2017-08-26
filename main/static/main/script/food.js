@@ -1,6 +1,5 @@
 var menu;
 var choices;
-var excludes = [3983, 3758, 283, 4048, 228, 48, 135, 247];
 
 function find(array, id) {
     return $.grep(array, function (e) {
@@ -16,31 +15,32 @@ function changeOptions(select, options) {
             item = find(menu.products, item.Id);
         }
         var name;
+        if ($.isEmptyObject(item)) { // Item was excluded
+            return true; // Continue
+        }
         if (item.Name === '.') {
-            name = item.Syn + ' ';
+            name = item.Syn;
         } else {
-            name = item.Name + ' ';
+            name = item.Name;
             if (item.Syn) {
-                name += '(' + item.Syn + ') '
+                name += ' (' + item.Syn + ')'
             }
         }
         var baseName = name;
         if (('Price' in item) && (item.Price !== 0)) {
-            name += '[' + item.Price + 'kr.]';
+            name += ' [' + item.Price + 'kr.]';
             price = item.Price;
         } else {
             select.attr('price', null);
         }
-        if (excludes.indexOf(item.Id) === -1) {
-            var option = $("<option></option>")
-                .attr("value", item.Id)
-                .text(name)
-                .attr('name', baseName);
-            if (price) {
-                option.attr('price', price)
-            }
-            select.append(option);
+        var option = $("<option></option>")
+            .attr("value", item.Id)
+            .text(name)
+            .attr('name', baseName);
+        if (price) {
+            option.attr('price', price)
         }
+        select.append(option);
     });
     select.next().show();
 }
@@ -79,7 +79,7 @@ function toggleButton() {
 $(function () {
     $('form#food select').select2();
     hideGreater($('form select#id_category'));
-    $.getJSON('https://gist.githubusercontent.com/bomjacob/bd82c4ead494bf7fe8ea8a93d53b9779/raw/1e3f84d722fdf922fd4375e07ffd45f81e3a01ee/byens_burger.json', function (data) {
+    $.getJSON(foodJsonUrl, function (data) {
         menu = data.Menu;
         changeOptions($('form select#id_category'), menu.Categories);
         toggleButton();
