@@ -12,6 +12,7 @@ from django.utils.safestring import mark_safe
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 
+from main.utils import send_mobilepay_request
 from .models import GRADES, Profile, LanProfile, PAYTYPES, TournamentTeam, get_next_lan, Tournament, NamedProfile, \
     FoodOrder
 
@@ -332,7 +333,14 @@ class FoodOrderForm(forms.ModelForm):
         if self.cleaned_data['phone'] and self.cleaned_data['phone'] != self.profile.phone:
             self.profile.phone = self.cleaned_data['phone']
             self.profile.save()
-        super().save(**kwargs)
+        order = super().save(**kwargs)
+
+        if self.cleaned_data['phone']:
+            send_mobilepay_request(lan=self.lp.lan,
+                                   profile=self.lp.profile,
+                                   type='LAN mad',
+                                   amount=order.price,
+                                   id=order.id)
 
     def __str__(self):
         return mark_safe(self._html_output(

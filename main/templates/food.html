@@ -21,6 +21,7 @@
     {% if request.user.is_authenticated %}
         <div class="box" id="mine">
             <h2>Dine madbestillinger</h2>
+            {% include 'messages.html' %}
             <p>Herunder ses dine madbestillinger for dette LAN samt hvorvidt de er registreret som betalt.</p>
             <p>Hvis du valgte at betale med MobilePay så skulle du gerne havet modtaget en admodning om betalingen.
                 Hvis du ikke har modtaget nogen admodning tryk da på "Send MobilePay anmodning" for at sende en til det telefonnummer der er registreret på din profil.</p>
@@ -60,7 +61,6 @@
     {% if show %}
         <div class="box" id="bestilling">
             <h2>Bestil mad</h2>
-            {% include 'messages.html' %}
             <p>Vi bestiller mad fra Byens Burger. Menukortet kan ses <a href="http://www.byensburger.dk/menukort/"
                                                                         target="_blank">her</a>.</p>
             <p>Vælg den mad du ønsker herunder og tryk derefter på knappen "Placér bestilling" som dukker op når din

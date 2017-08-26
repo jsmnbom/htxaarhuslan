@@ -36,6 +36,9 @@ urlpatterns = [
     url(r'^calendar/(?P<feed_name>.+).json$', views.calendar, name='calendar'),
     url(r'^mad$', views.food, name='food'),
     url(r'^event/(?P<event_id>.+)$', views.event, name='event'),
+    url(r'^betaling/(?P<service>mobilepay)/(?P<type>mad|tilmelding)/(?P<id>\d+)$',
+        views.payment,
+        name='send_payment_request'),
 
     # Autocompletes
     url(r'^autocomplete/profile/$',

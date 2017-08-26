@@ -12,6 +12,7 @@ from django.template.loader import render_to_string
 from django.utils.timezone import now, utc
 from sorl.thumbnail import get_thumbnail
 
+from main.utils import send_mobilepay_request
 from .models import get_next_lan, LanProfile, Profile, Tournament, TournamentTeam, Event, FoodOrder
 from .forms import (UserRegForm, ProfileRegForm, TilmeldForm, EditUserForm, EditProfileForm, TournamentTeamForm,
                     FoodOrderForm)
@@ -221,12 +222,11 @@ def food(request):
             lp = LanProfile.objects.get(lan=lan, profile=prof)
 
             if request.method == 'POST':
-                print(request.POST)
                 form = FoodOrderForm(request.POST, lanprofile=lp, profile=prof)
                 if show and form.is_valid():
                     form.save()
                     messages.add_message(request, messages.SUCCESS,
-                                         'Din bestilling er modtaget. Du kan nu betale herover.')
+                                         'Din bestilling er modtaget. Du kan nu betale.')
             else:
                 form = FoodOrderForm(lanprofile=lp, profile=prof)
 
@@ -237,7 +237,8 @@ def food(request):
             form = None
     else:
         form = None
-    return render(request, 'food.html', {'lan': lan, 'show': show, 'orders': orders, 'form': form})
+        prof = None
+    return render(request, 'food.html', {'lan': lan, 'show': show, 'orders': orders, 'form': form, 'profile': prof})
 
 
 def event(request, event_id):
@@ -360,5 +361,33 @@ def calendar(request, feed_name):
     return JsonResponse(events, safe=False)
 
 
-def send_payment_request(request):
-    pass
+def payment(request, service, type, id):
+    if request.user.is_authenticated:
+        if service == 'mobilepay':
+            if type == 'mad':
+                order = get_object_or_404(FoodOrder, id=id)
+                prof = order.lanprofile.profile
+                lan = order.lanprofile.lan
+                text = 'LAN mad'
+                amount = order.price
+            else:  # type == tilmelding
+                lanprofile = get_object_or_404(LanProfile, id=id)
+                prof = lanprofile.profile
+                lan = lanprofile.lan
+                text = 'LAN tilmelding'
+                amount = lanprofile.lan.price
+            if request.user == prof.user:
+                if prof.phone:
+                    send_mobilepay_request(lan=lan,
+                                           profile=prof,
+                                           type=text,
+                                           amount=amount,
+                                           id=id)
+                    messages.add_message(request, messages.INFO,
+                                         'En anmodning på {}kr. er blevet sendt til (+45)'.format(amount, prof.phone))
+                else:
+                    messages.add_message(request, messages.ERROR,
+                                         'Fejl! Du har ikke skrevet noget telefonnummer på din profil!')
+                referrer = request.GET.get('next', reverse('index'))
+                return redirect(referrer)
+    raise Http404
