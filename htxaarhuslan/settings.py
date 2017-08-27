@@ -22,11 +22,7 @@ def env_var(key, default=None):
         val = False
     return val
 
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env_var('SECRET_KEY')
@@ -39,8 +35,16 @@ ALLOWED_HOSTS = env_var('ALLOWED_HOSTS', '').split(',')
 if ALLOWED_HOSTS == ['']:
     ALLOWED_HOSTS = []
 
+INTERNAL_IPS = ['127.0.0.1', 'localhost']
+
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 SECURE_BROWSER_XSS_FILTER = True
+
+ADMINS = [('Jacob Bom', 'bomjacob@gmail.com')]
+
+WSGI_APPLICATION = 'htxaarhuslan.wsgi.application'
+
+ROOT_URLCONF = 'htxaarhuslan.urls'
 
 # Application definition
 
@@ -66,6 +70,8 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
 ]
 
+# Middlewares
+
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -78,7 +84,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'htxaarhuslan.urls'
+# Template cnfig
 
 TEMPLATES = [
     {
@@ -97,15 +103,10 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'htxaarhuslan.wsgi.application'
-
 # Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': env_var('DB_NAME'),
         'USER': env_var('DB_USER'),
@@ -116,7 +117,6 @@ DATABASES = {
 }
 
 # Password validation
-# https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -134,7 +134,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.10/topics/i18n/
 
 LANGUAGE_CODE = 'da-dk'
 
@@ -146,9 +145,11 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
+LANGUAGES = [
+    ('da', 'Dansk'),
+]
 
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = env_var('STATIC_ROOT', None)
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
@@ -156,38 +157,27 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesSto
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Used for spam protection when creating user
-RECAPTCHA_PRIVATE_KEY = env_var('RECAPTCHA_PRIVATE_KEY')
-RECAPTCHA_PUBLIC_KEY = env_var('RECAPTCHA_PUBLIC_KEY')
-
 # We don't really have a proper login page, so we have to have a needlogin one
 LOGIN_URL = '/bruger/needlogin'
 LOGIN_REDIRECT_URL = '/'
 
 # Mail stuff
-
 DEFAULT_FROM_EMAIL = 'HTXAarhusLAN <crew@htxaarhuslan.dk>'
 SERVER_MAIL = 'server@htxaarhuslan.dk'
-
 if DEBUG:
-    # Use python debug email server
-    # Start it with: `python -m smtpd -n -c DebuggingServer localhost:1025`
-    EMAIL_HOST = 'localhost'
-    EMAIL_PORT = 1025
-    EMAIL_HOST_USER = ''
-    EMAIL_HOST_PASSWORD = ''
-    EMAIL_USE_TLS = False
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    # We use sendgrid to send mail
+    SENDGRID_API_KEY = env_var('SENDGRID_API_KEY', None)
+    if SENDGRID_API_KEY:
+        EMAIL_BACKEND = "sgbackend.SendGridBackend"
 
-# We use sendgrid to send mail
-SENDGRID_API_KEY = env_var('SENDGRID_API_KEY', None)
-if SENDGRID_API_KEY:
-    EMAIL_BACKEND = "sgbackend.SendGridBackend"
+# Recaptcha
+RECAPTCHA_PRIVATE_KEY = env_var('RECAPTCHA_PRIVATE_KEY')
+RECAPTCHA_PUBLIC_KEY = env_var('RECAPTCHA_PUBLIC_KEY')
 
-ADMINS = [('Jacob Bom', 'bomjacob@gmail.com')]
-
-# We only have a few element so we collapse the sidebar
+# JET admin
 JET_SIDE_MENU_COMPACT = True
-
 # Just show all themes.
 JET_THEMES = [
     {
@@ -221,7 +211,6 @@ JET_THEMES = [
         'title': 'Light Gray'
     }
 ]
-
 JET_SIDE_MENU_ITEMS = [
     {'label': 'Godkendelse og autorisation', 'items': [
         {'name': 'auth.user'},
@@ -242,16 +231,11 @@ JET_SIDE_MENU_ITEMS = [
     ]}
 ]
 
-# All available languages
-LANGUAGES = [
-    ('da', 'Dansk'),
-]
-
+# Challonge credentials
 CHALLONGE_USER = env_var('CHALLONGE_USER')
 CHALLONGE_API_KEY = env_var('CHALLONGE_API_KEY')
 
-INTERNAL_IPS = ['127.0.0.1', 'localhost']
-
+# Rest API framework
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissions',
@@ -262,8 +246,8 @@ REST_FRAMEWORK = {
     )
 }
 
+# CK editor
 CKEDITOR_UPLOAD_PATH = "uploads/"
-
 CKEDITOR_CONFIGS = {
     'default': {
         'skin': 'moonocolor',
