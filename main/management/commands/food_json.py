@@ -41,7 +41,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print(options['restaurant'])
-        r = requests.get('https://www.just-eat.dk/restaurants-{}/menu'.format(options['restaurant']))
+        r = requests.get('https://www.just-eat.dk/restaurants-{}/menu'.format(options['restaurant'][0]))
         print(r.status_code)
         if r.status_code != 200:
             print("Error")
