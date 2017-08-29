@@ -22,12 +22,13 @@
         <div class="box" id="mine">
             <h2>Dine madbestillinger</h2>
             {% include 'messages.html' %}
-            <p>Herunder ses dine madbestillinger for dette LAN samt hvorvidt de er registreret som betalt.</p>
-            <p>Hvis du valgte at betale med MobilePay så skulle du gerne havet modtaget en admodning om betalingen.
-                Hvis du ikke har modtaget nogen admodning tryk da på "Send MobilePay anmodning" for at sende en til det telefonnummer der er registreret på din profil.</p>
-            <p>Hvis du gerne vil betale med kontanter gøres det ved <a href="{% url 'profile' username='bomjacob' %}">Jacob Bom</a>.</p>
-            <p>Der kan gå op til et kvater før din betaling går igennem. Hvis der går længere, du oplever andre
-                problemer eller du ønsker at betale med kontanter, kontakt venligst et medlem af LanCrew.</p>
+            <p>Herunder kan du se dine madbestillinger for dette LAN, samt hvorvidt de er registreret som betalt.</p>
+            <p>Hvis du har valgt at betale med MobilePay, skulle du gerne have modtaget en admodning om betalingen.
+                Hvis du ikke har modtaget en admodning, så tryk på "Send MobilePay anmodning", for at sende en ny anmodning til dit registrerede telefonnummer.</p>
+            <p>Hvis du gerne vil betale med kontanter, gøres det ved <a href="{% url 'profile' username='bomjacob' %}">Jacob Bom</a>.
+                Hvis du ikke kan finde ham, kan du også kontakte et andet medlem af LAN Crew..</p>
+            <p>Der kan gå op til et kvater før din betaling går igennem, og vises som betalt. Hvis der går længere eller du oplever andre
+                problemer, kontakt venligst et medlem af LAN Crew.</p>
             {% if orders %}
                 <table class="wide food">
                     <thead>
@@ -63,12 +64,12 @@
             <h2>Bestil mad</h2>
             <p>Vi bestiller mad fra Byens Burger. Menukortet kan ses <a href="http://www.byensburger.dk/menukort/"
                                                                         target="_blank">her</a>.</p>
-            <p>Vælg den mad du ønsker herunder og tryk derefter på knappen "Placér bestilling" som dukker op når din
-                ordre er gyldig. Vi godtager sm hovedregel ikke specialbestillinger (da det hurtigt bliver for svært
-                for byens burger at håndtere), men hvis der er noget yderst vigtigt kan vi nogen gange
-                lave en undtagelse hvis du taler med os.</p>
-            <p>Hvis du ønsker at betale med kontanter efterlader du bare telefonnummer feltet tomt.</p>
-            <p>Hvis du ønsker at lave mere end en bestilling får du også mulighed for det på næste side.</p>
+            <p>Vælg den mad du ønsker herunder og tryk på knappen "Placér bestilling", som dukker op, når din
+                ordre er gyldig. Vi godtager som hovedregel ikke specialbestillinger (da det hurtigt bliver for svært
+                for Byens Burger at håndtere), men hvis det er noget vigtigt, som allergi, kan vi
+                lave en undtagelse, hvis du kontakter os.</p>
+            <p>Hvis du ønsker at betale med kontanter, kan du bare efterlade telefonnummer-feltet tomt.</p>
+            <p>Hvis du ønsker at lave mere end en bestilling, får du mulighed for det på næste side.</p>
             <form id="food" action="{{ get_full_path }}" method="post">
                 {% csrf_token %}
                 {{ form }}
@@ -79,10 +80,10 @@
     {% else %}
         <div class="box" id="ikkeåben">
             <h2>{% block title %}Madbestilling{% endblock %} er ikke åben</h2>
-            <p>Madbestilling er ikke åben på nuværende tidspunkt. Hvis du mener dette er en fejl, kontakt et crew
+            <p>Madbestilling er ikke åben på nuværende tidspunkt. Hvis du mener dette er en fejl, kontakt et LAN Crew
                 medlem.</p>
             <p>Denne fejl vises også hvis du ikke er tilmeldt nuværende lan. Du kan kun lave en madbestilling hvis du er
-                tilmeldt LAN! Husk også at logge ind hvis du ikke allerede er det.</p>
+                tilmeldt LAN! Husk også at logge ind, hvis du ikke allerede er det.</p>
             <p>Vi bestiller mad fra Byens Burger. Menukortet kan ses <a href="http://www.byensburger.dk/menukort/"
                                                                         target="_blank">her</a>.</p>
         </div>
