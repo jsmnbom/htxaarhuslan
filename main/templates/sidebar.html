@@ -31,9 +31,8 @@
             <div class="buttons">
                 {% if not lp %}
                     <a class="button" href="{% url "tilmeld" %}">Tilmeld til lan</a>
-                {% elif lp.lan.is_ongoing %}
-                    <a class="button" href="{% url "food" %}">Madbestilling</a>
                 {% endif %}
+                <a class="button" href="{% url "food" %}">Madbestilling</a>
                 <a class="button" href="{% url "profile" username=user.username %}">Vis/rediger profil</a>
                 {% if request.user.is_staff %}
                     <a class="button" href="{% url "admin:index" %}">Admin</a>
