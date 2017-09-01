@@ -9,7 +9,9 @@ from django.db.models import Q
 from django.http import Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
+from django.utils.http import is_safe_url
 from django.utils.timezone import now, utc
+from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
 from sorl.thumbnail import get_thumbnail
 
 from main.utils import send_mobilepay_request
@@ -309,9 +311,13 @@ def event(request, event_id):
 
 # Meta pages
 
+@sensitive_post_parameters()
+@sensitive_variables('username', 'password')
 def login_view(request):
     """Post url for login form, always redirects the user back unless legacy."""
-    referrer = request.GET.get('next', reverse("index"))
+    referrer = request.GET.get('next', reverse('index'))
+    if not is_safe_url(referrer, allowed_hosts=[request.get_host()], require_https=request.is_secure()):
+        referrer = reverse('index')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -322,14 +328,16 @@ def login_view(request):
             if is_legacy:
                 return redirect(reverse('legacy'))
         else:
-            messages.add_message(request, messages.ERROR, "Fejl i brugernavn eller kodeord")
+            messages.add_message(request, messages.ERROR, 'Fejl i brugernavn eller kodeord')
     return redirect(referrer)
 
 
 def logout_view(request):
     """Logout and redirect."""
     logout(request)
-    referrer = request.GET.get('next', reverse("index"))
+    referrer = request.GET.get('next', reverse('index'))
+    if not is_safe_url(referrer, allowed_hosts=[request.get_host()], require_https=request.is_secure()):
+        referrer = reverse('index')
     return redirect(referrer)
 
 
