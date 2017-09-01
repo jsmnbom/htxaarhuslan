@@ -13,8 +13,8 @@ from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 
 from main.utils import send_mobilepay_request
-from .models import GRADES, Profile, LanProfile, PAYTYPES, TournamentTeam, get_next_lan, Tournament, NamedProfile, \
-    FoodOrder
+from .models import (GRADES, Profile, LanProfile, PAYTYPES, TournamentTeam, get_next_lan, Tournament, NamedProfile,
+                     FoodOrder)
 
 PHONE_REGEX = r'^(\(?\+?(?:00)?[- ]?45\)?)?[- ]?((?:\d[ -]?){8})$'
 
@@ -137,7 +137,7 @@ class PhotoInput(forms.ClearableFileInput):
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('grade', 'bio', 'photo')
+        fields = ('grade', 'bio', 'phone', 'photo')
 
     bio = forms.CharField(
         max_length=1024,
@@ -150,12 +150,26 @@ class EditProfileForm(forms.ModelForm):
 
     grade = forms.ChoiceField(sorted(GRADES, reverse=True), label='Klasse', widget=LabelSelect(label='Klasse'))
 
+    phone_regex = RegexValidator(PHONE_REGEX, message='Intast et gyldigt telefonnummer f.eks. 12345678')
+    phone = forms.CharField(validators=[phone_regex],
+                            widget=forms.TextInput(attrs={'type': 'tel',
+                                                          'patern': PHONE_REGEX,
+                                                          'placeholder': '(+45) 1234 5678'}),
+                            label='MobilePay telefonnummer',
+                            required=False)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         instance = kwargs.get('instance', None)
         if instance:
             self.fields['grade'].choices += ((instance.grade, instance.grade), ('none', 'Ukendt'))
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        phone.replace(' ', '')
+        phone.replace('-', '')
+        return phone[-8:]
 
 
 class TournamentSelect2(ModelSelect2):
