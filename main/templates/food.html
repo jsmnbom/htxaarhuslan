@@ -23,10 +23,12 @@
             <h2>Dine madbestillinger</h2>
             {% include 'messages.html' %}
             <p>Herunder kan du se dine madbestillinger for dette LAN, samt hvorvidt de er registreret som betalt.</p>
+            {% comment %}
             <p>Hvis du har valgt at betale med MobilePay, skulle du gerne have modtaget en admodning om betalingen.
                 Hvis du ikke har modtaget en admodning, så tryk på "Send MobilePay anmodning", for at sende en ny anmodning til dit registrerede telefonnummer.</p>
-            <p>Hvis du gerne vil betale med kontanter, gøres det ved <a href="{% url 'profile' username='bomjacob' %}">Jacob Bom</a>.
-                Hvis du ikke kan finde ham, kan du også kontakte et andet medlem af LAN Crew..</p>
+            {% endcomment %}
+            <p>Hvis du har valgt at betale med MobilePay skal du sende pengene til (+45) {{ lan.food_phone }}.</p>
+            <p>Hvis du gerne vil betale med kontanter, gøres det ved <a href="{% url 'profile' username='bomjacob' %}">Jacob Bom</a> eller et andet medlem af LAN Crew.</p>
             <p>Der kan gå op til et kvater før din betaling går igennem, og vises som betalt. Hvis der går længere eller du oplever andre
                 problemer, kontakt venligst et medlem af LAN Crew.</p>
             {% if orders %}
@@ -48,7 +50,7 @@
                                 <td>{% if order.paid %}
                                     Betalt :)
                                 {% else %}
-                                    Ikke betalt. {% if profile.phone %}<a href="{% url 'send_payment_request' service='mobilepay' type='mad' id=order.id %}?next={{ request.get_full_path }}">Send MobilePay admodning</a>{% endif %}
+                                    Ikke betalt. {#{% if profile.phone %}<a href="{% url 'send_payment_request' service='mobilepay' type='mad' id=order.id %}?next={{ request.get_full_path }}">Send MobilePay admodning</a>{% endif %}#}
                                 {% endif %}</td>
                             </tr>
                         {% endfor %}
