@@ -8,8 +8,8 @@ from main.models import FoodOrder
 
 @admin.register(FoodOrder)
 class FoodOrderAdmin(admin.ModelAdmin):
-    list_filter = ('time',)
-    list_display = ('pk', 'time', 'get_lan', 'order', 'get_profile', 'price', 'paid')
+    list_filter = ('time', 'paid', 'collected')
+    list_display = ('pk', 'time', 'get_lan', 'order', 'get_profile', 'price', 'paid', 'collected')
     list_display_links = ('pk', 'time', 'order')
     search_fields = ('lanprofile__profile__user__first_name', 'lanprofile__profile__user__username', 'order')
 
@@ -31,7 +31,7 @@ class FoodOrderAdmin(admin.ModelAdmin):
     get_lan.short_description = 'lan'
     get_lan.admin_order_field = 'lanprofile__lan'
 
-    actions = ['paid', 'not_paid', 'generate_summary']
+    actions = ['paid', 'not_paid', 'collected', 'not_collected', 'generate_summary']
 
     def paid(self, request, queryset):
         queryset.update(paid=True)
@@ -42,6 +42,16 @@ class FoodOrderAdmin(admin.ModelAdmin):
         queryset.update(paid=False)
 
     not_paid.short_description = "Markér som ikke betalt."
+
+    def collected(self, request, queryset):
+        queryset.update(collected=True)
+
+    collected.short_description = "Makér som afhentet."
+
+    def not_collected(self, request, queryset):
+        queryset.update(collected=False)
+
+    not_collected.short_description = "Markér som ikke afhentet."
 
     def generate_summary(self, request, queryset):
         out = Counter()

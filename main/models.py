@@ -410,6 +410,7 @@ class FoodOrder(models.Model):
     order = models.TextField(verbose_name='ordre')
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='pris', null=True, blank=True)
     paid = models.BooleanField(default=False, verbose_name='betalt')
+    collected = models.BooleanField(default=False, verbose_name='afhentet')
 
     def __str__(self):
         return self.order
