@@ -15,9 +15,9 @@ from django.views.decorators.debug import sensitive_post_parameters, sensitive_v
 from sorl.thumbnail import get_thumbnail
 
 from main.utils import send_mobilepay_request
-from .models import get_next_lan, LanProfile, Profile, Tournament, TournamentTeam, Event, FoodOrder
 from .forms import (UserRegForm, ProfileRegForm, TilmeldForm, EditUserForm, EditProfileForm, TournamentTeamForm,
                     FoodOrderForm)
+from .models import get_next_lan, LanProfile, Profile, Tournament, TournamentTeam, Event, FoodOrder
 
 
 # Actual pages
@@ -88,45 +88,43 @@ def _table(seats, current, is_staff):
 def tilmeld(request):
     """Tilmeldings page"""
     lan = get_next_lan()
-    if lan is None:
-        return redirect(reverse('index'))
+    context = {'lan': lan}
+    if lan is not None:
+        seats, count = lan.parse_seats()
 
-    seats, count = lan.parse_seats()
+        prof = request.user.profile if request.user.is_authenticated else None
 
-    prof = request.user.profile if request.user.is_authenticated else None
+        try:
+            current = LanProfile.objects.get(lan=lan, profile=prof).seat
+        except (LanProfile.DoesNotExist, AttributeError):
+            current = 0
 
-    try:
-        current = LanProfile.objects.get(lan=lan, profile=prof).seat
-    except (LanProfile.DoesNotExist, AttributeError):
-        current = 0
+        table, row_width = _table(seats, current, request.user.is_staff)
 
-    table, row_width = _table(seats, current, request.user.is_staff)
+        if request.method == 'POST':
+            form = TilmeldForm(request.POST, seats=seats, lan=lan, profile=prof)
+            if form.is_valid() and lan.is_open():
+                if count[1] < count[2] or form.cleaned_data['seat'] == '':
+                    created = form.save(profile=prof, lan=lan)
+                    if created:
+                        messages.add_message(request, messages.SUCCESS, "Du er nu tilmeldt LAN!")
+                    else:
+                        messages.add_message(request, messages.SUCCESS, "Tilmelding ændret!")
+                    return redirect(reverse("tilmeld"))
+            messages.add_message(request, messages.ERROR, "Tilmelding ikke mulig!")
+        else:
+            form = TilmeldForm(seats=seats, lan=lan, profile=prof)
 
-    if request.method == 'POST':
-        form = TilmeldForm(request.POST, seats=seats, lan=lan, profile=prof)
-        if form.is_valid() and lan.is_open():
-            if count[1] < count[2] or form.cleaned_data['seat'] == '':
-                created = form.save(profile=prof, lan=lan)
-                if created:
-                    messages.add_message(request, messages.SUCCESS, "Du er nu tilmeldt LAN!")
-                else:
-                    messages.add_message(request, messages.SUCCESS, "Tilmelding ændret!")
-                return redirect(reverse("tilmeld"))
-        messages.add_message(request, messages.ERROR, "Tilmelding ikke mulig!")
-    else:
-        form = TilmeldForm(seats=seats, lan=lan, profile=prof)
+        open_time = (lan.open - now()).total_seconds()
 
-    open_time = (lan.open - now()).total_seconds()
-    return render(request, 'tilmeld.html', {
-        'profile': prof,
-        'current': current,
-        'table': table,
-        'row_width': row_width,
-        'form': form,
-        'lan': lan,
-        'opens_time': open_time,
-        'count': count
-    })
+        context.update({'profile': prof,
+                        'current': current,
+                        'table': table,
+                        'row_width': row_width,
+                        'form': form,
+                        'opens_time': open_time,
+                        'count': count})
+    return render(request, 'tilmeld.html', context)
 
 
 def tilmeldlist(request):

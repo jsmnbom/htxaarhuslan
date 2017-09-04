@@ -219,7 +219,7 @@ class LanProfile(models.Model):
 
 def get_next_lan():
     try:
-        return Lan.objects.filter(end__isnull=False).latest('end')
+        return Lan.objects.filter(end__isnull=False, end__gte=now()).latest('end')
     except Lan.DoesNotExist:
         return None
 

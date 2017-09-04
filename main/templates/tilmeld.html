@@ -9,7 +9,7 @@
 
 {% block content %}
     <div class="box" id="tilmeld">
-        <h2>{% block title %}Tilmelding{% endblock %}</h2>
+        <h2>{% block title %}Tilmelding{% if not lan %} ikke klar endnu{% endif %}{% endblock %}</h2>
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -18,7 +18,9 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        {% if lan.is_open %}
+        {% if not lan %}
+            <p>Tilmeldingen til næste er desværre ikke klar endnu. Vend tilbage når vi nærmer os den planlagte dato.</p>
+        {% elif lan.is_open %}
             <div class="seats">
                 <h3 id="count">Antal tilmeldte: {{ count.1 }}/{{ count.2 }}{% if count.3 %} (+{{ count.3 }}){% endif %}</h3>
                 <a href="{% url "tilmeldlist" %}"><p class="centered">Se liste over tilmeldte</p></a>
