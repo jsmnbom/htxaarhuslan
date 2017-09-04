@@ -78,13 +78,6 @@ class Profile(models.Model):
     def __str__(self):
         return '{} ({})'.format(self.user.username, self.user.first_name)
 
-    def get_lanprofile_for_next_lan(self):
-        lan = get_next_lan()
-        try:
-            return LanProfile.objects.get(lan=lan, profile=self)
-        except LanProfile.DoesNotExist:
-            return None
-
     def get_grade_display(self):
         for k, v in GRADES:
             if k == self.grade:
@@ -195,6 +188,18 @@ class Lan(models.Model):
         parsed, tables = self._parse_seats({})
         return len(lps), len(lps.filter(seat__isnull=False)), sum(tables.values()), len(lps.filter(seat__isnull=True))
 
+    @classmethod
+    def get_next(cls, request=None):
+        if request and hasattr(request, 'cached_lan'):
+            return request.cached_lan
+        try:
+            lan = cls.objects.filter(end__isnull=False, end__gte=now()).latest('end')
+        except cls.DoesNotExist:
+            lan = None
+        if request:
+            request.cached_lan = lan
+        return lan
+
 
 class LanProfile(models.Model):
     class Meta:
@@ -215,13 +220,6 @@ class LanProfile(models.Model):
         if not self.seat:
             self.seat = None
         super().save(*args, **kwargs)
-
-
-def get_next_lan():
-    try:
-        return Lan.objects.filter(end__isnull=False, end__gte=now()).latest('end')
-    except Lan.DoesNotExist:
-        return None
 
 
 class Game(models.Model):

@@ -1,7 +1,7 @@
 from django.contrib.admin import SimpleListFilter
 from django.core.exceptions import FieldError
 
-from main.models import Lan, get_next_lan
+from main.models import Lan
 
 
 class LanFilter(SimpleListFilter):
@@ -27,7 +27,7 @@ class LanFilter(SimpleListFilter):
         value = super().value()
         if value is None:
             if self.lan is None:
-                self.lan = get_next_lan()
+                self.lan = Lan.get_next()
             if self.lan:
                 value = self.lan.pk
             else:

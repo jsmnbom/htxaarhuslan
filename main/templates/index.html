@@ -13,11 +13,11 @@
 
 {% block content %}
     <div class="box" id="næstelan">
-        {% if next_lan %}
-            <h2>Næste LAN: {{ next_lan.name }}</h2>
-            <h4>Dato: <strong>{{ next_lan.start }}</strong></h4>
-            {{ next_lan.blurb|safe }}
-            {% if not next_lan.show_calendar %}
+        {% if lan %}
+            <h2>Næste LAN: {{ lan.name }}</h2>
+            <h4>Dato: <strong>{{ lan.start }}</strong></h4>
+            {{ lan.blurb|safe }}
+            {% if not lan.show_calendar %}
                 <p>Tidsplanen for næste LAN er ikke klar endnu, men vil blive vist herunder så snart alt er planlagt.</p>
             {% endif %}
         {% else %}
@@ -25,11 +25,11 @@
             <p>Der er ingen LAN planlagt på nuværende tidspunkt.</p>
         {% endif %}
     </div>
-    {% if next_lan and next_lan.show_calendar %}
+    {% if lan and lan.show_calendar %}
         <div class="box" id="plan">
             <h2>Tidsplan</h2>
             <div id="calendar_loading"><h4>Indlæser</h4></div>
-            <div id="calendar" data-date="{{ next_lan.start.isoformat }}"></div>
+            <div id="calendar" data-date="{{ lan.start.isoformat }}"></div>
             <script src="{% static "main/script/calendar.js" %}"></script>
         </div>
     {% endif %}

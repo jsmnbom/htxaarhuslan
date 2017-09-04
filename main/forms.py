@@ -13,8 +13,8 @@ from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 
 from main.utils import send_mobilepay_request
-from .models import (GRADES, Profile, LanProfile, PAYTYPES, TournamentTeam, get_next_lan, Tournament, NamedProfile,
-                     FoodOrder)
+from .models import (GRADES, Profile, LanProfile, PAYTYPES, TournamentTeam, Tournament, NamedProfile,
+                     FoodOrder, Lan)
 
 PHONE_REGEX = r'^(\(?\+?(?:00)?[- ]?45\)?)?[- ]?((?:\d[ -]?){8})$'
 
@@ -230,7 +230,7 @@ class TournamentTeamForm(forms.ModelForm):
         self.profile = kwargs.pop('profile')
         super().__init__(*args, **kwargs)
 
-        lan = get_next_lan()
+        lan = Lan.get_next()
 
         del self.fields['profiles']
         del self.fields['namedprofiles']
@@ -274,7 +274,7 @@ class TournamentTeamForm(forms.ModelForm):
                     else:
                         self.cleaned_data['profiles'].append(val)
                         try:
-                            LanProfile.objects.get(profile=val, lan=get_next_lan())
+                            LanProfile.objects.get(profile=val, lan=Lan.get_next())
                         except LanProfile.DoesNotExist:
                             raise ValidationError(
                                 '%(profile)s er ikke tilmeldt LAN og kan derfor ikke være med på dit hold.',

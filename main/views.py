@@ -17,19 +17,19 @@ from sorl.thumbnail import get_thumbnail
 from main.utils import send_mobilepay_request
 from .forms import (UserRegForm, ProfileRegForm, TilmeldForm, EditUserForm, EditProfileForm, TournamentTeamForm,
                     FoodOrderForm)
-from .models import get_next_lan, LanProfile, Profile, Tournament, TournamentTeam, Event, FoodOrder
+from .models import LanProfile, Profile, Tournament, TournamentTeam, Event, FoodOrder, Lan
 
 
 # Actual pages
 
 def index(request):
     """Front page"""
-    return render(request, 'index.html', {'next_lan': get_next_lan()})
+    return render(request, 'index.html')
 
 
 def info(request):
     """Information page"""
-    return render(request, 'info.html', {'next_lan': get_next_lan()})
+    return render(request, 'info.html')
 
 
 def _table(seats, current, is_staff):
@@ -87,8 +87,8 @@ def _table(seats, current, is_staff):
 
 def tilmeld(request):
     """Tilmeldings page"""
-    lan = get_next_lan()
-    context = {'lan': lan}
+    lan = Lan.get_next(request=request)
+    context = {}
     if lan is not None:
         seats, count = lan.parse_seats()
 
@@ -128,7 +128,7 @@ def tilmeld(request):
 
 
 def tilmeldlist(request):
-    lan = get_next_lan()
+    lan = Lan.get_next(request=request)
     profiles = LanProfile.objects.filter(lan=lan).select_related('profile').select_related('profile__user')
     return render(request, 'tilmeldlist.html', {'profiles': profiles})
 
@@ -194,11 +194,11 @@ def profile(request, username=None):
         pass
 
     return render(request, 'profile.html', {'user_form': user_form, 'profile_form': profile_form,
-                                            'profile': prof, 'start_edit': start_edit, 'lan': get_next_lan()})
+                                            'profile': prof, 'start_edit': start_edit})
 
 
 def tournaments(request):
-    lan = get_next_lan()
+    lan = Lan.get_next(request=request)
     tournaments = Tournament.objects.filter(lan=lan).select_related('game').select_related('lan')
     games = defaultdict(list)
     for t in tournaments:
@@ -275,7 +275,7 @@ def policy(request):
 
 def food(request):
     orders = []
-    lan = get_next_lan()
+    lan = Lan.get_next(request=request)
     show = lan is not None and lan.is_open() and lan.food_open and request.user.is_authenticated()
     if request.user.is_authenticated():
         prof = request.user.profile
@@ -300,7 +300,7 @@ def food(request):
     else:
         form = None
         prof = None
-    return render(request, 'food.html', {'lan': lan, 'show': show, 'orders': orders, 'form': form, 'profile': prof})
+    return render(request, 'food.html', {'show': show, 'orders': orders, 'form': form, 'profile': prof})
 
 
 def event(request, event_id):
@@ -341,7 +341,7 @@ def logout_view(request):
 
 def frameld(request):
     """Framelds a user"""
-    lan = get_next_lan()
+    lan = Lan.get_next(request=request)
     success = False
     if request.method == 'POST':
         try:
@@ -369,7 +369,7 @@ class ProfileAutocomplete(autocomplete.Select2QuerySetView):
         if not self.request.user.is_authenticated:
             return False
 
-        lan = get_next_lan()
+        lan = Lan.get_next()
         qs = Profile.objects.filter(lanprofile__lan=lan)
 
         try:
@@ -398,7 +398,7 @@ class ProfileAutocomplete(autocomplete.Select2QuerySetView):
 
 
 def calendar(request, feed_name):
-    lan = get_next_lan()
+    lan = Lan.get_next(request=request)
     events = []
     if feed_name == 'tournament':
         ts = Tournament.objects.filter(lan=lan, start__isnull=False)

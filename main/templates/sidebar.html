@@ -1,45 +1,45 @@
 <div class="box login" id="login">
-    {% if request.user.is_authenticated %}
-        {% with request.user.profile.get_lanprofile_for_next_lan as lp %}
-            <h2>Velkommen {{ request.user.first_name }}</h2>
-            <div class="status">
-                {% if lp %}
-                    {% if lp.paytype %}
-                        {% if not lp.paid %}
-                            {% if lp.paytype == 'mp' %}
-                                <p>Du er tilmeldt LAN, og har valgt at betale med MobilePay.
-                                {% if lp.lan.payment_manager_id %}
-                                    Du har modtaget en anmodning via MobilePay som du skal godkende for at betale.
-                                    Bemærk at der kan gå op til 24 timer før du modtager anmodningen.
-                                    Hvis du oplever problemer så tryk <a href="{% url '' %}">her</a> for at sende en
-                                    ny, eller kontakt et lancrew medlem.
-                                {% else %}
-                                    Send venligst {{ lp.lan.price|floatformat:"-2" }}kr. til +45{{ lp.lan.payphone }}
-                                    for at betale.
-                                {% endif %}
-                                </p>
-                            {% elif lp.paytype == 'cash' %}
-                                <p>Du er tilmeldt LAN, og har valgt at betale med kontanter.
-                                    Find venligt et LanCrew medlem når du ankommer til LAN.</p>
+    {% if user.is_authenticated %}
+        <h2>Velkommen {{ request.user.first_name }}</h2>
+        <div class="status">
+            {% if lp %}
+                {% if lp.paytype %}
+                    {% if not lp.paid %}
+                        {% if lp.paytype == 'mp' %}
+                            <p>Du er tilmeldt LAN, og har valgt at betale med MobilePay.
+                            {% if lp.lan.payment_manager_id %}
+                                Du har modtaget en anmodning via MobilePay som du skal godkende for at betale.
+                                Bemærk at der kan gå op til 24 timer før du modtager anmodningen.
+                                Hvis du oplever problemer så tryk <a href="{% url '' %}">her</a> for at sende en
+                                ny, eller kontakt et lancrew medlem.
+                            {% else %}
+                                Send venligst {{ lp.lan.price|floatformat:"-2" }}kr. til +45{{ lp.lan.payphone }}
+                                for at betale.
                             {% endif %}
-                        {% else %}
-                            <p>Du er tilmeldt LAN, og din betaling er gennemført.</p>
+                            </p>
+                        {% elif lp.paytype == 'cash' %}
+                            <p>Du er tilmeldt LAN, og har valgt at betale med kontanter.
+                                Find venligt et LanCrew medlem når du ankommer til LAN.</p>
                         {% endif %}
+                    {% else %}
+                        <p>Du er tilmeldt LAN, og din betaling er gennemført.</p>
                     {% endif %}
                 {% endif %}
-            </div>
-            <div class="buttons">
-                {% if not lp %}
-                    <a class="button" href="{% url "tilmeld" %}">Tilmeld til lan</a>
-                {% endif %}
+            {% endif %}
+        </div>
+        <div class="buttons">
+            {% if lan and not lp%}
+                <a class="button" href="{% url "tilmeld" %}">Tilmeld til lan</a>
+            {% endif %}
+            {% if lan.food_open %}
                 <a class="button" href="{% url "food" %}">Madbestilling</a>
-                <a class="button" href="{% url "profile" username=user.username %}">Vis/rediger profil</a>
-                {% if request.user.is_staff %}
-                    <a class="button" href="{% url "admin:index" %}">Admin</a>
-                {% endif %}
-                <a class="button" href="{% url "logout" %}?next={{ request.get_full_path }}">Log af</a>
-            </div>
-        {% endwith %}
+            {% endif %}
+            <a class="button" href="{% url "profile" username=user.username %}">Vis/rediger profil</a>
+            {% if request.user.is_staff %}
+                <a class="button" href="{% url "admin:index" %}">Admin</a>
+            {% endif %}
+            <a class="button" href="{% url "logout" %}?next={{ request.get_full_path }}">Log af</a>
+        </div>
     {% else %}
         <h2>Login</h2>
         {% include 'messages.html' %}
