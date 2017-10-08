@@ -10,6 +10,6 @@ def lp(request):
     if lan:
         try:
             return {'lp': LanProfile.objects.get(lan=lan, profile=request.user.profile)}
-        except LanProfile.DoesNotExist:
+        except (LanProfile.DoesNotExist, AttributeError):
             pass
     return {'lp': None}
