@@ -7,7 +7,7 @@ import requests
 from django.core.management.base import BaseCommand
 
 # For byensburger we've used:
-# .manage.py food_json byensburger -ec 3983 3758 283 4048 228 48 135 247 -ep 2220636 2220652 2220653 2220654 2220658
+# ./manage.py food_json byensburger -ec 3983 3758 283 4048 228 48 135 247 -ep 2220636 2220652 2220653 2220654 2220658
 # Which will output
 # Excluded categories 3983 - Tilbud, 3758 - Chokolade & Slik, 283 - Chips, 4048 - Nyheder,
 #   228 - Børne Burgere, 48 - Vine, 135 - Spiritus -min. 18 år, 247 - Diverse
@@ -41,7 +41,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print(options['restaurant'])
-        r = requests.get('https://www.just-eat.dk/restaurants-{}/menu'.format(options['restaurant'][0]))
+        r = requests.get('https://www.just-eat.dk/restaurants-{}/menu/collection'.format(options['restaurant'][0]))
         print(r.status_code)
         if r.status_code != 200:
             print("Error")
