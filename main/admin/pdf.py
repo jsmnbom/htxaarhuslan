@@ -37,7 +37,7 @@ def table_pdf(request, lan_id):
                     lengths[1][seat[0][0]] = y - origins[seat[0][0]][1]
 
     horizontal = {table: lengths[0][table] > lengths[1][table] for table in lengths[0]}
-    pages = {seat[0]: seat[1] for table in tables for seat in table if seat[0] is not None}
+    pages = {seat[0]: seat[1] for table in tables if not isinstance(table, str) for seat in table if seat[0] is not None}
 
     def sort(page):
         if horizontal[page[0][0]]:
