@@ -3,26 +3,28 @@ $(document).ready(function () {
     $(".header .nav a").fitText(0.7);
 
     // Cookie law stuff
-    window.cookieconsent.initialise({
-        "palette": {
-            "popup": {
-                "background": "#363032",
-                "text": "#ffffff"
+    if (window.cookieconsent) {
+        window.cookieconsent.initialise({
+            "palette": {
+                "popup": {
+                    "background": "#363032",
+                    "text": "#ffffff"
+                },
+                "button": {
+                    "background": "#d33e20",
+                    "text": "#ffffff"
+                }
             },
-            "button": {
-                "background": "#d33e20",
-                "text": "#ffffff"
+            "theme": "edgeless",
+            "position": "bottom-left",
+            "content": {
+                "message": "Denne hjemmeside bruger cookies til at sikre, at du får den bedste oplevelse på vores hjemmeside.",
+                "dismiss": "Forstået!",
+                "link": "Lær mere",
+                "href": "/privatliv"
             }
-        },
-        "theme": "edgeless",
-        "position": "bottom-left",
-        "content": {
-            "message": "Denne hjemmeside bruger cookies til at sikre, at du får den bedste oplevelse på vores hjemmeside.",
-            "dismiss": "Forstået!",
-            "link": "Lær mere",
-            "href": "/privatliv"
-        }
-    });
+        });
+    }
 
     // Hide edit profile until you click button
     var hidden = false;
