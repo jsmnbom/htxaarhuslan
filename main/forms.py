@@ -1,5 +1,7 @@
 from dal_select2.widgets import ModelSelect2
 from django import forms
+from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UsernameField
 from django.contrib.auth.models import User
@@ -159,11 +161,20 @@ class EditProfileForm(forms.ModelForm):
                             required=False)
 
     def __init__(self, *args, **kwargs):
+        groups = kwargs.pop('groups')
+        request = kwargs.pop('request')
+
         super().__init__(*args, **kwargs)
 
         instance = kwargs.get('instance', None)
         if instance:
             self.fields['grade'].choices += ((instance.grade, instance.grade), ('none', 'Ukendt'))
+
+        if groups and groups.filter(name=settings.RESTRICTED_USER_GROUP).exists():
+            del self.fields['photo']
+            if request:
+                messages.warning(request, 'Du har ikke tilladelse til at ændre profilbillede. Hvis du mener '
+                                          'dette er en fejl, kontakt et medlem af LanCrew.')
 
     def clean_phone(self):
         phone = self.cleaned_data['phone']

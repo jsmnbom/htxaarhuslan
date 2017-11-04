@@ -178,7 +178,10 @@ def profile(request, username=None):
         if request.method == 'POST':
             if prof.id == request.user.profile.id:
                 user_form = EditUserForm(request.POST, instance=request.user)
-                profile_form = EditProfileForm(request.POST, request.FILES, instance=request.user.profile)
+                profile_form = EditProfileForm(request.POST, request.FILES,
+                                               instance=request.user.profile,
+                                               groups=request.user.groups,
+                                               request=request)
                 if user_form.is_valid() and profile_form.is_valid():
                     user_form.save()
                     prof = profile_form.save()
@@ -189,7 +192,7 @@ def profile(request, username=None):
         else:
             if prof.id == request.user.profile.id:
                 user_form = EditUserForm(instance=request.user)
-                profile_form = EditProfileForm(instance=request.user.profile)
+                profile_form = EditProfileForm(instance=request.user.profile, groups=request.user.groups, request=request)
     except AttributeError:
         pass
 
