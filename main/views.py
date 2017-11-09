@@ -171,8 +171,8 @@ def profile(request, username=None):
             return redirect(reverse('needlogin'))
 
     try:
-        prof = Profile.objects.get(user__username=username)
-    except Profile.DoesNotExist:
+        prof = Profile.objects.filter(user__username=username).select_related('user')[0]
+    except (IndexError, Profile.DoesNotExist):
         raise Http404
     try:
         if request.method == 'POST':
@@ -196,8 +196,15 @@ def profile(request, username=None):
     except AttributeError:
         pass
 
+    lan = Lan.get_next(request)
+    try:
+        lan_profile = prof.lanprofile_set.get(profile=prof, lan=lan)
+    except LanProfile.DoesNotExist:
+        lan_profile = None
+
     return render(request, 'profile.html', {'user_form': user_form, 'profile_form': profile_form,
-                                            'profile': prof, 'start_edit': start_edit})
+                                            'profile': prof, 'start_edit': start_edit,
+                                            'lan': lan, 'lan_profile': lan_profile})
 
 
 def tournaments(request):

@@ -10,9 +10,9 @@
                 <p><b>Navn:</b> {{ profile.user.first_name }}</p>
                 <p><b>Klasse:</b> {{ profile.get_grade_display }}</p>
                 {% if profile.user.is_staff %}<p><i>Denne bruger er en del af LanCrew.</i></p>{% endif %}
-                {% if lp %}
-                    {% if lp.seat %}
-                        <p><b>Reserveret plads:</b> <a href="{% url 'tilmeld' %}">{{ lp.seat }}</a></p>
+                {% if lan_profile %}
+                    {% if lan_profile.seat %}
+                        <p><b>Reserveret plads:</b> <a href="{% url 'tilmeld' %}">{{ lan_profile.seat }}</a></p>
                     {% else %}
                         <p><i>Ingen plads reseveret.</i></p>
                     {% endif %}
