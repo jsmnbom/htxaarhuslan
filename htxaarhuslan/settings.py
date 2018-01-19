@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
+import logging.config
 import os
+
+import raven
 
 
 def env_var(key, default=None):
@@ -21,6 +24,7 @@ def env_var(key, default=None):
     elif val == 'False':
         val = False
     return val
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -68,6 +72,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'ckeditor',
     'ckeditor_uploader',
+    'raven.contrib.django.raven_compat',
 ]
 
 # Middlewares
@@ -292,3 +297,36 @@ CKEDITOR_CONFIGS = {
 GOOGLE_FIREBASE_AUTH_KEY = env_var('GOOGLE_FIREBASE_AUTH_KEY')
 
 RESTRICTED_USER_GROUP = env_var('RESTRICTED_USER_GROUP')
+
+RAVEN_CONFIG = {
+    'dsn': env_var('RAVEN_DSN'),
+    'release': raven.fetch_git_sha(os.path.abspath(os.curdir)),
+}
+
+LOGGING_CONFIG = None
+logging.config.dictConfig({
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+        # Add Handler for Sentry for `warning` and above
+        'sentry': {
+            'level': 'WARNING',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'level': 'WARNING',
+            'handlers': ['console', 'sentry'],
+        },
+    },
+})

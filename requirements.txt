@@ -27,6 +27,7 @@ psycopg2==2.7.1
 pycparser==2.18           # via cffi
 python-http-client==2.2.1  # via sendgrid
 pytz==2017.2              # via django
+raven==6.4.0
 reportlab==3.4.0
 requests==2.18.1
 sendgrid-django==4.0.4

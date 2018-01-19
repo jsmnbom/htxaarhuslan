@@ -19,3 +19,4 @@ iso8601
 bcrypt
 gunicorn
 requests
+raven
