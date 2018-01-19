@@ -1,3 +1,4 @@
+from urllib import parse
 from collections import Counter
 from pathlib import Path
 
@@ -17,7 +18,7 @@ def table_pdf(request, lan_id):
         raise Http404
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="Bordkort {}.pdf"'.format(lan.name)
+    response['Content-Disposition'] = 'attachment; filename="Bordkort {}.pdf"'.format(parse.quote(lan.name))
 
     c = canvas.Canvas(response, pagesize=(W, H))
     c.setCreator('HTXAarhusLAN.dk')
