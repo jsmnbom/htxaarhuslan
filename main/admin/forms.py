@@ -1,6 +1,6 @@
 from django import forms
 
-from main.models import Profile, LanProfile, GRADES
+from main.models import Profile, LanProfile, GRADES_TEACHER
 
 
 class AdminLanProfileForm(forms.ModelForm):
@@ -14,7 +14,7 @@ class AdminProfileForm(forms.ModelForm):
         model = Profile
         fields = '__all__'
 
-    grade = forms.ChoiceField(GRADES, required=True, label='Klasse')
+    grade = forms.ChoiceField(GRADES_TEACHER, required=True, label='Klasse')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

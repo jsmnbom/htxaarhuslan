@@ -48,7 +48,7 @@ for school, years in grades.items():
         if not classes:
             GRADES += (('{}{}'.format(year, school),) * 2,)
 
-GRADES += (('teacher', 'Lærer'),)
+GRADES_TEACHER = (('teacher', 'Lærer'),) # Has to be last one
 
 PAYTYPES = (
     ('mp', 'MobilePay'),
@@ -79,7 +79,7 @@ class Profile(models.Model):
         return '{} ({})'.format(self.user.username, self.user.first_name)
 
     def get_grade_display(self):
-        for k, v in GRADES:
+        for k, v in GRADES_TEACHER:
             if k == self.grade:
                 return v
         else:
