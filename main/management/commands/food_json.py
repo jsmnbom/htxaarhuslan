@@ -7,12 +7,14 @@ import requests
 from django.core.management.base import BaseCommand
 
 # For byensburger we've used:
-# ./manage.py food_json byensburger -ec 3983 3758 283 4048 228 48 135 247 -ep 2220636 2220652 2220653 2220654 2220658
+# ./manage.py food_json byensburger -ec 3983 3758 283 4048 228 48 135 247
+#       -ep 2477164 2477165 2477166 2477167 2477174 2477155 2477156 2477161
 # Which will output
-# Excluded categories 3983 - Tilbud, 3758 - Chokolade & Slik, 283 - Chips, 4048 - Nyheder,
-#   228 - Børne Burgere, 48 - Vine, 135 - Spiritus -min. 18 år, 247 - Diverse
-# Excluded products 2220652 - Øl (Carlsberg), 2220653 - Øl (Heineken), 2220654 - Øl (Tuborg),
-#   2220658 - Husets vin, 2220636 - Chilisauce - License to Eat
+# Excluded categories 3983 - Tilbud, 3758 - Chokolade & Slik, 283 - Chips, 228 - Børne Burgere,
+#       48 - Vine, 135 - Spiritus -min. 18 år, 247 - Diverse
+# Excluded products 2477164 - Red Bull, 2477165 - Øl (Carlsberg), 2477166 - Øl (Heineken),
+#       2477167 - Øl (Tuborg), 2477174 - Husets vin, 2477155 -  Heinz i glas (Ketchup),
+#       2477156 -  Heinz i glas (Mayonnaise), 2477161 - Chilisauce - License to Eat
 
 
 class Command(BaseCommand):
@@ -46,13 +48,16 @@ class Command(BaseCommand):
         if r.status_code != 200:
             print("Error")
             print(r.text)
-        data = r.text
-        search = re.search(r'<div class=\"menu\" data-menu=\'([^\'\v]*)\'', data)
+        search = re.search(r'JustEatData.MenuId = \'(\d+)\';', r.text)
         if not search:
-            print('Error, could not find menu')
-        data = search.group(1)
-        data = html.unescape(data)
-        self.menu = json.loads(data)['Menu']
+            print('Error, could not find menuId')
+        menu_id = int(search.group(1))
+        r = requests.get('https://www.just-eat.dk/menu/getproductsformenu?menuId={}'.format(menu_id))
+        print(r.status_code)
+        if r.status_code != 200:
+            print("Error")
+            print(r.text)
+        self.menu = r.json()['Menu']
 
         if options['list']:
             for category in self.menu['Categories']:

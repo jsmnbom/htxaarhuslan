@@ -10,6 +10,7 @@ function find(array, id) {
 function changeOptions(select, options) {
     select.find('option:gt(0)').remove();
     $.each(options, function (index, item) {
+
         var price;
         if (!('Name' in item)) {
             item = find(menu.products, item.Id);
@@ -33,6 +34,7 @@ function changeOptions(select, options) {
         } else {
             select.attr('price', null);
         }
+        console.log("Adding:", name, item.Id);
         var option = $("<option></option>")
             .attr("value", item.Id)
             .text(name)
