@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import include, url
+from django.urls import path, include
 from django.contrib import admin
 from rest_framework import routers
 
@@ -25,13 +25,13 @@ router.register(r'food', FoodViewSet)
 router.register(r'lanprofile', LanProfileViewSet)
 
 urlpatterns = [
-    url(r'^', include('main.urls')),
-    url(r'^jet/', include('jet.urls', 'jet')),
-    url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^api/auth/', include('rest_framework.urls')),
-    url(r'^api/', include(router.urls)),
-    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    path('', include('main.urls')),
+    path('jet/', include('jet.urls', 'jet')),
+    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
+    path('admin/', admin.site.urls),
+    path('api/auth/', include('rest_framework.urls')),
+    path('api/', include(router.urls)),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 
 admin.site.site_header = 'HAL administation'
@@ -41,5 +41,5 @@ if settings.DEBUG:
     import debug_toolbar
 
     urlpatterns += [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
+        path('__debug__/', include(debug_toolbar.urls)),
     ]

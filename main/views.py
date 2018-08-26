@@ -4,7 +4,7 @@ from datetime import datetime
 from dal import autocomplete
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db.models import Q
 from django.http import Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -165,7 +165,7 @@ def profile(request, username=None):
     start_edit = False
 
     if username is None:
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             username = request.user.username
         else:
             return redirect(reverse('needlogin'))
@@ -271,7 +271,7 @@ def legacy(request):
 
 def needlogin(request):
     referrer = request.GET.get('next', None)
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         if referrer is not None:
             return redirect(referrer)
         else:
@@ -286,8 +286,8 @@ def policy(request):
 def food(request):
     orders = []
     lan = Lan.get_next(request=request)
-    show = lan is not None and lan.is_open() and lan.food_open and request.user.is_authenticated()
-    if request.user.is_authenticated():
+    show = lan is not None and lan.is_open() and lan.food_open and request.user.is_authenticated
+    if request.user.is_authenticated:
         prof = request.user.profile
         try:
             lp = LanProfile.objects.get(lan=lan, profile=prof)

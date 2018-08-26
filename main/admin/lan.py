@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.forms import model_to_dict
 from django.urls import reverse
+from django.utils.safestring import mark_safe
 from django.utils.timezone import now
 
 from main.models import Lan, Event
@@ -47,9 +48,8 @@ class LanAdmin(admin.ModelAdmin):
             return {}
 
     def bordkort(self, lan):
-        return '<a href="{}">Download bordkort</a>'.format(reverse('admin:bordkort', kwargs={'lan_id': lan.id}))
+        return mark_safe('<a href="{}">Download bordkort</a>'.format(reverse('admin:bordkort', kwargs={'lan_id': lan.id})))
 
-    bordkort.allow_tags = True
     bordkort.short_description = 'Bordkort'
 
     def get_seat_counts(self, lan):

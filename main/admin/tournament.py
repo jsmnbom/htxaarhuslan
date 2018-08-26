@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
 from main.admin import LanFilter
 from main.models import Tournament, TournamentTeam, NamedProfile
@@ -35,9 +36,8 @@ class TournamentAdmin(admin.ModelAdmin):
     get_teams_count.short_description = 'Antal hold'
 
     def challonge_link(self, tournament):
-        return '<a href="http://challonge.com/{0}" target="_blank">{0}</a>'.format(tournament.get_challonge_url())
+        return mark_safe('<a href="http://challonge.com/{0}" target="_blank">{0}</a>'.format(tournament.get_challonge_url()))
 
-    challonge_link.allow_tags = True
     challonge_link.short_description = 'Challonge'
 
     actions = ['open', 'close']

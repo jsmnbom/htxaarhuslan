@@ -14,7 +14,7 @@ class AdminProfileForm(forms.ModelForm):
         model = Profile
         fields = '__all__'
 
-    grade = forms.ChoiceField(GRADES_TEACHER, required=True, label='Klasse')
+    grade = forms.ChoiceField(choices=GRADES_TEACHER, required=True, label='Klasse')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

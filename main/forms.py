@@ -67,7 +67,7 @@ class ProfileRegForm(forms.ModelForm):
         model = Profile
         fields = ('grade',)
 
-    grade = forms.ChoiceField(sorted(GRADES, reverse=True), label='Klasse', widget=LabelSelect(label='Klasse'))
+    grade = forms.ChoiceField(choices=sorted(GRADES, reverse=True), label='Klasse', widget=LabelSelect(label='Klasse'))
     captcha = ReCaptchaField(widget=ReCaptchaWidget(size='100%'), label='Bot sikring')
 
 
@@ -150,7 +150,7 @@ class EditProfileForm(forms.ModelForm):
     photo = forms.ImageField(widget=PhotoInput, required=False, label="Profilbillede")
     photo.widget.attrs = {'accept': 'image/*'}
 
-    grade = forms.ChoiceField(sorted(GRADES, reverse=True), label='Klasse', widget=LabelSelect(label='Klasse'))
+    grade = forms.ChoiceField(choices=sorted(GRADES, reverse=True), label='Klasse', widget=LabelSelect(label='Klasse'))
 
     phone_regex = RegexValidator(PHONE_REGEX, message='Intast et gyldigt telefonnummer f.eks. 12345678')
     phone = forms.CharField(validators=[phone_regex],
@@ -203,6 +203,9 @@ class TournamentSelect2(ModelSelect2):
         self.choices.queryset = self.choices.queryset.filter(
             pk__in=[c for c in pre_filter_choices if c]
         )
+
+    def render(self, name, value, attrs=None, renderer=None):
+        return super().render(name, value, attrs=attrs)
 
 
 class TournamentModelChoiceField(forms.ModelChoiceField):
