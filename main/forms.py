@@ -186,9 +186,13 @@ class EditProfileForm(forms.ModelForm):
 class TournamentSelect2(ModelSelect2):
     autocomplete_function = 'tournamentSelect2'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.Media.js += ('main/script/tournamentSelect2.js',)
+    class Media:
+        extend = False
+        js = ['autocomplete_light/jquery.init.js',
+              'main/script/tournamentSelect2.js',
+              'autocomplete_light/autocomplete.init.js',
+              'autocomplete_light/vendor/select2/dist/js/select2.full.js',
+              'autocomplete_light/select2.js', ]
 
     def filter_choices_to_render(self, selected_choices):
         """Filter out un-selected choices if choices is a QuerySet."""
@@ -261,13 +265,15 @@ class TournamentTeamForm(forms.ModelForm):
             attrs = {'data-html': 'true', 'data-placeholder': 'Søg efter brugere som er tilmeldt LAN'}
             if self.tournament.allow_external:
                 attrs['data-allow-external'] = 'true'
+            print(forward)
+            widget = TournamentSelect2(
+                url='autocomplete-profile',
+                forward=forward,
+                attrs=attrs,
+            )
             self.fields['profile_{}'.format(i)] = TournamentModelChoiceField(
                 queryset=Profile.objects.filter(lanprofile__lan=lan),
-                widget=TournamentSelect2(
-                    url='autocomplete-profile',
-                    forward=forward,
-                    attrs=attrs,
-                ),
+                widget=widget,
                 label='Medlem {}'.format(i + 1),
                 allow_external=self.tournament.allow_external
             )

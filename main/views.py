@@ -4,11 +4,11 @@ from datetime import datetime
 from dal import autocomplete
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.urls import reverse
 from django.db.models import Q
 from django.http import Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.http import is_safe_url
 from django.utils.timezone import now, utc
 from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
@@ -192,7 +192,8 @@ def profile(request, username=None):
         else:
             if prof.id == request.user.profile.id:
                 user_form = EditUserForm(instance=request.user)
-                profile_form = EditProfileForm(instance=request.user.profile, groups=request.user.groups, request=request)
+                profile_form = EditProfileForm(instance=request.user.profile, groups=request.user.groups,
+                                               request=request)
     except AttributeError:
         pass
 
@@ -382,11 +383,13 @@ class ProfileAutocomplete(autocomplete.Select2QuerySetView):
         lan = Lan.get_next()
         qs = Profile.objects.filter(lanprofile__lan=lan)
 
-        try:
-            exclude = [int(x) for x in self.forwarded.values() if x] + [self.request.user.profile.id, ]
-            qs = qs.exclude(pk__in=exclude)
-        except ValueError:  # It's a non lan user (therefore a str not int)
-            pass
+        exclude = [self.request.user.profile.id]
+        for x in self.forwarded.values():
+            try:
+                exclude.append(int(x))
+            except ValueError:
+                pass
+        qs = qs.exclude(pk__in=exclude)
 
         if self.q:
             qs = qs.filter(Q(user__username__icontains=self.q) |

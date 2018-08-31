@@ -10,7 +10,7 @@ bcrypt==3.1.4
 certifi==2018.8.24
 cffi==1.11.5              # via bcrypt
 chardet==3.0.4            # via requests
-django-autocomplete-light==3.3.0
+django-autocomplete-light==3.2.10
 django-ckeditor==5.6.1
 django-debug-toolbar==1.9.1
 django-dotenv==1.4.2

@@ -1,7 +1,7 @@
 -e git+http://github.com/russ-/pychallonge#egg=pychallonge
 -e git+https://github.com/rense/django-jet#egg=django-jet
 django
-django-autocomplete-light
+django-autocomplete-light==3.2.10
 django-ckeditor
 django-dotenv
 django-jet
