@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from django.utils.safestring import mark_safe
-from sorl.thumbnail.admin import AdminImageMixin
+from sorl.thumbnail import ImageField
+from sorl.thumbnail.admin.current import AdminImageWidget
 
 from main.admin.filters import LanFilter
 from main.admin.forms import AdminLanProfileForm, AdminProfileForm
@@ -42,7 +42,27 @@ class LanProfileAdmin(admin.ModelAdmin):
     not_paid.short_description = "Markér som ikke betalt."
 
 
-class ProfileInline(AdminImageMixin, admin.StackedInline):
+# We need to patch renderer= in AdminImageWidget since it's not django 2.1 ready yet
+
+class ProfileAdminImageWidget(AdminImageWidget):
+    def render(self, name, value, attrs=None, renderer=None):
+        return super().render(name, value, attrs=attrs)
+
+
+class ProfileAdminImageMixin(object):
+    """
+    This is a mix-in for InlineModelAdmin subclasses to make ``ImageField``
+    show nicer form widget
+    """
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if isinstance(db_field, ImageField):
+            return db_field.formfield(widget=ProfileAdminImageWidget)
+        sup = super(ProfileAdminImageMixin, self)
+        return sup.formfield_for_dbfield(db_field, **kwargs)
+
+
+class ProfileInline(ProfileAdminImageMixin, admin.StackedInline):
     model = Profile
     form = AdminProfileForm
 
