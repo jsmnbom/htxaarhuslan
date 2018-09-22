@@ -299,7 +299,7 @@ GOOGLE_FIREBASE_AUTH_KEY = env_var('GOOGLE_FIREBASE_AUTH_KEY')
 RESTRICTED_USER_GROUP = env_var('RESTRICTED_USER_GROUP')
 
 RAVEN_CONFIG = {
-    'dsn': env_var('RAVEN_DSN') if DEBUG else None,
+    'dsn': env_var('RAVEN_DSN') if not DEBUG else None,
     'release': raven.fetch_git_sha(os.path.abspath(os.curdir)),
 }
 
