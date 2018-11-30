@@ -61,7 +61,7 @@ def _table(seats, current, is_staff):
                         classes.append('staff')
                     if seat == current:
                         classes.append('current')
-                    if prof.profile:
+                    if prof.photo:
                         im = get_thumbnail(prof.photo, '60x60', crop='center')
                         if im:
                             attrs['style'] = 'background-image: url({})'.format(im.url)
