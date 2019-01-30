@@ -1,32 +1,45 @@
-import html
 import json
-import re
 
 import copy
 import requests
 from django.core.management.base import BaseCommand
 
-# For byensburger we've used:
-# ./manage.py food_json byensburger -ec 3983 3758 283 4048 228 48 135 247
-#       -ep 2477164 2477165 2477166 2477167 2477174 2477155 2477156 2477161
-# Which will output
-# Excluded categories 3983 - Tilbud, 3758 - Chokolade & Slik, 283 - Chips, 228 - Børne Burgere,
+# Use "./manage.py help food_json" for help on how to use this script!
+
+# Please update this on next use:
+# (it shows the command we last used)
+#
+# ./manage.py food_json 16084 -ec 3977 3758 283 163 3 48 135 247
+#                             -ep 2779663 2779666 2779667 2779668 2779669 2779650
+# Which output
+# Excluded categories 3977 - Super Bowl, 3758 - Chokolade & Slik, 283 - Chips, 163 - Snacks, 3 - Desserter,
 #       48 - Vine, 135 - Spiritus -min. 18 år, 247 - Diverse
-# Excluded products 2477164 - Red Bull, 2477165 - Øl (Carlsberg), 2477166 - Øl (Heineken),
-#       2477167 - Øl (Tuborg), 2477174 - Husets vin, 2477155 -  Heinz i glas (Ketchup),
-#       2477156 -  Heinz i glas (Mayonnaise), 2477161 - Chilisauce - License to Eat
+# Excluded products 2779663 - Red Bull, 2779666 - Øl (Carlsberg), 2779667 - Øl (Heineken), 2779668 - Øl (Tuborg),
+#       2779669 - Husets vin, 2779650 - Chilisauce - License to Eat
+
+CHROME_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36'
+JUST_EAT_MENU_URL = 'https://www.just-eat.dk/menu/getproductsformenu'
+
+HELP = """
+Loads food data from just eat
+
+Needs a menuId, find it by going to a menu page on just-eat.dk and opening the developer console and executing:
+JustEatData.MenuId
+
+To find category and product ids execute:
+document.querySelectorAll('.menuCard-category').forEach(function (c) {console.log(c.querySelector('h3').textContent.trim(), c.dataset.categoryId);c.querySelectorAll('.menu-product').forEach(function (p) {console.log('    ', p.querySelector('h4').textContent.trim(), p.dataset.productId);})})
+"""
 
 
 class Command(BaseCommand):
-    help = 'Loads food from just eat'
+    help = HELP
 
     menu = None
 
     def add_arguments(self, parser):
-        parser.add_argument('restaurant', nargs=1, type=str)
+        parser.add_argument('menuId', nargs=1, type=str)
         parser.add_argument('--exclude-categories', '-ec', nargs='+', type=int, dest='categories')
         parser.add_argument('--exclude-products', '-ep', nargs='+', type=int, dest='products')
-        parser.add_argument('--list', action='store_true', dest='list', default=False)
 
     def del_product(self, product):
         for i, item in enumerate(self.menu['products']):
@@ -42,53 +55,38 @@ class Command(BaseCommand):
         return name
 
     def handle(self, *args, **options):
-        print(options['restaurant'])
-        r = requests.get('https://www.just-eat.dk/restaurants-{}/menu/collection'.format(options['restaurant'][0]))
-        print(r.status_code)
-        if r.status_code != 200:
-            print("Error")
-            print(r.text)
-        search = re.search(r'JustEatData.MenuId = \'(\d+)\';', r.text)
-        if not search:
-            print('Error, could not find menuId')
-        menu_id = int(search.group(1))
-        r = requests.get('https://www.just-eat.dk/menu/getproductsformenu?menuId={}'.format(menu_id))
+        r = requests.get(JUST_EAT_MENU_URL,
+                         params={'menuId': options['menuId']},
+                         headers={'User-Agent': CHROME_USER_AGENT})
         print(r.status_code)
         if r.status_code != 200:
             print("Error")
             print(r.text)
         self.menu = r.json()['Menu']
 
-        if options['list']:
-            for category in self.menu['Categories']:
-                print('{} - {}'.format(category['Id'], category['Name']))
-                for item in category['Items']:
-                    for product in item['Products']:
-                        print('\t{} - {}'.format(product['Id'], self.get_product_name(product)))
-        else:
-            excluded_categories = []
-            excluded_products = []
-            for i, category in enumerate(copy.deepcopy(self.menu)['Categories']):
-                if category['Id'] in options['categories']:
-                    excluded_categories.append('{} - {}'.format(category['Id'], category['Name']))
-                    self.menu['Categories'][i] = {}
+        excluded_categories = []
+        excluded_products = []
+        for i, category in enumerate(copy.deepcopy(self.menu)['Categories']):
+            if category['Id'] in options['categories']:
+                excluded_categories.append('{} - {}'.format(category['Id'], category['Name']))
+                self.menu['Categories'][i] = {}
 
-                for j, item in enumerate(category['Items']):
-                    for k, product in enumerate(item['Products']):
-                        if product['Id'] in options['products']:
-                            excluded_products.append('{} - {}'.format(product['Id'], self.get_product_name(product)))
-                            self.menu['Categories'][i]['Items'][j]['Products'][k] = {}
+            for j, item in enumerate(category['Items']):
+                for k, product in enumerate(item['Products']):
+                    if product['Id'] in options['products']:
+                        excluded_products.append('{} - {}'.format(product['Id'], self.get_product_name(product)))
+                        self.menu['Categories'][i]['Items'][j]['Products'][k] = {}
 
-                        if product['Id'] in options['products'] or category['Id'] in options['categories']:
-                            self.del_product(product)
+                    if product['Id'] in options['products'] or category['Id'] in options['categories']:
+                        self.del_product(product)
 
-            # Clean out descriptions
-            for i, product in enumerate(self.menu['products']):
-                if product:
-                    self.menu['products'][i]['Desc'] = ''
+        # Clean out descriptions
+        for i, product in enumerate(self.menu['products']):
+            if product:
+                self.menu['products'][i]['Desc'] = ''
 
-            print('Excluded categories', ', '.join(excluded_categories))
-            print('Excluded products', ', '.join(excluded_products))
+        print('Excluded categories', ', '.join(excluded_categories))
+        print('Excluded products', ', '.join(excluded_products))
 
-            with open('main/static/main/food.json', 'w') as f:
-                json.dump({'Menu': self.menu}, f, separators=(',', ':'), indent=None)
+        with open('main/static/main/food.json', 'w') as f:
+            json.dump({'Menu': self.menu}, f, separators=(',', ':'), indent=None)
