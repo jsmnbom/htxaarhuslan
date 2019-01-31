@@ -9,7 +9,7 @@ from django.core.management.base import BaseCommand
 # Please update this on next use:
 # (it shows the command we last used)
 #
-# ./manage.py food_json 16084 -ec 3977 3758 283 163 3 48 135 247
+# ./manage.py food_json 1066 -ec 3977 3758 283 163 3 48 135 247
 #                             -ep 2779663 2779666 2779667 2779668 2779669 2779650
 # Which output
 # Excluded categories 3977 - Super Bowl, 3758 - Chokolade & Slik, 283 - Chips, 163 - Snacks, 3 - Desserter,
