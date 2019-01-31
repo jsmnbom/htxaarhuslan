@@ -44,7 +44,7 @@ INTERNAL_IPS = ['127.0.0.1', 'localhost']
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 SECURE_BROWSER_XSS_FILTER = True
 
-ADMINS = [('Jacob Bom', 'bomjacob@gmail.com')]
+ADMINS = [('Jasmin Bom', 'jsmnbom@gmail.com'), ('Nichi S Poulsen', 'nichisuzukip@gmail.com')]
 
 WSGI_APPLICATION = 'htxaarhuslan.wsgi.application'
 
