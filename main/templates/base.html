@@ -46,6 +46,20 @@
         <script src="{% static "main/script/vendor/jquery.unevent.js" %}"></script>
         <script src="{% static "main/script/main.js" %}"></script>
 
+        {% if not DEBUG %}
+            {# @formatter:off--> #}
+            <!-- Global site tag (gtag.js) - Google Analytics -->
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-134012756-1"></script>
+            <script>
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'UA-134012756-1');
+            </script>
+            {# @formatter:on--> #}
+        {% endif %}
+
         {% block extrahead %}{% endblock %}
     </head>
 
@@ -106,18 +120,5 @@
                 </div>
             </div>
         </footer>
-        {% if not DEBUG %}
-            {# @formatter:off--> #}
-            <!-- Global site tag (gtag.js) - Google Analytics -->
-            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-134012756-1"></script>
-            <script>
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-
-              gtag('config', 'UA-134012756-1');
-            </script>
-            {# @formatter:on--> #}
-        {% endif %}
     </body>
 </html>
