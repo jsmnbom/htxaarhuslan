@@ -169,8 +169,8 @@ LOGIN_URL = '/bruger/needlogin'
 LOGIN_REDIRECT_URL = '/'
 
 # Mail stuff
-DEFAULT_FROM_EMAIL = 'HTXAarhusLAN <crew@htxaarhuslan.dk>'
-SERVER_MAIL = 'server@htxaarhuslan.dk'
+DEFAULT_FROM_EMAIL = 'AG LAN <crew@aglan.dk>'
+SERVER_MAIL = 'server@aglan.dk'
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
