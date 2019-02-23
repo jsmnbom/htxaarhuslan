@@ -13,7 +13,7 @@
                                 Hvis du oplever problemer så tryk <a href="{% url '' %}">her</a> for at sende en
                                 ny, eller kontakt et lancrew medlem.
                             {% else %}
-                                Send venligst {{ lp.lan.price|floatformat:"-2" }}kr. til +45{{ lp.lan.payphone }}
+                                Send venligst {{ lp.lan.price|floatformat:"-2" }}kr. til {{ lp.lan.payphone }}
                                 for at betale.
                             {% endif %}
                             </p>

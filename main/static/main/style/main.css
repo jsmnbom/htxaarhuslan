@@ -43,13 +43,17 @@ h2, strong, b {
 /* Header, title and navigation bar */
 
 .header {
-    margin-top: 30px;
+    margin-top: 15px;
 }
 
 .header .title {
-    background: #d33e20;
     width: 100%;
     font-size: 58px;
+}
+
+div.title img {
+    width: 100%;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.75);
 }
 
 .header .title h1 {
