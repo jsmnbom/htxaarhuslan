@@ -13,8 +13,12 @@
                                 Hvis du oplever problemer så tryk <a href="{% url '' %}">her</a> for at sende en
                                 ny, eller kontakt et lancrew medlem.
                             {% else %}
-                                Send venligst {{ lp.lan.price|floatformat:"-2" }}kr. til {{ lp.lan.payphone }}
-                                for at betale.
+                                Send venligst <b>{{ lp.lan.price|floatformat:"-2" }}kr.</b>
+                                til <b>{{ lp.lan.payphone }}</b> for at betale. Du kan også vælge
+                                at klikke eller scanne koden herunder for at betale.
+                                <a href="{{ lp.get_payment_url }}" class="qr">
+                                    <img src="{{ lp.get_payment_qr_url }}" alt="Unik mobilepay QR kode">
+                                </a>
                             {% endif %}
                             </p>
                         {% elif lp.paytype == 'cash' %}

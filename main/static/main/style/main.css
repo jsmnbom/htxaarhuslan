@@ -140,6 +140,10 @@ div.title img {
     width: 100%;
 }
 
+.sidebar .qr img {
+    margin-top: 10px;
+}
+
 .box.spacer {
     height: 5vh;
     padding: 0;

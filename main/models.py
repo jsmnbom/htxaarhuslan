@@ -1,4 +1,5 @@
 import json
+import urllib.parse
 from collections import Counter
 from urllib.error import HTTPError
 
@@ -230,6 +231,25 @@ class LanProfile(models.Model):
             self.seat = None
         super().save(*args, **kwargs)
 
+    def get_payment_url(self):
+        attrs = {
+            'amount': self.lan.price,
+            'phone': self.lan.payphone,
+            'comment': 'LAN|{}'.format(self.pk),
+            'lock': '1'
+        }
+        return 'https://mobilepay.dk/box/?' + urllib.parse.urlencode(attrs)
+
+    def get_payment_qr_url(self):
+        attrs = {
+            'chs': '300x300',
+            'chld': 'M|2',
+            'chl': self.get_payment_url(),
+            'cht': 'qr'
+        }
+
+        return 'https://chart.googleapis.com/chart?' + urllib.parse.urlencode(attrs)
+
 
 class Game(models.Model):
     class Meta:
@@ -421,3 +441,22 @@ class FoodOrder(models.Model):
 
     def __str__(self):
         return self.order
+
+    def get_payment_url(self):
+        attrs = {
+            'amount': self.price,
+            'phone': self.lanprofile.lan.food_phone,
+            'comment': 'LAN_MAD|{}'.format(self.pk),
+            'lock': '1'
+        }
+        return 'https://mobilepay.dk/box/?' + urllib.parse.urlencode(attrs)
+
+    def get_payment_qr_url(self):
+        attrs = {
+            'chs': '300x300',
+            'chld': 'M|2',
+            'chl': self.get_payment_url(),
+            'cht': 'qr'
+        }
+
+        return 'https://chart.googleapis.com/chart?' + urllib.parse.urlencode(attrs)
