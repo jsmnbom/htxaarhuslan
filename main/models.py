@@ -295,7 +295,7 @@ class Tournament(models.Model):
         return self.name
 
     def get_challonge_url(self):
-        return '{}_{}_{}'.format('htxaarhuslan', self.lan.id, self.id)
+        return '{}_{}_{}'.format('aarhusgymnasiumlan', self.lan.id, self.id)
 
     def get_absolute_url(self):
         return reverse('tournament', kwargs={'game': self.game.name, 'lan_id': self.lan.id, 'name': self.name})
@@ -312,7 +312,7 @@ def create_challonge(sender, instance, **kwargs):
             params.update(json.loads(instance.extra_challonge))
         try:
             tournament = challonge.tournaments.create(
-                '{} – {} – {}'.format('HTXAarhusLAN', instance.lan.name, instance.name),
+                '{} – {} – {}'.format('AG LAN', instance.lan.name, instance.name),
                 instance.get_challonge_url(),
                 params.get('tournament_type', 'single elimination'), **params)
             instance.challonge_id = tournament['id']
@@ -327,11 +327,11 @@ def create_challonge(sender, instance, **kwargs):
         }
         params = {
             'description': '{}<br><br>Tilmeld dig på: '
-                           '<a href="https://htxaarhuslan.dk{}" '
+                           '<a href="https://aglan.dk{}" '
                            'target="_blank">{}</a>'.format(instance.description,
                                                            reverse('tournament', kwargs=url_params),
-                                                           'HTXAarhuslan.dk'),
-            'name': '{} – {} – {}'.format('HTXAarhusLAN', instance.lan.name, instance.name),
+                                                           'AGLAN.dk'),
+            'name': '{} – {} – {}'.format('AG LAN', instance.lan.name, instance.name),
             'url': instance.get_challonge_url()
         }
         if instance.extra_challonge:
