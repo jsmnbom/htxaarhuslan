@@ -36,9 +36,9 @@ urlpatterns = [
     path('calendar/<feed_name>.json', views.calendar, name='calendar'),
     path('mad/', views.food, name='food'),
     path('event/<event_id>/', views.event, name='event'),
-    path('betaling/<service>/<type>/<id>/',
-         views.payment,
-         name='send_payment_request'),
+    # path('betaling/<service>/<type>/<id>/',
+    #      views.payment,
+    #      name='send_payment_request'),
 
     # Autocompletes
     path('autocomplete/profile/',
