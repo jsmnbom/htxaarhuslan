@@ -6,7 +6,7 @@ from sorl.thumbnail import get_thumbnail
 def send_mobilepay_request(lan, profile, type, amount, id):
     url = ''
     if profile.photo:
-        url = 'https://htxaarhuslan.dk' + get_thumbnail(profile.photo, '60x60', crop='center').url
+        url = 'https://aglan.dk' + get_thumbnail(profile.photo, '60x60', crop='center').url
     data = {
         'to': lan.payment_manager_id,
         'data': {

@@ -258,10 +258,10 @@ def tournament(request, game, lan_id, name):
 
 
 def send_tournament_mails(request, team):
-    site = 'https://htxaarhuslan.dk'  # Naughty naugthy hard code
+    site = 'https://aglan.dk'  # Naughty naugthy hard code
     for p in team.profiles.all():
         p.user.email_user(
-            '{} tilmeldt til {} på HTXAarhusLAN.dk'.format(team.name, team.tournament.name),
+            '{} tilmeldt til {} på AGLAN.dk'.format(team.name, team.tournament.name),
             render_to_string('tournament_mail.html', {'team': team, 'profile': p, 'site': site})
         )
 
