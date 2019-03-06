@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="box login" id="login">
     {% if user.is_authenticated %}
         <h2>Velkommen {{ request.user.first_name }}</h2>
@@ -7,20 +9,34 @@
                     {% if not lp.paid %}
                         {% if lp.paytype == 'mp' %}
                             <p>Du er tilmeldt LAN, og har valgt at betale med MobilePay.
-                            {% if lp.lan.payment_manager_id %}
-                                Du har modtaget en anmodning via MobilePay som du skal godkende for at betale.
-                                Bemærk at der kan gå op til 24 timer før du modtager anmodningen.
-                                Hvis du oplever problemer så tryk <a href="{% url '' %}">her</a> for at sende en
-                                ny, eller kontakt et lancrew medlem.
-                            {% else %}
-                                Denne gang koster LAN <b>{{ lp.lan.price|floatformat:"-2" }}kr.</b></p>
-                                <p>Hvis du er på mobil, kan du klikke på QR koden for at åbne MobilePay, og betale.
-                                Ellers skal du på MobilePay appen trykke
-                                <b>Betal</b>, derefter <b>Scan QR-kode</b> og scanne koden for at betale.
-                                <a href="{{ lp.get_payment_url }}" class="qr">
-                                    <img src="{{ lp.get_payment_qr_url }}" alt="Unik mobilepay QR kode">
-                                </a>
-                            {% endif %}
+                                {% if lp.lan.payment_manager_id %}
+                                    Du har modtaget en anmodning via MobilePay som du skal godkende for at betale.
+                                    Bemærk at der kan gå op til 24 timer før du modtager anmodningen.
+                                    Hvis du oplever problemer så tryk <a href="{% url '' %}">her</a> for at sende en
+                                    ny, eller kontakt et lancrew medlem.
+                                {% else %}
+                                    Denne gang koster LAN <b>{{ lp.lan.price|floatformat:"-2" }}kr.</b></p>
+
+                                    <div class="payment">
+                                        <p>Denne QR-kode kan du bruge til at betale med, i MobilePay.</p>
+                                        <p>Gå ind i MobilePay appen, tryk på <b>Betal</b>, derefter <b>Scan QR-kode</b>.
+                                        </p>
+                                        <p>Du kan også åbne denne side på din smartphone, og betale der igennem.</p>
+
+                                        <a href="#" class="qr">
+                                            <img src="{{ lp.get_payment_qr_url }}" alt="Unik mobilepay QR kode">
+                                        </a>
+                                    </div>
+
+                                    <div class="payment_mobile">
+                                        <p>Du kan klikke på knappen nedenfor, for at blive sendt direkte til MobilePay,
+                                            og betale.</p>
+
+                                        <a class="button" style="background-color:#5774F9;"
+                                           href="{{ lp.get_payment_url }}">Betal med MobilePay</a>
+
+                                    </div>
+                                {% endif %}
                             </p>
                         {% elif lp.paytype == 'cash' %}
                             <p>Du er tilmeldt LAN, og har valgt at betale med kontanter.
@@ -33,7 +49,7 @@
             {% endif %}
         </div>
         <div class="buttons">
-            {% if lan and not lp%}
+            {% if lan and not lp %}
                 <a class="button" href="{% url "tilmeld" %}">Tilmeld til lan</a>
             {% endif %}
             {% if lan.food_open %}

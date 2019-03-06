@@ -772,6 +772,10 @@ table.food img {
     direction: rtl;
 }
 
+.payment_mobile {
+    display:none;
+}
+
 /* Handle smaller screens */
 
 @media (max-width: 1150px) {
@@ -804,6 +808,13 @@ table.food img {
         float: left;
         width: 100%;
     }
+
+     .payment {
+        display: none;
+     }
+     .payment_mobile {
+        display:inline;
+     }
 }
 
 /* Handle very small screens */

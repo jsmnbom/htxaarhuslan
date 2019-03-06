@@ -58,7 +58,7 @@ for school, years in grades.items():
         if not classes:
             GRADES += (('{}{}'.format(year, school),) * 2,)
 
-GRADES_TEACHER = (('teacher', 'Lærer'),) # Has to be last one
+GRADES_TEACHER = (('teacher', 'Lærer'),)  # Has to be last one
 
 PAYTYPES = (
     ('mp', 'MobilePay'),
@@ -238,7 +238,7 @@ class LanProfile(models.Model):
             'comment': 'LAN|{}'.format(self.pk),
             'lock': '1'
         }
-        return 'https://mobilepay.dk/box/?' + urllib.parse.urlencode(attrs)
+        return 'mobilepay://send?' + urllib.parse.urlencode(attrs)
 
     def get_payment_qr_url(self):
         attrs = {
