@@ -813,7 +813,7 @@ table.food img {
         display: none;
      }
      .payment_mobile {
-        display:inline;
+        display:block;
      }
 }
 

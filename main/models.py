@@ -449,7 +449,7 @@ class FoodOrder(models.Model):
             'comment': 'LAN_MAD|{}'.format(self.pk),
             'lock': '1'
         }
-        return 'https://mobilepay.dk/box/?' + urllib.parse.urlencode(attrs)
+        return 'mobilepay://send?' + urllib.parse.urlencode(attrs)
 
     def get_payment_qr_url(self):
         attrs = {

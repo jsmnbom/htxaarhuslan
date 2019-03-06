@@ -27,44 +27,60 @@
             <p>Hvis du har valgt at betale med MobilePay, skulle du gerne have modtaget en admodning om betalingen.
                 Hvis du ikke har modtaget en admodning, så tryk på "Send MobilePay anmodning", for at sende en ny anmodning til dit registrerede telefonnummer.</p>
             {% endcomment %}
-            <p>Hvis du ønsker at betale med MobilePay skal du scanne eller trykke på QR-koden ved siden af ordren.
-                Hvis du har flere forskellige ordre, gøres dette individuelt.
-                Du scanner koden ved at gå ind i MobilePay, trykke betal og derefter trykke Scan QR-kode.
-                Du kan også vælge at sende pengene til {{ lan.food_phone }}. Hvis du betaler for en anden, er det dog vigtigt
-                at du scanner deres QR-kode.</p>
+            <div class="payment">
+                <p>Hvis du ønsker at betale med MobilePay, skal du scanne QR koden ved siden af ordren,
+                    ved at gå ind i MobilePay appen, tryk på <b>Betal</b>, derefter <b>Scan QR-kode</b>.
+                    Du kan også åbne denne side på din smartphone, og betale der igennem.</p>
+            </div>
+
+            <div class="payment_mobile">
+                <p>Hvis du ønsker at betale med MobilePay, skal du trykke på knappen ved siden af ordren,
+                    for at blive sendt direkte til MobilePay, hvor du kan sende pengene.</p>
+            </div>
+
             <p>Hvis du ønsker at betale med kontanter, gøres det ved mad afhentningen.</p>
             <p>Da betalingerne skal godkendes manuelt, kan der gå et stykke tid før at den bliver vist som betalt.</p>
 
             {% if orders %}
                 <table class="wide food">
                     <thead>
-                        <tr>
-                            <td>Tid</td>
-                            <td>Ordre</td>
-                            <td>Pris</td>
-                            <td style="width:20%">Betaling</td>
-                        </tr>
+                    <tr>
+                        <td>Tid</td>
+                        <td>Ordre</td>
+                        <td>Pris</td>
+                        <td style="width:20%">Betaling</td>
+                    </tr>
                     </thead>
                     <tbody>
-                        {% for order in orders %}
-                            <tr>
-                                <td>{{ order.time|date:"l, G:i" }}</td>
-                                <td>{{ order.order }}</td>
-                                <td>{{ order.price|floatformat:"-2" }}kr.</td>
-                                <td>{% if order.paid %}
-                                    Betalt :)
-                                {% else %}
-                                    Ikke betalt. {#{% if profile.phone %}<a href="{% url 'send_payment_request' service='mobilepay' type='mad' id=order.id %}?next={{ request.get_full_path }}">Send MobilePay admodning</a>{% endif %}#}
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.time|date:"l, G:i" }}</td>
+                            <td>{{ order.order }}</td>
+                            <td>{{ order.price|floatformat:"-2" }}kr.</td>
+                            <td>{% if order.paid %}
+                                Betalt :)
+                            {% else %}
+                                Ikke betalt.
+                                {#{% if profile.phone %}<a href="{% url 'send_payment_request' service='mobilepay' type='mad' id=order.id %}?next={{ request.get_full_path }}">Send MobilePay admodning</a>{% endif %}#}
                                 </a>
-                                {% endif %}</td>
-                                <td>{% if order.paid == False %}
-                                        <a href="{{ order.get_payment_url }}">
-                                            <img src="{{ order.get_payment_qr_url }}" alt="Unik mobilepay QR kode" style="width:100px;height:100px;">
-                                        </a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
+                            {% endif %}</td>
+                            <td>{% if order.paid == False %}
+
+                                <div class="payment">
+                                    <a href="{{ order.get_payment_url }}">
+                                        <img src="{{ order.get_payment_qr_url }}" alt="Unik mobilepay QR kode"
+                                             style="width:100px;height:100px;">
+                                    </a>
+                                </div>
+
+                                <div class="payment_mobile">
+                                    <a class="button" style="background-color:#5774F9;height:60px;width:140px;"
+                                       href="{{ order.get_payment_url }}">Betal med<br>MobilePay</a>
+                                </div>
+                            {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             {% else %}
@@ -75,8 +91,9 @@
     {% if show %}
         <div class="box" id="bestilling">
             <h2>Bestil mad</h2>
-            <p>Vi bestiller mad fra Byens Burger. Menukortet kan ses <a href="https://www.just-eat.dk/restaurants-byensburger/menu/"
-                                                                        target="_blank">her</a>.</p>
+            <p>Vi bestiller mad fra Byens Burger. Menukortet kan ses <a
+                    href="https://www.just-eat.dk/restaurants-byensburger/menu/"
+                    target="_blank">her</a>.</p>
             <p>Vælg den mad du ønsker herunder og tryk på knappen "Placér bestilling", som dukker op, når din
                 ordre er gyldig. Vi godtager som hovedregel ikke specialbestillinger (da det hurtigt bliver for svært
                 for Byens Burger at håndtere), men hvis det er noget vigtigt, som allergi, kan vi
@@ -97,8 +114,9 @@
                 medlem.</p>
             <p>Denne fejl vises også hvis du ikke er tilmeldt nuværende lan. Du kan kun lave en madbestilling hvis du er
                 tilmeldt LAN! Husk også at logge ind, hvis du ikke allerede er det.</p>
-            <p>Vi bestiller mad fra Byens Burger. Menukortet kan ses <a href="https://www.just-eat.dk/restaurants-byensburger/menu/"
-                                                                        target="_blank">her</a>.</p>
+            <p>Vi bestiller mad fra Byens Burger. Menukortet kan ses <a
+                    href="https://www.just-eat.dk/restaurants-byensburger/menu/"
+                    target="_blank">her</a>.</p>
         </div>
     {% endif %}
 {% endblock %}
