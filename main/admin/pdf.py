@@ -1,6 +1,7 @@
 from urllib import parse
 from collections import Counter
 from pathlib import Path
+import re
 
 from django.http import HttpResponse, Http404
 from reportlab.lib.pagesizes import A4
@@ -9,6 +10,9 @@ from reportlab.pdfgen import canvas
 from main.models import Lan
 
 H, W = A4  # Landscape
+
+def fuck_unicode(text):
+    return re.sub(r'[^\x00-\x7F]+', ' ', text)
 
 
 def table_pdf(request, lan_id):
@@ -63,8 +67,8 @@ def table_pdf(request, lan_id):
             line1 = 'Denne plads er ikke reserveret.'
             line2 = 'Du kan derfor godt sætte dig her.'
         else:
-            line1 = lp.profile.user.first_name
-            line2 = '{}({})'.format(lp.profile.user.username, lp.profile.grade)
+            line1 = fuck_unicode(lp.profile.user.first_name)
+            line2 = '{}({})'.format(fuck_unicode(lp.profile.user.username), fuck_unicode(lp.profile.grade))
         string(c, W / 2, H * 0.48, 45, line1)
         string(c, W / 2, H * 0.36, 35, line2)
 
