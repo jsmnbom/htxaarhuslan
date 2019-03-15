@@ -11,11 +11,8 @@ from main.models import Lan
 
 H, W = A4  # Landscape
 
-
 def fuck_unicode(text):
-    return text
-    # No longer needed???
-    #return re.sub(r'[^\x00-\x7F]+', ' ', text)
+    return re.sub(r'[^\x00-\x7F]+', ' ', text)
 
 
 def table_pdf(request, lan_id):
@@ -45,8 +42,7 @@ def table_pdf(request, lan_id):
                     lengths[1][seat[0][0]] = y - origins[seat[0][0]][1]
 
     horizontal = {table: lengths[0][table] > lengths[1][table] for table in lengths[0]}
-    pages = {seat[0]: seat[1] for table in tables if not isinstance(table, str) for seat in table if
-             seat[0] is not None}
+    pages = {seat[0]: seat[1] for table in tables if not isinstance(table, str) for seat in table if seat[0] is not None}
 
     def sort(page):
         if horizontal[page[0][0]]:
