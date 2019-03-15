@@ -21,7 +21,7 @@ def table_pdf(request, lan_id):
     response['Content-Disposition'] = 'attachment; filename="Bordkort {}.pdf"'.format(parse.quote(lan.name))
 
     c = canvas.Canvas(response, pagesize=(W, H))
-    c.setCreator('HTXAarhusLAN.dk')
+    c.setCreator('AGLAN.dk')
 
     tables = lan.parse_seats()[0]
     origins = {}
@@ -73,13 +73,13 @@ def table_pdf(request, lan_id):
             'Husk at tilmelde dig vores discord server på linket: https://discord.gg/3DJaNFY',
             'Det er her der vil komme løbende updateringer under LANet.',
             'Der kan være sket ændringer siden denne seddel blev printet.',
-            'Hvis du er i tvivl spørg et crew member eller check på htxaarhuslan.dk/tilmeld.',
-            'Ved ophold til lan skal du følge reglerne på htxaarhuslan.dk/info#regler.'
+            'Hvis du er i tvivl spørg et crew member eller check på aglan.dk/tilmeld.',
+            'Ved ophold til lan skal du følge reglerne på aglan.dk/info#regler.'
         ]
         for i, line in enumerate(lines):
             c.drawString(W * 0.05, H * (0.06 + 0.02 * (len(lines) - i)), line)
 
-        c.drawImage(str(Path('main/static/main/img/logo.png')), W * 0.75, H * 0.07, width=W * 0.2,
+        c.drawImage(str(Path('main/static/main/img/aglan.png')), W * 0.75, H * 0.07, width=W * 0.2,
                     preserveAspectRatio=True, anchor='sw', mask='auto')
 
         c.showPage()
