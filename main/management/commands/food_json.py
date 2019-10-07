@@ -18,7 +18,7 @@ from django.core.management.base import BaseCommand
 #       2779669 - Husets vin, 2779650 - Chilisauce - License to Eat
 
 CHROME_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36'
-JUST_EAT_MENU_URL = 'https://www.just-eat.dk/menu/getproductsformenu'
+JUST_EAT_MENU_URL = 'https://www.just-eat.dk/menu/getproductsformenu?'
 
 HELP = """
 Loads food data from just eat
